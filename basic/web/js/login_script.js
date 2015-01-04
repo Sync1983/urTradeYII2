@@ -1,5 +1,3 @@
-/* 
- */
 
 function login_click(item){
   var disp = $('.login-window').css('display');

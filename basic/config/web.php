@@ -6,6 +6,7 @@ $config = [
     'id' => 'basic',    
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language'  => 'ru-RU',
     'components' => [
         'request' => [            
             'cookieValidationKey' => 'nGL57l_yqQrai_FQAYuDEwZoYnfrJZdg',
@@ -13,8 +14,7 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'user' => [
-            //'class' => 'app\models\WebUser',
+        'user' => [            
             'identityClass' => 'app\models\MongoUser',
             'enableAutoLogin' => true,
         ],
@@ -37,7 +37,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
+        'mongodb' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
 ];

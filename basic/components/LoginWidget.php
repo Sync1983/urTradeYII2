@@ -9,6 +9,7 @@ namespace app\components;
 use yii;
 
 class LoginWidget extends \yii\base\Widget {
+  public $form;
   
   public function init(){
     parent::init();    
@@ -16,6 +17,6 @@ class LoginWidget extends \yii\base\Widget {
   
   public function run(){
     $this->getView()->registerJsFile("/js/login_script.js");    
-    return $this->render('login_widget',array('model'=> yii::$app->user));
+    return $this->render('login_widget',array('form'=> $this->form));
   }
 }

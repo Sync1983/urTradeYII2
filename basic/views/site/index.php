@@ -1,50 +1,42 @@
 <?php
 /* @var $this yii\web\View */
-$this->title = 'My Yii Application';
+//$this->title = 'My Yii Application';
+use app\components\NewsWidget;
 ?>
 <div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
     <div class="body-content">
+      <h3>Добро пожаловать на сайт АвтоТехСнаб - Вашего поставщика автомобильных запчастей.</h3>
+      
+      <div class="row">
+        <h4>Для наших клиентов мы предлагаем:</h4>
+        <div class="col-lg-4">
+          <img src="/img/qality.png" class="index-big-icon" />
+          <p class="index-icon-text">Поставка оригинальных и не оригинальных запчастей</p>
+        </div>
+        <div class="col-lg-4">
+          <img src="/img/partner.png" class="index-big-icon" />
+          <p class="index-icon-text">Мы сотрудничаем с более чем 30−ю поставщиками из России, Европы, ОАЭ, Японии</p>
+        </div>
+        <div class="col-lg-4">
+          <img src="/img/cert.png" class="index-big-icon" />
+          <p class="index-icon-text">Сертификаты качества и гарантия на поставляемую продукцию</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-lg-6">
+          <p style ="text-align: center;text-transform: uppercase;font: 14pt sans-serif;color: #0f547c;"><strong>ПЕРСОНАЛЬНОЕ ОБСЛУЖИВАНИЕ</strong></p>
+          <ul class="index-list">
+            <li><p>Каждый клиент получает персонального менеджера, который занимается всем процессом от получения заявки до выдачи заказа клиенту</p></li>
+            <li><p>Максимальная помощь в подборе запчастей, расходных материалов, масел, смазок и спец. жидкостей</p></li>
+            <li><p>Быстрый документооборот</p></li>
+            <li><p>Бесплатную доставку запчастей по г. Пенза</p></li>
+          </ul>
+        </div>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+        <div class="col-lg-6">
+          <?= NewsWidget::widget(['data_provider'=>$news_provider]) ?>
         </div>
 
     </div>

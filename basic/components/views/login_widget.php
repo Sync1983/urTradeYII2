@@ -1,20 +1,27 @@
 <?php
-use app\models\User;
+use app\models\LoginForm;
+use yii\helpers\Html;
 use yii\helpers\Url;
-/*  @var $model \app\models\User */
+use yii\widgets\ActiveForm;
+/* @var $form LoginForm */
 ?>
-<?php if(YII::$app->user->isGuest)
-        echo 123;?>
+<?php if(YII::$app->user->isGuest): ?>
 <a href="#" onclick="login_click(this);return false;">Войти</a>
+<?php else: ?>
+<a href="<?= Url::to(['site/logout']);?>" data-method="post">(<?= YII::$app->user->getIdentity()->getId();?>) Выйти</a>
+<?php endif;?>
 <div class="login-window">
-  <form action="<?= Url::to(['site/login']);?>" method="POST">    
+  <?php ActiveForm::begin(['id' => 'login-form','action'=>['site/login']]) ?>  
     <div class="login-row">
-      <label for="user-name">Имя:</label>
-      <input id="user-name" type="text" name="username"/>
+      <?= Html::activeLabel($form, 'username',['label'=>'Имя:']); ?>     
+      <?= Html::activeInput("text", $form, "username",['id'=>"user-name"]); ?>
     </div>
     <div class="login-row">
-      <label for="user-pass">Пароль:</label>
-      <input id="user-pass" type="password"/>
+      <?= Html::activeLabel($form, 'userpass',['label'=>'Пароль:']); ?>     
+      <?= Html::activeInput("password", $form, "userpass",['id'=>"user-pass"]); ?>
+    </div>
+    <div class="login-row">      
+      <?= Html::activeCheckbox($form, "rememberMe",['id'=>"remember-me",'label'=>'Запомнить меня']); ?>
     </div>
     <div class="login-row">              
       <input type="submit" value="Войти"/>
@@ -27,5 +34,5 @@ use yii\helpers\Url;
       <div class="login-icon mm-icon">&nbsp;</div>
       <div class="login-icon vk-icon">&nbsp;</div>
     </div>
-  </form>
+  <?php    ActiveForm::end()?>
 </div>

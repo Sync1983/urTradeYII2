@@ -27,11 +27,11 @@ AppAsset::register($this);
 <body>
 
 <?php $this->beginBody() ?>
-    <div class="wrap">
-      <div class ="logo-line">
-        <?= LoginWidget::widget() ?>
-      </div>
+    <div class="wrap">      
       <div class="main-menu">
+        <div class ="logo-line">
+          <?= LoginWidget::widget(['form'=> $model->login_form]) ?>
+        </div>
         <div class="head-logo"><a href="<?= Url::to(['site/index'])?>" onclick="main.menuClick(this);">&nbsp;</a></div>
         <div class="menu-spliter">&nbsp;</div>
         
@@ -71,19 +71,21 @@ AppAsset::register($this);
         </div>        
         
         <div class="menu-search">
-          <div class="search-head search">&nbsp;</div>
           <div class="search-line">
-            <input class="search-string" type="text" id="search-string" value="<?= $model->search ?>"/>
-            <div class="search-dropdown"></div>
+            <div class="btn btn-primary search-button" style="left:10px;">Каталоги</div>
+            <div class="search-head search">&nbsp;</div> 
+            <div class="search-string-dropdown">
+              <input class="search-string" type="text" id="search-string" value="<?= $model->search ?>"/>
+              <div class="search-dropdown"></div>
+            </div>
           </div>  
-          <div class="search-line" style="width: 45%;">
+          <div class="search-line" style="min-width: 200px;">
             <div class="btn btn-primary search-button">Искать</div>
             <input type="checkbox" class = "big-check" id="cross" <?= $model->cross?'checked':''?>/>
             <label for="cross">Аналоги</label>
             <select class="over-price" id="over-price" value=3>
               <?= $model->generateOverPrice() ?>
-            </select>
-            <div class="btn btn-primary search-button" style="float:right;">Каталоги</div>
+            </select>            
           </div>
         </div>
       </div>

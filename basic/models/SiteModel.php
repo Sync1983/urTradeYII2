@@ -6,8 +6,8 @@
  */
 namespace app\models;
 
-use Yii;
 use yii\base\Model;
+use app\models\LoginForm;
 
 class SiteModel extends Model {
   /* @var $instance SiteModel */
@@ -16,6 +16,7 @@ class SiteModel extends Model {
   public $search  = "";
   public $cross   = true;
   public $op      = 0;
+  public $login_form;
   public $over_price = [1=>'10%',2=>'15%',3=>'20%',4=>'25%'];
   
   public function generateOverPrice(){
@@ -31,8 +32,8 @@ class SiteModel extends Model {
   /* @return SiteModel */
   static public function _instance(){
     if(!SiteModel::$instance){
-      SiteModel::$instance = new SiteModel;
-      //SiteModel::$instance->init();
+      SiteModel::$instance = new SiteModel();
+      SiteModel::$instance->login_form = new LoginForm();      
     }
     return SiteModel::$instance;
   }
