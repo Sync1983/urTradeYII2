@@ -2,8 +2,10 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use app\models\SetupModel;
+use app\models\prices\OverpriceModel;
 
 /* @var $model SetupModel */
+/* @var $price_model OverpriceModel */
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 
@@ -20,9 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php $form = ActiveForm::begin([
             'id' => 'setup-form',
             'action'=>['site/setup'],
-            'enableClientValidation'=>false,
-            //'clientOptions'=>['validateOnSubmit'=>true,]
+            'enableClientValidation'=>false,            
           ]);?>
+        <?= Html::hiddenInput("type","data"); ?>
         
         <?= $form->errorSummary($model); ?>
         <div class="row">
@@ -69,11 +71,56 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php ActiveForm::end();?>
       </div>
       <div class="col-lg-6">
-        <h4 class="center-block">Управление наценками для вывода в поиске</h4>
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h5 class="center-block">Управление наценками для вывода в поиске</h5>
+          </div>
+        </div>
+        <div class="panel-body">
+        <?php $form_price = ActiveForm::begin([
+            'id' => 'overprice-form',
+            'action'=>['site/setup'],
+            'enableClientValidation' => false            
+          ]); ?>
+        <?= $form_price->errorSummary($price_model); ?>
+        <?= Html::hiddenInput("type","overprice"); ?>
+        <div class="row" style="margin-left: 10px;margin-top:-30px;padding-bottom: 5px;">
+          <?= Html::button("Добавить строку",['hint'=>"asd", 'onclick'=>'add_price_row(this);']); ?>
+        </div>
+        <?php foreach ($price_model->prices as $name=>$value):?>
+          <div class="row" style="margin-left: 10px;padding-bottom: 5px;">
+            <?= Html::button(Html::img("/img/cross.png"),['hint'=>"asd", 'onclick'=>'delete_price_row(this);']); ?>
+            <?= Html::activeLabel($price_model,"price_name[]",['label'=>"Имя"]); ?>
+            <?= Html::activeInput("text", $price_model, "prices_name[]",['value'=>$name,'size'=>'20']); ?>
+            <?= Html::activeLabel($price_model,"price_value[]",['label'=>"Значение, %"]); ?>
+            <?= Html::activeInput("text", $price_model, "prices_value[]",['value'=>$value,'size'=>'20']); ?>            
+          </div>
+        <?php endforeach;?>
+        <?= Html::submitButton("Сохранить");?>
+        <?php ActiveForm::end(); ?>
+        </div>
       </div>
-    </div>
-    
+    </div>    
 </div>
+
+<script type="text/javascript">
+  function delete_price_row(item){
+    var parent = $(item).parent();
+    parent.remove();
+  }
+  
+  function add_price_row(item){
+    var parent = $(item).parent().last();
+    var text = '<div class="row panel-info" style="margin-left: 10px;padding-bottom: 5px;">'+
+            '<?= Html::button(Html::img("/img/cross.png"),["hint"=>"asd", "onclick"=>"delete_price_row(this);","style"=>"margin-right: 5px;"]); ?>'+
+            '<?= Html::activeLabel($price_model,"price_name[]",["label"=>"Имя","style"=>"padding-right:5px;"]); ?>'+
+            '<?= Html::activeInput("text", $price_model, "prices_name[]",['value'=>"New",'size'=>'20']); ?>'+
+            '<?= Html::activeLabel($price_model,"price_value[]",['label'=>"Значение, %","style"=>"padding-right:4px; padding-left:4px"]); ?>'+
+            '<?= Html::activeInput("text", $price_model, "prices_value[]",['value'=>"10",'size'=>'20']); ?>'+
+            '</div>';
+    parent.after(text);
+  }
+</script>
 
 
 

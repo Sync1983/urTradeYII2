@@ -64,10 +64,18 @@ class SetupModel extends Model {
       if($crc_1!=$crc1 || $crc_2!=$crc2){
         $this->addError($attribute, 'Ошибка при проверке ИНН. Проверьте правильность введеных цифр.');
       }
-    }
-    
+    }    
   }
   
+  public function loadParams($data=[]){       
+    foreach ($this->getAttributes() as $name=>$value){        
+      if(isset($data[$name])){
+        $this->$name = $data[$name];
+      }
+    }
+    return $this->validate();
+  }
+
   public function save(){    
     /* @var $user MongoUser */
     $user = YII::$app->user->getIdentity();

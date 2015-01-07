@@ -12,7 +12,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   
   public function attributes(){
     return ['_id', 'user_name', 'user_pass', 'role', 'sailt',
-      'type','name','first_name','second_name','inn','kpp','addres','phone','email'];
+      'type','name','first_name','second_name','inn','kpp','addres','phone','email','over_price_list'];
   }  
   
   public static function collectionName(){
@@ -27,8 +27,30 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     return $this->getAttribute('user_pass') === md5($password);
   }
   
+  /**
+   * Проверяет имеет ли пользователь права администратора
+   * @return boolean 
+   * **/
   public function isAdmin(){
     return $this->getAttribute("role")==="admin";
+  }
+  
+  /**
+   * Получает список установленных пользователем наценок
+   * @return array
+   * **/
+  public function getOverPiceList(){
+    return $this->getAttribute("over_price_list");
+  }
+  
+  /**
+   * Сохраняет список установленных пользователем наценок
+   * @return boolena
+   * **/
+  public function setOverPiceList($list){
+    if(is_array($list)){
+      $this->setAttribute("over_price_list",$list);
+    }
   }
 
   // =================== Interface ====================
@@ -39,6 +61,10 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   public function getId() {
     $id = $this->getAttribute("_id");    
     return $id->__toString();
+  }
+  
+  public function getObjectId(){    
+    return $this->getAttribute("_id");    
   }
 
   public function validateAuthKey($authKey) {    

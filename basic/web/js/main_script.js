@@ -12,6 +12,7 @@ function main_fucnt(){
     $('.menu-item > a').each(function(index,item){
       $(item).attr('onClick',"menuClick(this);");      
     });
+    $('#search-button').attr('onClick',"searchClick(this)");
   };
   
   this.menuClick = function(item){
@@ -19,6 +20,11 @@ function main_fucnt(){
     $(item).attr('href',ref+getDataStruct());
     return true;
   };
+  
+  this.searchClick = function(item){
+    document.location.href = "index.php?r=site/search"+getDataStruct();
+    return true;
+  }
   
   return this;
 }

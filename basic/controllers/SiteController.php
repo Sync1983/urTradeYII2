@@ -11,6 +11,8 @@ use app\models\SiteModel;
 use app\models\LoginForm;
 use app\models\news\NewsProvider;
 use app\models\SetupModel;
+use app\models\prices\OverpriceModel;
+use app\models\search\SearchModel;
 
 class SiteController extends Controller
 {
@@ -49,15 +51,11 @@ class SiteController extends Controller
     public function beforeAction($action){      
       $model = SiteModel::_instance();
       $get = Yii::$app->request->get();
-      if(isset($get['search'])){
-        $model->search  = $get['search'];
-      }
       if(isset($get['cross'])){
-        $model->cross   = $get['cross']=="true";
+        $get['cross'] = $get['cross']==="true"?1:0;
       }
-      if(isset($get['op'])){
-        $model->op      = intval($get['op']);      
-      }
+      $model->load($get,'');
+      $model->validate();
       return parent::beforeAction($action);
     }
 
@@ -79,7 +77,7 @@ class SiteController extends Controller
         $login_model = new LoginForm();        
         if ($login_model->load(Yii::$app->request->post()) && $login_model->login()) {
           $this->goBack();
-        };
+        }
         return $this->goHome();        
     }
 
@@ -100,22 +98,38 @@ class SiteController extends Controller
       if (Yii::$app->user->isGuest) {
         return $this->goHome();
       }
-      
+      $post = Yii::$app->request->post();
+      $type = isset($post['type'])?$post['type']:"";
       $user = Yii::$app->user->getIdentity();
       $s_model = new SetupModel();
-      $model_attr = $s_model->getAttributes();
-      $user_attr  = $user->getAttributes();
-      $attr = [];
-      foreach ($user_attr as $name=> $value) {
-        if(isset($model_attr[$name])){
-          $attr[$name] = $value;
+      $s_model->loadParams($user->getAttributes());            
+      $price_model = new OverpriceModel();
+        
+      if($type == "data"){
+        if ($s_model->load($post) && $s_model->validate()) {        
+          $s_model->save();
         }
-      }      
-      $s_model->setAttributes($attr);
-      if ($s_model->load(Yii::$app->request->post()) && $s_model->validate()) {        
-        $s_model->save();
+      } 
+      elseif($type=="overprice"){
+        if($price_model->load($post) && $price_model->validate()){
+          $price_model->save();
+        }
       }
-      return $this->render('setup',['model'=>$s_model]);      
+      
+      return $this->render('setup',['model'=>$s_model,'price_model'=>$price_model]);      
+    }
+    
+    public function actionSearch(){
+      $cross = SiteModel::_instance()->cross;
+      $serach = SiteModel::_instance()->search;
+      $over_price_model = new OverpriceModel();
+      $over_price = $over_price_model->getValue(SiteModel::_instance()->op);
+      
+      $search = new SearchModel();      
+      if($search->load(SiteModel::_instance()->getAttributes(),'') && $search->validate()){        
+        return $this->render('search',['model'=>$search]);
+      }
+      throw new \yii\web\NotAcceptableHttpException("Ошибка параметров запроса. Попробуйте повторить запрос");
     }
 
 }

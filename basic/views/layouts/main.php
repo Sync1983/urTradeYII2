@@ -5,6 +5,7 @@ use app\components\LoginWidget;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\SiteModel;
+use yii\bootstrap\ButtonDropdown;
 
 /* @var $this \yii\web\View */
 /* @var $model \app\models\SiteModel */
@@ -71,22 +72,54 @@ AppAsset::register($this);
         </div>        
         
         <div class="menu-search">
-          <div class="search-line">
-            <div class="btn btn-primary search-button" style="left:10px;">Каталоги</div>
-            <div class="search-head search">&nbsp;</div> 
-            <div class="search-string-dropdown">
-              <input class="search-string" type="text" id="search-string" value="<?= $model->search ?>"/>
-              <div class="search-dropdown"></div>
-            </div>
-          </div>  
-          <div class="search-line" style="min-width: 200px;">
-            <div class="btn btn-primary search-button">Искать</div>
-            <input type="checkbox" class = "big-check" id="cross" <?= $model->cross?'checked':''?>/>
-            <label for="cross">Аналоги</label>
-            <select class="over-price" id="over-price" value=3>
-              <?= $model->generateOverPrice() ?>
-            </select>            
-          </div>
+          <div class="search-line input-group">              
+              <div class="input-group-btn">
+                <?= ButtonDropdown::widget([
+                    'label' => 'Каталоги',                    
+                    'options' => [
+                      'class' => 'btn btn-primary',
+                    ],
+                    'dropdown' => [
+                      'items' => [
+                        ['label'=>'A','url'=>'#'],
+                        ['label'=>'Ab','url'=>'#']
+                      ]
+                    ]
+                  ]);?>                
+              </div>
+              <?= Html::input("text", "search-string", $model->search, [
+                  'class'=>'form-control input-medium',
+                  'id'=>'search-string',
+                  'min-size'=>'50',
+                  'size'=>'20',
+                  'placeholder'=>"Введите номер запчасти",
+                  'aria-describedby'=>'sizing-addon1']);?>              
+              <div class="input-group-btn">                  
+                <?= ButtonDropdown::widget([
+                    'label' => '',
+                    'options' => [
+                      'class' => 'btn-primary',
+                    ],
+                    'dropdown' => [
+                      'options' => [
+                        'class' => 'dropdown-menu-right'                        
+                      ],
+                      'items' => [
+                        ['label'=>'A','url'=>'#','onclick="bfa();"'],
+                        ['label'=>'Ab','url'=>'#']
+                      ]
+                    ]
+                  ]);?>                
+                <?= Html::button("Искать", ['class'=>'btn btn-primary search-button','id'=>'search-button']);?>            
+                <?= Html::checkbox("cross", $model->cross, [                  
+                      'id'=>'cross',
+                      'class' => 'big-check']); ?>            
+                <?= Html::label("Аналоги","cross",['class'=>'btn btn-primary']); ?>            
+                <?= Html::dropDownList('over-price', $model->op, $model->generateOverPrice(),[
+                      'id'=>'over-price',
+                      'class'=>'over-price btn btn-primary']);?>            
+              </div>
+          </div>        
         </div>
       </div>
 

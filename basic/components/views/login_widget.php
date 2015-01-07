@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 <?php if(YII::$app->user->isGuest): ?>
 <a href="#" onclick="login_click(this);return false;">Войти</a>
 <?php else: ?>
-<a href="<?= Url::to(['site/logout']);?>" data-method="post">(<?= YII::$app->user->getIdentity()->getId();?>) Выйти</a>
+<a href="<?= Url::to(['site/logout']);?>" data-method="post">(<?= YII::$app->user->getIdentity()->type==0?YII::$app->user->getIdentity()->name:YII::$app->user->getIdentity()->first_name. " " .YII::$app->user->getIdentity()->second_name;?>) Выйти</a>
 <?php endif;?>
 <div class="login-window">
   <?php ActiveForm::begin(['id' => 'login-form','action'=>['site/login']]) ?>  
