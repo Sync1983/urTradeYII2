@@ -1,0 +1,39 @@
+/* 
+    Created on : 09.01.2015, 23:19:41
+    Author     : Sync<atc58.ru>
+*/
+.nav-atc{width: 60%;height: 80px;margin-left: 20%;z-index: 1000;background-color: #FFFFBA !important;}
+.menu-item{  
+  top:    5px;
+  left:   22px;  
+  height: 50px;
+  width:  50px;
+  background-repeat: no-repeat;
+  background-size: 50px 50px;    
+  position: relative;
+}
+.nav-atc-list{ height: 80px;}
+.nav-atc-list a{top: -45px;font-weight: bold;color: #000 !important;height: 80px;max-width: 90px;padding-top: 50px !important;display: box;}
+
+.navbar-search{
+  padding: 10px 0 10px 0;
+  background-color: #FFFFBA !important;  
+  border-radius: 0 0 5px 5px;
+}
+.navbar-search input[type="checkbox"].big-check{display: none;}
+.navbar-search input[type="checkbox"].big-check+label{font-size: 11pt;line-height: 32px;height: 34px;color: #FFF;padding: 0px 10px 0px 40px;text-align: right;vertical-align: middle;background-image: none;background-position: 2px 2px;background-repeat: no-repeat}
+.navbar-search input[type="checkbox"].big-check:checked+label{background-image: url('/img/green-checked.png'); background-size: 24px 24px;background-position: 10px 3px;}
+.navbar-search .over-price{height: 34px;font-weight: bold;text-align: center;}
+/*.
+.menu-search{top:20px;width: 100%;padding: 0px 0px 5px;background-color: #FFFFA0;border: 1px solid #58C0E7;border-top: 2px solid #58C0E7;border-radius: 0 0 15px 15px;display: inline-block;position: relative;}
+.search-line{top: 1px;width: 80%;margin-right: auto;margin-left: 10%;}
+
+*/
+.basket   {background-image: url('/img/basket_icon.png');}
+.balance  {background-image: url('/img/balance_icon.png');}
+.consumer {background-image: url('/img/consumer_icon.png');}
+.contact  {background-image: url('/img/contact_icon.png');}
+.order    {background-image: url('/img/order_icon.png');}
+.search   {background-image: url('/img/search_icon.png');}
+.setup    {background-image: url('/img/setup_icon.png');}
+

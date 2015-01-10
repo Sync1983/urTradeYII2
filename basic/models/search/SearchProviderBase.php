@@ -6,17 +6,20 @@
  */
 namespace app\models\search;
 use yii\base\Object;
+use app\models\PartRecord;
 
 class SearchProviderBase extends Object {
   
   protected $_CLSID;
   protected $_default_params;
-  protected $_name;
+  protected $_name;  
 
-  public function __construct($Name,$CLSID = null,$default_params=[],$config=[]) {    
-    $this->_CLSID = $CLSID;
-    $this->_default_params = $default_params;
+  public function __construct($Name,$CLSID = null,$default_params=[],$config=[]) {
+    if($CLSID){
+      $this->_CLSID = $CLSID;
+    }    
     $this->_name = $Name;
+    $this->_default_params = $default_params;
     parent::__construct($config);
   }
   /**
@@ -29,22 +32,20 @@ class SearchProviderBase extends Object {
   public function getMakerList($part_id="",$cross=false){
     throw new \BadMethodCallException("Метод должен быть описан в каждом потомке");
   }
-
-    /**
+  /**
    * Возвращает имя поставщика
    * @return string
    */
   public function getName(){
     return $this->_name;
-  }
-  
+  }  
   /**
    * Возвращает идентификатор поставщика
    * @return int
    */
   public function getCLSID(){
     return $this->_CLSID;
-  }
+  }  
   /**
    * Отправляет запрос по указаному URL с параметрами $param
    * POST или GET запрос определяется флагом is_post
@@ -70,7 +71,28 @@ class SearchProviderBase extends Object {
     curl_close($ch);
     return $answer;
   }
-  
+  /**
+   * ПОЛНОСТЬЮ очищает из базы запчастей все данные от указанного производителя
+   * @return boolean
+   */
+  protected function _clearAll(){
+    if(!$this->_CLSID){
+      return false;
+    }
+    return PartRecord::deleteAll(['provider'=>  $this->_CLSID]); 
+  }
+  /**
+   * Сохраняет данные в БД
+   * @param dataStruct $data
+   */
+  protected function _saveItem($data=[]){
+    if(count($data)==0){
+      return false;
+    }
+    $item = new PartRecord();
+    $item->setAttributes($data,false);
+    return $item->save();
+  }
   /**
    * Преобразуем входящую XML строку в массив
    * @param string $xml
@@ -80,5 +102,26 @@ class SearchProviderBase extends Object {
     $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);
     $json = json_encode($xml_string);
     return json_decode($json,true);
+  }
+  /**
+   * Возвращает соответствие полей в стандартной структуре данных БД
+   * @return array
+   */
+  protected function _stdDataStruct(){
+    return [        
+			  "provider"    => 0,
+			  "articul"     => 0,
+			  "producer"    => 0,
+			  "maker_id"    => 0,
+			  "name"        => 0,
+			  "price"       => 0,
+			  "shiping"     => 0,
+			  "stock"       => 0,  
+			  "info"        => 0,
+			  "update_time" => 0,
+			  "is_original" => 0,
+			  "count"       => 0,
+			  "lot_quantity"=> 0
+    ];
   }
 }

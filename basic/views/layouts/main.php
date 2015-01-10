@@ -1,14 +1,11 @@
 <?php
 use yii\helpers\Html;
-use yii\helpers\Url;
-use app\components\LoginWidget;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\SiteModel;
-use yii\bootstrap\ButtonDropdown;
+use app\components\MainMenuWidget;
 
 /* @var $this \yii\web\View */
-/* @var $model \app\models\SiteModel */
 /* @var $content string */
 $model = SiteModel::_instance();
 $this->title = "АвтоТехСнаб - Ваш поставщик запчастей";
@@ -28,100 +25,40 @@ AppAsset::register($this);
 <body>
 
 <?php $this->beginBody() ?>
-    <div class="wrap">      
-      <div class="main-menu">
-        <div class ="logo-line">
-          <?= LoginWidget::widget(['form'=> $model->login_form]) ?>
-        </div>
-        <div class="head-logo"><a href="<?= Url::to(['site/index'])?>" onclick="main.menuClick(this);">&nbsp;</a></div>
-        <div class="menu-spliter">&nbsp;</div>
-        
-        <div class="menu-item">
-          <div class="basket menu-icon"><span class="badge"></span></div>          
-          <a href="<?= Url::to(['site/basket'])?>">Корзина</a>
-        </div>
-        <div class="menu-spliter">&nbsp;</div>
-        
-        <div class="menu-item">
-          <div class="order menu-icon"><span class="badge"></span></div>
-          <a href="<?= Url::to(['site/orders'])?>">Заказы</a>
-        </div>
-        <div class="menu-spliter">&nbsp;</div>
-        
-        <div class="menu-item">
-          <div class="balance menu-icon"><span class="badge"></span></div>
-          <a  href="<?= Url::to(['site/balance'])?>">Баланс</a>
-        </div>
-        <div class="menu-spliter">&nbsp;</div>
-        
-        <div class="menu-item">
-          <div class="setup menu-icon">&nbsp;</div>
-          <a href="<?= Url::to(['site/setup'])?>">Профиль</a>
-        </div>
-        <div class="menu-spliter">&nbsp;</div>
-        
-        <div class="menu-item">
-          <div class="consumer menu-icon">&nbsp;</div>
-          <a  href="<?= Url::to(['site/consumers'])?>">Клиентам</a>
-        </div>
-        <div class="menu-spliter">&nbsp;</div>
-        
-        <div class="menu-item">
-          <div class="contact menu-icon">&nbsp;</div>
-          <a href="<?= Url::to(['site/contact'])?>">Контакты</a>
-        </div>        
-        
-        <div class="menu-search">
-          <div class="search-line input-group">              
-              <div class="input-group-btn">
-                <?= ButtonDropdown::widget([
-                    'label' => 'Каталоги',                    
-                    'options' => [
-                      'class' => 'btn btn-primary',
-                    ],
-                    'dropdown' => [
-                      'items' => [
-                        ['label'=>'A','url'=>'#'],
-                        ['label'=>'Ab','url'=>'#']
-                      ]
-                    ]
-                  ]);?>                
-              </div>
-              <?= Html::input("text", "search-string", $model->search, [
-                  'class'=>'form-control input-medium',
-                  'id'=>'search-string',
-                  'min-size'=>'50',
-                  'size'=>'20',
-                  'placeholder'=>"Введите номер запчасти",
-                  'aria-describedby'=>'sizing-addon1']);?>              
-              <div class="input-group-btn">                  
-                <?= ButtonDropdown::widget([
-                    'label' => '',
-                    'options' => [
-                      'class' => 'btn-primary',
-                    ],
-                    'dropdown' => [
-                      'options' => [
-                        'class' => 'dropdown-menu-right'                        
-                      ],
-                      'items' => [
-                        ['label'=>'A','url'=>'#','onclick="bfa();"'],
-                        ['label'=>'Ab','url'=>'#']
-                      ]
-                    ]
-                  ]);?>                
-                <?= Html::button("Искать", ['class'=>'btn btn-primary search-button','id'=>'search-button']);?>            
-                <?= Html::checkbox("cross", $model->cross, [                  
-                      'id'=>'cross',
-                      'class' => 'big-check']); ?>            
-                <?= Html::label("Аналоги","cross",['class'=>'btn btn-primary']); ?>            
-                <?= Html::dropDownList('over-price', $model->op, $model->generateOverPrice(),[
-                      'id'=>'over-price',
-                      'class'=>'over-price btn btn-primary']);?>            
-              </div>
-          </div>        
-        </div>
-      </div>
+    <div class="wrap"> 
+      <?= MainMenuWidget::widget([
+            'brand' => [
+              'url'   => ['site/index'],
+              'class' => 'head-logo',
+              'img'   => '/img/logo_left.png'
+            ],
+            'items'=>[
+              'Корзина'=>[
+                'url'   => ['site/basket'],
+                'class' => 'basket',                
+              ],
+              'Заказы'=>[
+                'url'   => ['site/orders'],
+                'class' => 'order',            
+              ],
+              'Баланс'=>[
+                'url'   => ['site/balance'],
+                'class' => 'balance',            
+              ],
+              'Профиль'=>[
+                'url'   => ['site/setup'],
+                'class' => 'setup',            
+              ],
+              'Клиентам'=>[
+                'url'   => ['site/consumers'],
+                'class' => 'consumer',            
+              ],
+              'Контакты'=>[
+                'url'   => ['site/contact'],
+                'class' => 'contact',            
+              ],                
+            ]
+          ]); ?>    
 
         <div class="container">
             <?= Breadcrumbs::widget([
@@ -139,6 +76,7 @@ AppAsset::register($this);
     </footer>
 
 <?php $this->endBody() ?>
+<div class="preloader">&nbsp;</div>
 </body>
 </html>
 <script type="text/javascript">

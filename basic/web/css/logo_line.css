@@ -2,12 +2,8 @@
     Created on : 01.01.2015, 22:42:34
     Author     : Sync<atc58.ru>
 */
-.logo-line{right: 10px;height:1px;float: right;position: relative;z-index: 1001;}
-.logo-line a{padding-right: 10px;text-decoration: underline;text-decoration-style: dashed;-moz-text-decoration-style: dashed;float: right;cursor: pointer;position: relative;}
-.login-window{margin-left:-200px;width: 300px;padding: 5px 5px 10px 5px;background-color: #FFF;border: 2px solid #58C0E7;border-radius: 5px;display: none;position: fixed;}
-.login-row {text-align: center;position: relative;}
-.login-row input[type="text"],.login-row input[type="password"], .login-row label{margin-top: 10px;min-width: 80px;font-size: 10pt;height: 20px;}
-.login-icon{width: 26px;height: 26px;margin-top: 10px;background-repeat: no-repeat;cursor: pointer;display: inline-block;}
+#navbar-login{padding-bottom: 5px;background-color: #FFFFBA !important;display: none;}
+.login-icon{margin-top: 2px;width: 26px;height: 26px;background-repeat: no-repeat;cursor: pointer;display: inline-block;}
 .fb-icon{background-image: url('/img/fb_icon.png');}
 .tw-icon{background-image: url('/img/tw_icon.png');}
 .od-icon{background-image: url('/img/od_icon.png');}

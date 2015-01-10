@@ -5,6 +5,7 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models;
+use yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
 
@@ -28,6 +29,20 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   }
   
   /**
+   * Возвращает отображаемое имя пользователя
+   * @return string
+   */
+  public function getUserName(){
+    if(Yii::$app->user->isGuest){
+      return "guest";
+    }
+    if($this->getAttribute("type")==0){
+      return $this->getAttribute("name");
+    }
+    return $this->getAttribute("first_name"). " " .$this->getAttribute("second_name");
+  }
+
+    /**
    * Проверяет имеет ли пользователь права администратора
    * @return boolean 
    * **/

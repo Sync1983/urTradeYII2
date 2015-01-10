@@ -28,9 +28,10 @@ class SearchModel extends Model{
       if(count($makers)==0){
         $makers = $provider->getMakerList($this->search, $this->cross);
       } else {
-        
+        $makers = array_merge($makers,$provider->getMakerList($this->search, $this->cross));
       }
     }
+    var_dump($makers);
     return $makers;
   }
   

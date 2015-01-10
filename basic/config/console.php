@@ -25,7 +25,7 @@ return [
                 ],
             ],
         ],
-        'db' => $db,
+        'mongodb' => $db,
     ],
     'params' => $params,
 ];

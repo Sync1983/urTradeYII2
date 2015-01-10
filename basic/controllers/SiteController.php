@@ -13,6 +13,7 @@ use app\models\news\NewsProvider;
 use app\models\SetupModel;
 use app\models\prices\OverpriceModel;
 use app\models\search\SearchModel;
+use app\models\PartRecord;
 
 class SiteController extends Controller
 {
@@ -130,6 +131,27 @@ class SiteController extends Controller
         return $this->render('search',['model'=>$search]);
       }
       throw new \yii\web\NotAcceptableHttpException("Ошибка параметров запроса. Попробуйте повторить запрос");
+    }
+    
+    public function actionAjaxsearchdata(){      
+      $post = Yii::$app->request->post();
+      if(!isset($post['text'])){
+        return;
+      }
+      $search = $post['text'];      
+      if(strlen($search)<3){
+        return "none";
+      }            
+      $cond = PartRecord::getCollection()->buildRegexCondition('articul',['articul',"/^$search.*/"]);    
+      $result = PartRecord::find()->where($cond)->limit(50)->all();
+      $items = [];
+      foreach ($result as $item) {
+        $items[$item->getAttribute("articul")." - ".$item->getAttribute("producer")] = [$item->getAttribute("articul") => $item->getAttribute("name")];
+      }
+      if(count($items)<2){
+        return "none";
+      }
+      return $this->renderPartial("parts/search_help",['items'=>$items]);
     }
 
 }
