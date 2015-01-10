@@ -72,6 +72,14 @@ class SearchProviderBase extends Object {
     return $answer;
   }
   /**
+   * Очищает строку от всех символов кроме буквенно-цифровых
+   * @param string $text
+   * @return string
+   */
+  protected function _clearStr($text) {    
+    return preg_replace("/[^a-zA-Z0-9\s]/", "", $text);    
+  }
+  /**
    * ПОЛНОСТЬЮ очищает из базы запчастей все данные от указанного производителя
    * @return boolean
    */

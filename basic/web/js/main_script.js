@@ -40,11 +40,15 @@ function main_fucnt(){
     this.ajax("index.php?r=site/ajaxsearchdata",{text:val},onSuccess);    
   };
   
+  this.searchHelperHide = function(item){    
+    $("#search-helper").removeClass("show");
+  };
+  
   this.insertSearch = function(item){
     var val = $(item).val();
     $('#search-string').val(val);
     $("#search-helper").removeClass("show");
-  }
+  };
   
   this.ajax = function(url,params,success,error){    
     jQuery.ajax({                

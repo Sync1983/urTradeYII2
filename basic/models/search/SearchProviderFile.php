@@ -17,7 +17,7 @@ class SearchProviderFile extends SearchProviderBase{
   private $_data_array;
 
   public function getMakerList($part_id = "", $cross = false) {
-    $search = PartRecord::find()->where(['articul'=>$part_id])->all();
+    $search = PartRecord::find()->where(['articul'=>$part_id,'provider'=>  $this->_CLSID])->all();
     $maker_list = [];
     foreach ($search as $part) {
       $maker_list[$part->getAttribute("producer")]=[$this->_CLSID => $part->getAttribute("maker_id")];
@@ -92,15 +92,15 @@ class SearchProviderFile extends SearchProviderBase{
     }  
     $count = 0;
     $time = time();
-    while(!feof($fh)){
-      $str = $this->_loadLine($fh);
-      $data = $this->_convertLine($str);
+    while(!feof($fh))
+    {
+      $str = $this->_loadLine($fh);      
+      $data = $this->_convertLine($str);      
       $res = $this->_dataToStruct($data);
       $this->_saveItem($res);      
       $count++;
-    }
-    $time = time()-$time;    
-    echo "Add $count items  by  $time sec.\r\n";
+    }    
+    echo "Add $count items  by  ".(time()-$time)." sec.\r\n";
     fclose($fh);
   }
   /**
@@ -129,9 +129,10 @@ class SearchProviderFile extends SearchProviderBase{
    * @return mixed
    */
   protected function _convertLine($line){
-    $parts = explode($this->divider, $line);
+    $parts = explode($this->divider, $line);    
     if(count($parts)!=count($this->_field_array)){
-      return false;
+      echo "Не совпадает количество полей в файле и в массиве полей (".count($parts)."-".count($this->_field_array).")\r\n";
+      return [];
     }
     $result = [];
     foreach ($this->_field_array as $key => $name) {
@@ -168,7 +169,8 @@ class SearchProviderFile extends SearchProviderBase{
       return $file;
     }    
     $new_filename = str_replace(".zip", ".csv", $file);
-    $command = "unzip -p $file > $new_filename";
+    $command = "unzip -p '$file' > '$new_filename'";
+    echo "Unzip command: $command \r\n";
     $result = 0;
     $output = "";
     exec($command,$output,$result);

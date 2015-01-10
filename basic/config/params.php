@@ -5,6 +5,7 @@ return [
     'providerUse' =>[
       app\models\search\ProviderOnline::class,
       app\models\search\ProviderArmtek::class,      
+      app\models\search\ProviderForum::class,      
     ],
     'providers'  => [
       app\models\search\ProviderOnline::class=> [
@@ -13,6 +14,9 @@ return [
       ],      
        app\models\search\ProviderArmtek::class=> [
             'dir'     => '/prices/armtek',
+      ],       
+       app\models\search\ProviderForum::class=> [
+            'dir'     => '/prices/forum',
       ],       
       
       /*  [ 'name'  =>  'Ixora',

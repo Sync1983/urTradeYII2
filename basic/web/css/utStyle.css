@@ -48,3 +48,8 @@
   height: 100% !important;
   position: relative;
 }
+
+.provider-header > div.panel-heading{
+  height: 30px;
+  padding: 7px 0 0 15px;
+}

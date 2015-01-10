@@ -61,7 +61,8 @@ use yii\bootstrap\ButtonDropdown;
                   'size'=>'20',
                   'placeholder'=>"Введите номер запчасти",
                   'aria-describedby'=>'sizing-addon1',
-                  'onkeyup'=>'main.searchKeyPress(this)'
+                  'onkeyup'=>'main.searchKeyPress(this)',
+                  'onfocus'=>'main.searchKeyPress(this)',                  
                 ]);?>              
               <div class="input-group-btn">                  
                 <?= ButtonDropdown::widget([

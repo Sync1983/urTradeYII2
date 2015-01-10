@@ -18,7 +18,7 @@ class SearchModel extends Model{
   protected $_providers = [];
   
   /**
-   * Возвращает список производителей запрпшиваемого артикула
+   * Возвращает список производителей запрашиваемого артикула
    * @return array
    */
   public function generateMakerList(){
@@ -26,12 +26,11 @@ class SearchModel extends Model{
     $makers = [];
     foreach ($this->_providers as $provider){
       if(count($makers)==0){
-        $makers = $provider->getMakerList($this->search, $this->cross);
+        $makers = $provider->getMakerList($this->search, $this->cross);        
       } else {
-        $makers = array_merge($makers,$provider->getMakerList($this->search, $this->cross));
+        $makers = array_merge_recursive($makers, $provider->getMakerList($this->search, $this->cross));        
       }
     }
-    var_dump($makers);
     return $makers;
   }
   
