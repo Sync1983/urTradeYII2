@@ -22,7 +22,7 @@ class ProviderForum extends SearchProviderFile{
     return ["Maker","Articul","Name","model","Price","cur","Count","Quantity","code","null"];
   }
   
-  protected function _dataToStruct($data=[]){
+  protected function _dataToStruct($data=[],$add_fields=[]){
     $result = parent::_dataToStruct($data,[
       'shiping'       => 0,
       'is_original'   => 1,

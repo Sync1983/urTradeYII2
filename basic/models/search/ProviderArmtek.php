@@ -23,7 +23,7 @@ class ProviderArmtek extends SearchProviderFile{
     return ["Maker","Articul","Name","brand_artcul","armtek_code","Count","Price"];
   }
   
-  protected function _dataToStruct($data=[]){
+  protected function _dataToStruct($data=[],$add_fields=[]){
     $result = parent::_dataToStruct($data,[
       'shiping'       => 0,
       'is_original'   => 1,
