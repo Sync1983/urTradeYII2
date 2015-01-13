@@ -37,9 +37,9 @@ foreach ($maker as $key => $providers) {
     ]
     ];
 }
-if(count($items)==1){
+/*if(count($items)==1){
   $items[0]['contentOptions'] = ['class' => 'in'];
-}
+}*/
 if(count($items)==0){
   echo "По Вашему запросу \"$model->search\" ничего не найдено!";
 } else {
