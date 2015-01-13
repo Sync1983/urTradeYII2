@@ -24,12 +24,13 @@ class ProviderArmtek extends SearchProviderFile{
   }
   
   protected function _dataToStruct($data=[]){
-    $result = parent::_dataToStruct($data);
+    $result = parent::_dataToStruct($data,[
+      'shiping'       => 0,
+      'is_original'   => 1,
+      'lot_quantity'  => 1,
+      'stock'         => $this->getName()
+    ]);
     $result['maker_id'] = md5($result['producer']);
-    $result['shiping'] = 0;
-    $result['is_original'] = 1;
-    $result['stock'] = $this->getName();
-    $result['lot_quantity'] = 1;
     $result['price'] *= 1; 
     return $result;
   }

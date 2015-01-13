@@ -5,14 +5,58 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models;
-use yii;
+use Yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
 
 class MongoUser extends ActiveRecord implements IdentityInterface {
   
+  /**
+   * Возвращает общую наценку магазина пользователю
+   * @return integer
+   */
+  public function getUserOverPriver(){
+    return intval($this->getAttribute("over_price"));
+  }
+  /**
+   * Возвращает отображаемое имя пользователя
+   * @return string
+   */
+  public function getUserName(){
+    if(Yii::$app->user->isGuest){
+      return "guest";
+    }
+    if($this->getAttribute("type")==0){
+      return $this->getAttribute("name");
+    }
+    return $this->getAttribute("first_name"). " " .$this->getAttribute("second_name");
+  }
+  /**
+   * Проверяет имеет ли пользователь права администратора
+   * @return boolean 
+   * **/
+  public function isAdmin(){
+    return $this->getAttribute("role")==="admin";
+  }  
+  /**
+   * Получает список установленных пользователем наценок
+   * @return array
+   * **/
+  public function getOverPiceList(){
+    return $this->getAttribute("over_price_list");
+  }  
+  /**
+   * Сохраняет список установленных пользователем наценок
+   * @return boolena
+   * **/
+  public function setOverPiceList($list){
+    if(is_array($list)){
+      $this->setAttribute("over_price_list",$list);
+    }
+  }
+
   public function attributes(){
-    return ['_id', 'user_name', 'user_pass', 'role', 'sailt',
+    return ['_id', 'user_name', 'user_pass', 'role', 'sailt','over_price',
       'type','name','first_name','second_name','inn','kpp','addres','phone','email','over_price_list'];
   }  
   
@@ -27,47 +71,6 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   public function validatePassword($password) {
     return $this->getAttribute('user_pass') === md5($password);
   }
-  
-  /**
-   * Возвращает отображаемое имя пользователя
-   * @return string
-   */
-  public function getUserName(){
-    if(Yii::$app->user->isGuest){
-      return "guest";
-    }
-    if($this->getAttribute("type")==0){
-      return $this->getAttribute("name");
-    }
-    return $this->getAttribute("first_name"). " " .$this->getAttribute("second_name");
-  }
-
-    /**
-   * Проверяет имеет ли пользователь права администратора
-   * @return boolean 
-   * **/
-  public function isAdmin(){
-    return $this->getAttribute("role")==="admin";
-  }
-  
-  /**
-   * Получает список установленных пользователем наценок
-   * @return array
-   * **/
-  public function getOverPiceList(){
-    return $this->getAttribute("over_price_list");
-  }
-  
-  /**
-   * Сохраняет список установленных пользователем наценок
-   * @return boolena
-   * **/
-  public function setOverPiceList($list){
-    if(is_array($list)){
-      $this->setAttribute("over_price_list",$list);
-    }
-  }
-
   // =================== Interface ====================
   public function getAuthKey() {
     return $this->getAttribute("sailt");

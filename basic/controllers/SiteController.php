@@ -14,6 +14,7 @@ use app\models\SetupModel;
 use app\models\prices\OverpriceModel;
 use app\models\search\SearchModel;
 use app\models\PartRecord;
+use app\models\SearchHistoryRecord;
 
 class SiteController extends Controller
 {
@@ -121,13 +122,15 @@ class SiteController extends Controller
     }
     
     public function actionSearch(){
-      $cross = SiteModel::_instance()->cross;
+      /*$cross = SiteModel::_instance()->cross;
       $serach = SiteModel::_instance()->search;
       $over_price_model = new OverpriceModel();
       $over_price = $over_price_model->getValue(SiteModel::_instance()->op);
+      */
       
       $search = new SearchModel();      
-      if($search->load(SiteModel::_instance()->getAttributes(),'') && $search->validate()){        
+      if($search->load(SiteModel::_instance()->getAttributes(),'') && $search->validate()){
+        SearchHistoryRecord::addQuery($search->search);
         return $this->render('search',['model'=>$search]);
       }
       throw new \yii\web\NotAcceptableHttpException("Ошибка параметров запроса. Попробуйте повторить запрос");
@@ -136,22 +139,26 @@ class SiteController extends Controller
     public function actionAjaxsearchdata(){      
       $post = Yii::$app->request->post();
       if(!isset($post['text'])){
-        return;
+        return "none";        
       }
-      $search = $post['text'];      
-      if(strlen($search)<3){
+      
+      if((!$search_helper = PartRecord::getHelperByPartId($post['text']))||(count($search_helper)<2)){
         return "none";
-      }            
-      $cond = PartRecord::getCollection()->buildRegexCondition('articul',['articul',"/^$search.*/"]);    
-      $result = PartRecord::find()->where($cond)->limit(50)->all();
+      }
       $items = [];
-      foreach ($result as $item) {
+      foreach ($search_helper as $item) {
         $items[$item->getAttribute("articul")." - ".$item->getAttribute("producer")] = [$item->getAttribute("articul") => $item->getAttribute("name")];
       }
-      if(count($items)<2){
-        return "none";
-      }
+      
       return $this->renderPartial("parts/search_help",['items'=>$items]);
+    }
+    
+    public function actionAjaxLoadParts(){
+      $post = Yii::$app->request->post();
+      $model = new SearchModel();
+      $model->load($post,'');
+      $answer = $model->loadParts();
+      return json_encode(['id'=>$model->getCurrentCLSID(),'parts'=>$answer]);
     }
 
 }

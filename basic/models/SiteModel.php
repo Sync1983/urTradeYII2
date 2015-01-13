@@ -11,7 +11,7 @@ use app\models\LoginForm;
 use app\models\prices\OverpriceModel;
 
 class SiteModel extends Model {
-  /** @var $instance SiteModel **/
+  /** @var SiteModel $instance**/
   static protected $instance;
   
   public $search  = "";
@@ -19,9 +19,10 @@ class SiteModel extends Model {
   public $op      = 0;
   public $login_form;
   public $over_price = [];
+  public $history = [];
   
   public function attributes() {
-    return ['search','cross','op'];
+    return ['search','cross','op','history'];
   }
   
   public function rules() {
@@ -51,6 +52,7 @@ class SiteModel extends Model {
       SiteModel::$instance = new SiteModel();
       SiteModel::$instance->login_form = new LoginForm();      
       SiteModel::$instance->over_price = (new OverpriceModel())->prices;
+      SiteModel::$instance->history = SearchHistoryRecord::getHtmlList();
     }
     return SiteModel::$instance;
   }

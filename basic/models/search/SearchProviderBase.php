@@ -23,6 +23,19 @@ class SearchProviderBase extends Object {
     parent::__construct($config);
   }
   /**
+   * Возвращает список деталей по указанному номеру, id производителя и указанию 
+   * на использование кросс-номеров
+   * Возвращаются первые 20 позиций с минимальной ценой и сроком доставки
+   * @param string $part_id
+   * @param string $maker_id
+   * @param boolean $cross
+   * @return ['price'=>$min_price,'time'=>$min_time];
+   * @throws \BadMethodCallException
+   */
+  public function getPartList($part_id="",$maker_id="",$cross=false){    
+    throw new \BadMethodCallException("Метод должен быть описан в каждом потомке");
+  }
+  /**
    * Возвращает список фирм-производителей для указанного артикула
    * @param String $part_id артикул детали
    * @param boolean $cross указывает включать ли кросс-номера артикула
@@ -72,6 +85,30 @@ class SearchProviderBase extends Object {
     return $answer;
   }
   /**
+   * Формирует итоговую структуру, готовую для передачи в БД
+   * @param mixed $data
+   * @param mixed $add_fields Добавочные поля. Позволяет добавить\заменить стандартные поля в итоговой структуре
+   * @return mixed Итоговая структура полей для записи в БД
+   */
+  protected function _dataToStruct($data=[],$add_fields=[]){
+    $result = [];
+    foreach ($this->_stdDataStruct() as $key => $name) {
+      if(isset($data[$name])){
+        $result[$key] = $data[$name];
+      } else {
+        $result[$key] = null;
+      }        
+    }
+    
+    $result['provider'] = $this->_CLSID;
+    $result['update_time'] = time();    
+    
+    foreach ($add_fields as $key => $value) {
+      $result[$key] = $value;
+    }
+    return $result;
+  }    
+  /**
    * Очищает строку от всех символов кроме буквенно-цифровых
    * @param string $text
    * @return string
@@ -107,8 +144,13 @@ class SearchProviderBase extends Object {
    * @return array
    */
   protected function xmlToArray($xml){
-    $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);
-    $json = json_encode($xml_string);
+    try {
+      $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);    
+      $json = json_encode($xml_string,JSON_FORCE_OBJECT);
+    } catch (Exception $exc) {    
+      Yii::error($exc);
+      $json = '[]';
+    } 
     return json_decode($json,true);
   }
   /**
@@ -116,7 +158,8 @@ class SearchProviderBase extends Object {
    * @return array
    */
   protected function _stdDataStruct(){
-    return [        
+    return [
+        "search_articul" => 0,
 			  "provider"    => 0,
 			  "articul"     => 0,
 			  "producer"    => 0,

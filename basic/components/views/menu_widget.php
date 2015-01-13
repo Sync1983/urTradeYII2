@@ -3,7 +3,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use app\components\LoginWidget;
 use yii\bootstrap\ButtonDropdown;
-/* @var $model \app\models\SiteModel */
+/** @var \app\models\SiteModel $model*/
 ?>
         <nav class="navbar navbar-default navbar-fixed-top nav-atc">
           <div class="container-fluid">
@@ -47,10 +47,7 @@ use yii\bootstrap\ButtonDropdown;
                       'class' => 'btn btn-info',
                     ],
                     'dropdown' => [
-                      'items' => [
-                        ['label'=>'A','url'=>'#'],
-                        ['label'=>'Ab','url'=>'#']
-                      ]
+                      'items' => $model->history,
                     ]
                   ]);?>                
               </div>
@@ -74,20 +71,18 @@ use yii\bootstrap\ButtonDropdown;
                       'options' => [
                         'class' => 'dropdown-menu-right'                        
                       ],
-                      'items' => [
-                        ['label'=>'A','url'=>'#','onclick="bfa();"'],
-                        ['label'=>'Ab','url'=>'#']
-                      ]
+                      'items' => $model->history
                     ]
                   ]);?>                
                 <?= Html::button("Искать", ['class'=>'btn btn-info search-button','id'=>'search-button']);?>            
                 <?= Html::checkbox("cross", $model->cross, [                  
-                      'id'=>'cross',
+                      'id'    =>'cross',
                       'class' => 'big-check']); ?>            
                 <?= Html::label("Аналоги","cross",['class'=>'btn btn-info']); ?>            
                 <?= Html::dropDownList('over-price', $model->op, $model->generateOverPrice(),[
-                      'id'=>'over-price',
-                      'class'=>'over-price btn btn-info']);?>            
+                      'id'        =>'over-price',
+                      'class'     =>'over-price btn btn-info',
+                      'onchange'  =>'main.changeOverPrice();']);?>            
               </div>          
           </div>          
         </nav>    

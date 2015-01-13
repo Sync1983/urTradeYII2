@@ -15,6 +15,17 @@ class SearchProviderFile extends SearchProviderBase{
   
   private $_field_array;
   private $_data_array;
+  
+  public function getPartList($part_id = "", $maker_id = "", $cross = false) {
+    $collection = PartRecord::getCollection();    
+    $cond = $collection->buildCondition(["AND",
+              ["provider" => $this->_CLSID] ,
+              ["articul"  => strval($part_id)],
+              ["maker_id" => strval($maker_id)]
+    ]);
+    $answer = PartRecord::find()->where($cond)->orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])->limit(20)->asArray()->all();    
+    return $answer;
+  }
 
   public function getMakerList($part_id = "", $cross = false) {
     $search = PartRecord::find()->where(['articul'=>$part_id,'provider'=>  $this->_CLSID])->all();
@@ -23,8 +34,7 @@ class SearchProviderFile extends SearchProviderBase{
       $maker_list[$part->getAttribute("producer")]=[$this->_CLSID => $part->getAttribute("maker_id")];
     }
     return $maker_list;
-  }
-  
+  }  
   //================ Общие методы для файлов ==============================
   /**
    * Возвращает [имя,дату] последнего добавленного файла
@@ -102,25 +112,7 @@ class SearchProviderFile extends SearchProviderBase{
     }    
     echo "Add $count items  by  ".(time()-$time)." sec.\r\n";
     fclose($fh);
-  }
-  /**
-   * Формирует итоговую структуру, готовую для передачи в БД
-   * @param mixed $data
-   * @return mixed Итоговая структура полей для записи в БД
-   */
-  protected function _dataToStruct($data=[]){
-    $result = [];
-    foreach ($this->_data_array as $key => $name) {
-      if(isset($data[$name])){
-        $result[$key] = $data[$name];
-      } else {
-        $result[$key] = null;
-      }        
-    }
-    $result['provider'] = $this->_CLSID;
-    $result['update_time'] = time();    
-    return $result;
-  }    
+  }  
   /**
    * Преобразует строку файла в массив, где ключу из _csvLine сопоставлено
    * соответствующее значение из строки

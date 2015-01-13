@@ -23,16 +23,18 @@ class ProviderForum extends SearchProviderFile{
   }
   
   protected function _dataToStruct($data=[]){
-    $result = parent::_dataToStruct($data);
+    $result = parent::_dataToStruct($data,[
+      'shiping'       => 0,
+      'is_original'   => 1,
+      'stock'         => $this->getName()
+    ]);
+    
     $result['maker_id'] = md5($result['producer']);
-    $result['shiping'] = 0;
-    $result['is_original'] = 1;
-    $result['stock'] = $this->getName();    
-    $result['price'] *= 1; 
+    $result['price'] *= 1;       
+    $result['articul'] = $this->_clearStr($result['articul']);
     if(isset($data['model'])){
       $result['name'] .= " ".$data['model'];
     }
-    $result['articul'] = $this->_clearStr($result['articul']);
     return $result;
   }
 

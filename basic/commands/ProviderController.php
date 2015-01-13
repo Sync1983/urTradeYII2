@@ -36,7 +36,7 @@ class ProviderController extends Controller{
         //getCollection()->group([], $initial, $reduce)*/
   }
 
-  public function actionLoadprices(){
+  public function actionLoadPrices(){
     $app = Yii::$app;    
     if(!isset($app->params['providerUse'])){
       return;

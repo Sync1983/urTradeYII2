@@ -1,4 +1,5 @@
 function main_fucnt(){
+  var data_flow = [];
   
   function getDataStruct(){
     var search = $('#search-string').val();
@@ -7,6 +8,33 @@ function main_fucnt(){
     var line = ((search!=="")?("&search="+search):"")+"&cross="+cross+"&op="+overPrice;
     return encodeURI(line);    
   }
+  
+  function getDataStructArray(){
+    var search = $('#search-string').val();
+    var cross  = $('#cross').prop('checked');
+    var overPrice = $('#over-price').val();
+    var line = {
+      search:search,
+      cross:cross,
+      op:overPrice
+    };
+    return line;
+  }
+  
+  this.getDataFlow  = function(){
+    return data_flow;
+  };
+  
+  this.getActiveOverPrice = function(){
+    return $('#over-price').val();
+  };
+  
+  this.changeOverPrice  = function(){
+    var parent = $("div.panel-collapse.collapse.in");    
+    var table = parent.find("table");    
+    var table_class = $(table).dataTable();
+    table_class.api().draw(false);
+  };
   
   this.initMainMenu = function(){
     $('.nav-atc-list > li > a').each(function(index,item){      
@@ -21,7 +49,7 @@ function main_fucnt(){
     return true;
   };
   
-  this.searchClick = function(item){
+  this.searchClick = function(){
     document.location.href = "index.php?r=site/search"+getDataStruct();
     return true;
   };
@@ -50,12 +78,54 @@ function main_fucnt(){
     $("#search-helper").removeClass("show");
   };
   
+  this.loadPartList = function(item,params,table){
+    var collapse = $(item).children(".panel-collapse").attr("aria-expanded");
+    if(collapse==="true"){
+      return;
+    }    
+    var maker_id;
+    var query = getDataStructArray();
+    var table_name = table;
+    
+    function onSuccess(data){      
+      var answer = false;
+      try{
+        answer = JSON.parse(data);
+      }catch(err){
+        console.log(err);
+      }
+      if((!answer)||(!answer.id))
+        return;      
+      
+      var parts = answer.parts;
+      data_flow = data_flow.concat(parts);
+      
+      var table_class = $("#"+table).DataTable();
+      table_class.clear();
+      table_class.rows.add(data_flow).draw();      
+    }
+    
+    data_flow = [];
+    for (id in params){
+      maker_id = params[id];      
+      query['maker_id'] = maker_id;
+      query['provider'] = id;
+      this.ajax("/index.php?r=site/ajax-load-parts",query,onSuccess);      
+    }
+  };
+  
+  this.historyItemClick = function(text){
+    $('#search-string').val(text);
+    this.searchClick();
+  };
+  
   this.ajax = function(url,params,success,error){    
     jQuery.ajax({                
                 url: url,
                 type: "POST",
                 data: params,
                 error: function(xhr,tStatus,e){
+                  $(".preloader").removeClass("show");
                   console.log("Ajax error: ",xhr,tStatus,e);
                   if(error)
                     error(xhr,tStatus,e);
