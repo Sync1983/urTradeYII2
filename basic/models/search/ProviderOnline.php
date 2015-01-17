@@ -45,8 +45,8 @@ class ProviderOnline extends SearchProviderBase{
   
   public function getMakerList($part_id="",$cross=false){
     $param = ['sm'=>'1','code'=>$part_id];
-    $xml  = $this->onlineRequest($this->url, $param, false);    
-    $answer = $this->xmlToArray($xml);    
+    $xml  = $this->onlineRequest($this->url, $param, false);
+    $answer = $this->xmlToArray($xml);
     return $this->convertMakersAnswerToStandart($answer);
   }
   
@@ -55,13 +55,16 @@ class ProviderOnline extends SearchProviderBase{
    * @param mixed $data
    * @return mixed
    */
-  protected function convertMakersAnswerToStandart($data){
+  protected function convertMakersAnswerToStandart($data){    
     if(!$data || !isset($data['detail'])){
       return [];
     }
     $result = [];    
     $clsid = $this->getCLSID();
-    foreach ($data['detail'] as $key => $value) {
+    if(isset($data['detail']['ident'])){        //Такое бывает когда запись одна - массив приходит не вложенный
+      $data['detail'] = [$data['detail']];
+    }
+    foreach ($data['detail'] as $value) {      
       $name     = (isset($value['producer']))?$value['producer']:"";      
       $id       = (isset($value['ident']))?$value['ident']:"";      
       $result[$name] = [$clsid => $id];
