@@ -141,6 +141,12 @@ function main_fucnt(){
     });	
   };
   
+  this.showLoginWindow = function(id,parent){
+    var wnd = new windows(id,"Вход пользователя",true);
+    wnd.setWindowToCenter();
+    wnd.showWindow();
+  };
+  
   return this;
 }
 

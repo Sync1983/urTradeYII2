@@ -27,13 +27,12 @@ class SearchModel extends Model{
    * строки поиска артикула детали
    * @return array
    */
-  public function loadParts(){
-    $clsid = $this->provider;
-    /** @var app\models\search\SearchProviderBase $class **/
-    if(!$class = $this->getProviderByCLSID($clsid)){
+  public function loadParts(){    
+    if(!$class = $this->getProviderByCLSID($this->provider)){
       return [];
     }
-    $parts = $class->getPartList($this->search,  $this->maker_id,  $this->cross);
+    $search = SearchProviderBase::_clearStr($this->search);    
+    $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);
     $isGuest = yii::$app->user->isGuest;
     $over_price = 0;
     if (!$isGuest) {
@@ -43,6 +42,7 @@ class SearchModel extends Model{
       if(!$isGuest){
         $parts[$key]["price"] += round($over_price*$part["price"]/100,2);
       } else {
+        //Цена для гостей
         //$parts[$key]["price"] = 0;
       }
     }
@@ -54,12 +54,12 @@ class SearchModel extends Model{
    */
   public function generateMakerList(){
     $makers = [];
-    foreach ($this->_providers as $provider){
-      /* @var SearchProviderBase $provider */
+    $search = SearchProviderBase::_clearStr($this->search);    
+    foreach ($this->_providers as $provider){      
       if(count($makers)==0){
-        $makers = $provider->getMakerList($this->search, $this->cross);        
+        $makers = $provider->getMakerList($search, $this->cross);        
       } else {
-        $makers = array_merge_recursive($makers, $provider->getMakerList($this->search, $this->cross));        
+        $makers = array_merge_recursive($makers, $provider->getMakerList($search, $this->cross));        
       }
     }
     return $makers;

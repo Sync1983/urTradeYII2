@@ -8,7 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
 use app\models\SiteModel;
-use app\models\LoginForm;
+use app\models\forms\LoginForm;
 use app\models\news\NewsProvider;
 use app\models\SetupModel;
 use app\models\prices\OverpriceModel;

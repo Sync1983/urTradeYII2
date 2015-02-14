@@ -56,8 +56,24 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   }
 
   public function attributes(){
-    return ['_id', 'user_name', 'user_pass', 'role', 'sailt','over_price',
-      'type','name','first_name','second_name','inn','kpp','addres','phone','email','over_price_list'];
+    return [
+      '_id', 
+      'user_name', 
+      'user_pass', 
+      'role', 
+      'sailt',
+      'over_price',
+      'type',
+      'name',
+      'first_name',
+      'second_name',
+      'inn',
+      'kpp',
+      'addres',
+      'phone',
+      'email',
+      'over_price_list',
+      'basket'];
   }  
   
   public static function collectionName(){

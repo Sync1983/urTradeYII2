@@ -37,12 +37,13 @@ $(".out-data").DataTable({
       } else if(data.shiping*1 <2){
         $(row).addClass("text-info");
       }      
-      var op = data.price+main.getActiveOverPrice()*data.price/100;      
+      
+      var op = data.price*1+main.getActiveOverPrice()*data.price/100;      
       $(row).children("td").eq(3).text(op.toFixed(2));
       $(row).children("td").last().html("<a href=# class=\"ref-to-basket\">Добавить</a>");
     },
     rowCallback: function( row, data ) {     
-      var op = data.price+main.getActiveOverPrice()*data.price/100;      
+      var op = data.price*1+main.getActiveOverPrice()*data.price/100;      
       $(row).children("td").eq(3).text(op.toFixed(2));
     }
 });

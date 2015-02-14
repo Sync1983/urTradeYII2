@@ -1,44 +1,23 @@
 <?php
-use yii\helpers\Url;
 use yii\helpers\Html;
-use app\components\LoginWidget;
 use yii\bootstrap\ButtonDropdown;
 /** @var \app\models\SiteModel $model*/
 ?>
-        <nav class="navbar navbar-default navbar-fixed-top nav-atc">
-          <div class="container-fluid">
-            <?php if($brand):?>
-            <div class="navbar-header">
-              <a class="navbar-brand <?= $brand['class'];?>" href="<?= Url::to($brand['url'])?>">
-                <img alt="Brand" src="<?= $brand['img'];?>">
-              </a>
-            </div>              
-            <?php endif;?>
-            <div class="collapse navbar-collapse">
-              <ul class="nav navbar-nav nav-atc-list">
+        <nav class="navbar navbar-default navbar-menu" style="top:70px;">          
+          <ul class="nav-atc-list">
                 <?php foreach ($items as $name=>$params):?>
                   <li>
-                    <div class="menu-item <?= $params['class'];?>">
-                      <?php if($params['badge']):?>
-                        <span class="badge"><?= $params['badge'];?></span>
-                      <?php endif;?>
-                    </div>
-                    <a href="<?= $params['url'];?>"><?= $name;?></a>
+                    <a href="<?= $params['url'];?>" class="menu-item">
+                      <div class="menu-icon <?= $params['class'];?>"></div>
+                      <span class="menu-title"><?= $name;?><span class="badge"><?= $params['badge']?$params['badge']:"";?></span></span>
+                      <p class="menu-describe"><?= $params['describe'];?></p></a>
+                    <span class="divider">&nbsp;</span>
                   </li>
-                  <li class="divider"></li>
                 <?php endforeach;?>                
-              </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <?php if(YII::$app->user->isGuest): ?>
-                <li><button type="button" class="btn btn-info navbar-btn" onclick="login_click(this);return false;">Войти <span class="caret"></span></button></li>
-                <?php else: ?>
-                <li><a class="navbar-link" href="<?= Url::to(['site/logout']);?>" data-method="post"><?= YII::$app->user->getIdentity()->getUserName();?> (Выйти)</a></li>
-                <?php endif; ?>
-              </ul>
-            </div>  
-          </div>          
-          <?= LoginWidget::widget(['form'=> $model->login_form]) ?>                      
-          <div class="container-fluid navbar-search">          
+          </ul>              
+          
+          
+          <!--<div class="container-fluid navbar-search">          
             <div class="input-group">              
               <div class="input-group-btn">
                 <?= ButtonDropdown::widget([
@@ -85,5 +64,16 @@ use yii\bootstrap\ButtonDropdown;
                       'onchange'  =>'main.changeOverPrice();']);?>            
               </div>          
           </div>          
+          <?php if((!YII::$app->user->isGuest)&&(YII::$app->user->getIdentity()->isAdmin())):?>            
+          <div class="container-fluid navbar-search">
+            <div class="btn-toolbar" role="toolbar">
+              <div class="btn-group" role="group">
+                <a href="#" class="btn btn-info">Заказы</a>
+                <a href="#" class="btn btn-info">Клиенты</a>
+                <a href="#" class="btn btn-info">Прайс-листы</a>
+              </div>              
+            </div>
+          </div>  
+          <?php endif;?>-->
         </nav>    
         <div id="search-helper" class="search-helper"></div>

@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    background-color: #D8D8D8;
 }
 
 .wrap {
@@ -8,10 +9,42 @@ body {
     height: auto;
     margin: 0 auto -60px;
     padding: 0 0 60px;
+    width: 60%;
+    background-color: white;
 }
 
 .wrap > .container {
     padding: 145px 15px 20px;
+}
+
+.nav-atc{
+    background-color: #FFFFBA !important;
+    width: 60%;
+    height: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 20px;
+    position: fixed;
+    z-index: 1000;
+}
+
+.navbar-menu{
+    top: 80px;
+    background-color: #FFFFBA !important;
+}
+
+.navbar-menu > div.container-fluid {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.window-heading{
+  cursor: pointer;
+}
+
+.window{
+  padding: 10px 20px 10px 20px;
 }
 
 .footer {

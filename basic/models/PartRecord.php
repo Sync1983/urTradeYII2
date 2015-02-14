@@ -23,7 +23,6 @@ class PartRecord extends ActiveRecord {
         asArray()->
         all();
   }
-
   /**
    * Возвращает первые 50 позиций начинающихся с текста part_id
    * для формирования помошника поиска

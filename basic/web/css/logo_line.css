@@ -2,7 +2,12 @@
     Created on : 01.01.2015, 22:42:34
     Author     : Sync<atc58.ru>
 */
-#navbar-login{padding-bottom: 5px;background-color: #FFFFBA !important;display: none;}
+.form-horizontal{
+  font-size: 10pt;
+}
+.form-horizontal > .row > label{
+  width: 80px;
+}
 .login-icon{margin-top: 2px;width: 26px;height: 26px;background-repeat: no-repeat;cursor: pointer;display: inline-block;}
 .fb-icon{background-image: url('/img/fb_icon.png');}
 .tw-icon{background-image: url('/img/tw_icon.png');}

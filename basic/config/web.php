@@ -7,6 +7,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language'  => 'ru-RU',
+    'name'      => 'АвтоТехСнаб',
     'components' => [
         'request' => [            
             'cookieValidationKey' => 'nGL57l_yqQrai_FQAYuDEwZoYnfrJZdg',
@@ -17,6 +18,7 @@ $config = [
         'user' => [            
             'identityClass' => 'app\models\MongoUser',
             'enableAutoLogin' => true,
+            'class' => 'app\models\SiteUser'
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

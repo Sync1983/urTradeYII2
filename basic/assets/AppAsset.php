@@ -23,6 +23,7 @@ class AppAsset extends AssetBundle
         'css/logo_line.css',
     ];
     public $js = [
+        'js/windows.js',
         'js/main_script.js'
     ];
     public $depends = [

@@ -113,7 +113,7 @@ class SearchProviderBase extends Object {
    * @param string $text
    * @return string
    */
-  protected function _clearStr($text) {    
+  public static function _clearStr($text) {    
     return preg_replace("/[^a-zA-Z0-9\s]/", "", $text);    
   }
   /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\forms;
 
 use Yii;
 use yii\base\Model;
@@ -12,8 +12,7 @@ use app\models\MongoUser;
 class LoginForm extends Model
 {
     public $username;
-    public $userpass;
-    public $rememberMe = true;
+    public $userpass;    
 
     private $_user = false;
 
@@ -24,9 +23,7 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'userpass'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
+            [['username', 'userpass'], 'required'],            
             // password is validated by validatePassword()
             ['userpass', 'validatePassword'],
         ];
@@ -57,7 +54,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {          
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            return Yii::$app->user->login($this->getUser(), 3600*24*30);
         } else {          
             return false;
         }

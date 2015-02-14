@@ -2,18 +2,68 @@
     Created on : 09.01.2015, 23:19:41
     Author     : Sync<atc58.ru>
 */
-.nav-atc{width: 60%;height: 80px;margin-left: 20%;z-index: 1000;background-color: #FFFFBA !important;}
-.menu-item{  
-  top:    5px;
-  left:   22px;  
-  height: 50px;
-  width:  50px;
+
+.menu-icon{    
+  height: 25px;  
+  width:  25px;
   background-repeat: no-repeat;
-  background-size: 50px 50px;    
+  background-size: 25px 25px;  
+  position: relative;
+  float: left;
+}
+.menu-title{
+  color: black;
+  line-height: 25px;
+  //top: -25px;  
+  margin-left: 5px;
+  max-width: 120px;    
+  //border-bottom: 1px solid black;    
+  font-size: 14pt;
+  font-family: Impact, Arial, Helvetica, sans-serif;
+  display: block;
+  position: relative;     
+  float: left;
+}
+
+.menu-describe{
+  clear: both;
+  height: 30px;
+  max-width: 120px;
+  
+  //width: 90px;  
+  font-size: 6pt;
+  font-family: Arial, Helvetica, sans-serif;;
+  color: black;
+  text-align: center;  
+  display: block;
+  position: relative;  
+}
+
+.menu-item{
+  top: 5px;
+  min-width: 150px;
+  height: 30px;
+  text-decoration: none;  
+  display: block;
   position: relative;
 }
-.nav-atc-list{ height: 80px;}
-.nav-atc-list a{top: -45px;font-weight: bold;color: #000 !important;height: 80px;max-width: 90px;padding-top: 50px !important;display: box;}
+.menu-item:hover{ 
+  text-decoration: none;  
+}
+
+ul.nav-atc-list{    
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+}
+
+ul.nav-atc-list li{
+  display: inline-block;
+}
+
+
+//.nav-atc-list a{top: -45px;font-weight: bold;color: #000 !important;height: 80px;max-width: 90px;padding-top: 50px !important;display: box;}
 
 .navbar-search{
   padding: 10px 0 10px 0;

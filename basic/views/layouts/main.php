@@ -4,6 +4,8 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\SiteModel;
 use app\components\MainMenuWidget;
+use yii\helpers\Url;
+use app\components\LoginWidget;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -26,36 +28,41 @@ AppAsset::register($this);
 
 <?php $this->beginBody() ?>
     <div class="wrap"> 
-      <?= MainMenuWidget::widget([
-            'brand' => [
-              'url'   => ['site/index'],
-              'class' => 'head-logo',
-              'img'   => '/img/logo_left.png'
-            ],
+      <nav class="navbar navbar-default navbar-fixed-top nav-atc">
+        <div class="navbar-header"><a style="top: 4px;left:4px;position: relative;" href="<?= Url::home();?>"><img alt="Brand" src="/img/logo_left.png"></a></div> 
+        <?= LoginWidget::widget() ?>        
+      </nav>
+      <?= MainMenuWidget::widget([            
             'items'=>[
               'Корзина'=>[
                 'url'   => ['site/basket'],
-                'class' => 'basket',                
+                'class' => 'basket',
+                'describe' => 'Содержит сохраненные детали для формирования заказов'
               ],
               'Заказы'=>[
                 'url'   => ['site/orders'],
                 'class' => 'order',            
+                'describe' => 'Список заказанных деталей и состояние работы по ним'
               ],
               'Баланс'=>[
                 'url'   => ['site/balance'],
                 'class' => 'balance',            
+                'describe' => 'Содержит историю платежей и расшифровка списаний со счета'
               ],
               'Профиль'=>[
                 'url'   => ['site/setup'],
                 'class' => 'setup',            
+                'describe' => 'Данные учетной записи и дополнительная информация'
               ],
               'Клиентам'=>[
                 'url'   => ['site/consumers'],
                 'class' => 'consumer',            
+                'describe' => 'Предложения по сотруничеству'
               ],
               'Контакты'=>[
                 'url'   => ['site/contact'],
                 'class' => 'contact',            
+                'describe' => 'Список контактов и способов для связи'
               ],                
             ]
           ]); ?>    

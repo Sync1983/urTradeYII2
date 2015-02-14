@@ -49,8 +49,7 @@ class SiteModel extends Model {
   /** @return SiteModel **/
   static public function _instance(){
     if(!SiteModel::$instance){
-      SiteModel::$instance = new SiteModel();
-      SiteModel::$instance->login_form = new LoginForm();      
+      SiteModel::$instance = new SiteModel();      
       SiteModel::$instance->over_price = (new OverpriceModel())->prices;
       SiteModel::$instance->history = SearchHistoryRecord::getHtmlList();
     }

@@ -21,7 +21,7 @@ class ProviderOnline extends SearchProviderBase{
   
   public function getPartList($part_id="",$maker_id="",$cross=false){    
     $xml = $this->onlineRequest($this->url, ['ident'=>$maker_id],false);
-    $answer = $this->xmlToArray($xml);        
+    $answer = $this->xmlToArray($xml);
     
     if(!isset($answer['detail'])){return [];}      
     
