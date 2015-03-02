@@ -91,7 +91,7 @@ class AdminController extends Controller
       'icon'    => $icon,
       'show'    => $show
       ],false);    
-    if($item->update()){
+    if($item->save(false)){
       echo json_encode(['ok'=>1]);
     } else {
       echo json_encode(['error'=>"Ошибка записи"]);      
