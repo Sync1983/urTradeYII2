@@ -4,9 +4,10 @@
 use app\components\NewsWidget;
 ?>
 <div class="site-index">
-
     <div class="body-content">
-      <h3>Добро пожаловать на сайт АвтоТехСнаб - Вашего поставщика автомобильных запчастей.</h3>
+      <h3>Добро пожаловать на сайт АвтоТехСнаб - Вашего поставщика автомобильных запчастей.</h3>      
+      <?= NewsWidget::widget() ?>
+  
       
       <div class="row">
         <h4>Для наших клиентов мы предлагаем:</h4>
@@ -36,7 +37,7 @@ use app\components\NewsWidget;
         </div>
 
         <div class="col-lg-6">
-          <?= NewsWidget::widget(['data_provider'=>$news_provider]) ?>
+          
         </div>
 
     </div>

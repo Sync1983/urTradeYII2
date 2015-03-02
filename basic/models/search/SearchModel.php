@@ -48,22 +48,7 @@ class SearchModel extends Model{
     }
     return $parts;
   }
-  /**
-   * Возвращает список производителей запрашиваемого артикула
-   * @return array
-   */
-  public function generateMakerList(){
-    $makers = [];
-    $search = SearchProviderBase::_clearStr($this->search);    
-    foreach ($this->_providers as $provider){      
-      if(count($makers)==0){
-        $makers = $provider->getMakerList($search, $this->cross);        
-      } else {
-        $makers = array_merge_recursive($makers, $provider->getMakerList($search, $this->cross));        
-      }
-    }
-    return $makers;
-  }
+  
   /**
    * Возвращает класс поставщика по указанном CLSID
    * @param int $clsid

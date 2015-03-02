@@ -12,6 +12,7 @@ $user = Yii::$app->user;
     <div class="row col-md-8 col-md-offset-7">
       <?= Html::button("Войти",['class'=>'btn btn-default btn-sm','onClick'=>'main.showLoginWindow("login-window",this)']); ?>
       <?= Html::button("Регистрация",['class'=>'btn btn-info btn-sm']); ?>
+      <?= Html::a("Админка",Url::toRoute(['admin/index']),['class'=>'btn btn-info btn-sm']); ?>
     </div>
   </div>
 <?php else: ?>  

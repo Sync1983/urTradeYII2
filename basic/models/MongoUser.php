@@ -10,7 +10,10 @@ use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
 
 class MongoUser extends ActiveRecord implements IdentityInterface {
-  
+  public $history     = [];  
+  public $over_price  = [];
+  public $basket      = [];
+
   /**
    * Возвращает общую наценку магазина пользователю
    * @return integer

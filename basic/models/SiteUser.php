@@ -36,4 +36,13 @@ class SiteUser extends User{
     /* @var $identity MongoUser */
     return $identity->getAttribute("name");
   }
+  
+  public function getOverPiceList(){
+    if($this->isGuest){
+      return ["Без наценки"=>0];
+    }
+    $identity = $this->getIdentity();
+    /* @var $identity MongoUser */
+    return array_merge($identity->getOverPiceList(),["Без наценки"=>0]);
+  }
 }

@@ -3,82 +3,14 @@
     Author     : Sync<atc58.ru>
 */
 
-.menu-icon{    
-  height: 25px;  
-  width:  25px;
-  background-repeat: no-repeat;
-  background-size: 25px 25px;  
-  position: relative;
-  float: left;
-}
-.menu-title{
-  color: black;
-  line-height: 25px;
-  //top: -25px;  
-  margin-left: 5px;
-  max-width: 120px;    
-  //border-bottom: 1px solid black;    
-  font-size: 14pt;
-  font-family: Impact, Arial, Helvetica, sans-serif;
-  display: block;
-  position: relative;     
-  float: left;
-}
-
-.menu-describe{
-  clear: both;
-  height: 30px;
-  max-width: 120px;
-  
-  //width: 90px;  
-  font-size: 6pt;
-  font-family: Arial, Helvetica, sans-serif;;
-  color: black;
-  text-align: center;  
-  display: block;
-  position: relative;  
-}
-
-.menu-item{
-  top: 5px;
-  min-width: 150px;
-  height: 30px;
-  text-decoration: none;  
-  display: block;
-  position: relative;
-}
-.menu-item:hover{ 
-  text-decoration: none;  
-}
-
-ul.nav-atc-list{    
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  display: inline-block;
-}
-
-ul.nav-atc-list li{
-  display: inline-block;
-}
-
-
-//.nav-atc-list a{top: -45px;font-weight: bold;color: #000 !important;height: 80px;max-width: 90px;padding-top: 50px !important;display: box;}
-
-.navbar-search{
-  padding: 10px 0 10px 0;
-  background-color: #FFFFBA !important;  
-  border-radius: 0 0 5px 5px;
-}
-.navbar-search input[type="checkbox"].big-check{display: none;}
-.navbar-search input[type="checkbox"].big-check+label{font-size: 11pt;line-height: 32px;height: 34px;color: #FFF;padding: 0px 10px 0px 40px;text-align: right;vertical-align: middle;background-image: none;background-position: 2px 2px;background-repeat: no-repeat}
-.navbar-search input[type="checkbox"].big-check:checked+label{background-image: url('/img/green-checked.png'); background-size: 24px 24px;background-position: 10px 3px;}
-.navbar-search .over-price{height: 34px;font-weight: bold;text-align: center;}
-/*.
-.menu-search{top:20px;width: 100%;padding: 0px 0px 5px;background-color: #FFFFA0;border: 1px solid #58C0E7;border-top: 2px solid #58C0E7;border-radius: 0 0 15px 15px;display: inline-block;position: relative;}
-.search-line{top: 1px;width: 80%;margin-right: auto;margin-left: 10%;}
-
-*/
+.menu-icon{background-repeat: no-repeat;background-size: 25px 25px;background-position: 2px 0;}
+.menu-title{padding-left: 12px;color: black;width: 100%;line-height: 25px;font-size: 16pt;font-family: Impact, Arial, Helvetica, sans-serif;display: block;position: relative;}
+.menu-describe{color: black;top: -8px;height: 25px;line-height: 10px;padding: 0 0 0 0;font-size: 8pt;font-family: Arial, Helvetica, sans-serif;display: block;position: relative;}
+ul.nav-atc-list{text-align: center;margin: auto;padding: 0 0 0 0;list-style: outside none none;display: inline-block;position: relative;}
+ul.nav-atc-list li{color: black;width: 150px;height: 60px;padding: 0 5px 0 5px;margin-top: 5px;border-left: 2px solid rgba(0, 0, 0, 0.5);float: left;}
+ul.nav-atc-list li:hover{background-color: #BBFCFC;border-radius: 5px;border: 1px solid rgba(0, 0, 0, 0.3);border-right: none;}
+ul.nav-atc-list li:first-child{border-left: none;}
+ul.nav-atc-list li a {text-decoration: none; display: block;}
 .basket   {background-image: url('/img/basket_icon.png');}
 .balance  {background-image: url('/img/balance_icon.png');}
 .consumer {background-image: url('/img/consumer_icon.png');}

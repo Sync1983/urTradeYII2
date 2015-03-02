@@ -1,16 +1,16 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
-use app\models\SiteModel;
-use app\components\MainMenuWidget;
 use yii\helpers\Url;
+use app\assets\AppAsset;
+use app\components\MainMenuWidget;
 use app\components\LoginWidget;
+use app\components\SearchWidget;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-$model = SiteModel::_instance();
 $this->title = "АвтоТехСнаб - Ваш поставщик запчастей";
+$this->registerJs('main.init();');
 AppAsset::register($this);
 ?>
 
@@ -25,48 +25,47 @@ AppAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body>
-
 <?php $this->beginBody() ?>
     <div class="wrap"> 
       <nav class="navbar navbar-default navbar-fixed-top nav-atc">
-        <div class="navbar-header"><a style="top: 4px;left:4px;position: relative;" href="<?= Url::home();?>"><img alt="Brand" src="/img/logo_left.png"></a></div> 
+        <div class="navbar-header"><a href="<?= Url::home();?>">&nbsp;</a>&nbsp;</div> 
         <?= LoginWidget::widget() ?>        
       </nav>
-      <?= MainMenuWidget::widget([            
-            'items'=>[
-              'Корзина'=>[
+      <?php $menu_items = [];
+        $menu_items['Корзина'] = [
                 'url'   => ['site/basket'],
                 'class' => 'basket',
                 'describe' => 'Содержит сохраненные детали для формирования заказов'
-              ],
-              'Заказы'=>[
+              ];
+        $menu_items['Заказы'] = [
                 'url'   => ['site/orders'],
                 'class' => 'order',            
                 'describe' => 'Список заказанных деталей и состояние работы по ним'
-              ],
-              'Баланс'=>[
+              ];
+        $menu_items['Баланс'] = [
                 'url'   => ['site/balance'],
                 'class' => 'balance',            
                 'describe' => 'Содержит историю платежей и расшифровка списаний со счета'
-              ],
-              'Профиль'=>[
+              ];
+        $menu_items['Профиль'] = [
                 'url'   => ['site/setup'],
                 'class' => 'setup',            
                 'describe' => 'Данные учетной записи и дополнительная информация'
-              ],
-              'Клиентам'=>[
+              ];
+        $menu_items['Клиентам'] = [
                 'url'   => ['site/consumers'],
                 'class' => 'consumer',            
                 'describe' => 'Предложения по сотруничеству'
-              ],
-              'Контакты'=>[
+              ];
+        $menu_items['Контакты'] = [              
                 'url'   => ['site/contact'],
                 'class' => 'contact',            
                 'describe' => 'Список контактов и способов для связи'
-              ],                
-            ]
-          ]); ?>    
-
+              ];
+      ?>
+      <?= MainMenuWidget::widget(['items' => $menu_items]); ?>    
+      <?= SearchWidget::widget(); ?>
+      
         <div class="container">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
@@ -86,9 +85,4 @@ AppAsset::register($this);
 <div class="preloader">&nbsp;</div>
 </body>
 </html>
-<script type="text/javascript">
-  $(document).ready(function(){
-    main.initMainMenu();
-  });
-</script>
 <?php $this->endPage() ?>

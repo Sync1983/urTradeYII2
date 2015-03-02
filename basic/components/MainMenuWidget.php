@@ -7,7 +7,6 @@
 namespace app\components;
 
 use yii\bootstrap\Widget;
-use app\models\SiteModel;
 use yii\helpers\Url;
 
 class MainMenuWidget extends Widget{
@@ -31,8 +30,7 @@ class MainMenuWidget extends Widget{
       ];  
     }
     $this->getView()->registerCssFile("/css/main_menu.css");
-    return $this->render("menu_widget",[
-      'model' =>  SiteModel::_instance(),
+    return $this->render("menu_widget",[      
       'items' =>  $this->items      
     ]);
   }

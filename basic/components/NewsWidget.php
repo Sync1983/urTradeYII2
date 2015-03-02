@@ -7,23 +7,18 @@
 
 namespace app\components;
 use yii\base\Widget;
-use app\models\NewsProvider;
+use app\models\news\NewsModel;
 
 class NewsWidget extends Widget {
-  /* @var $data_provider NewsProvider */
-  public $data_provider;
-  protected $data_out;
-
+  protected $data;
 
   public function init(){
     parent::init();    
+    $this->data = NewsModel::find()->where(['show'=>true])->orderBy(['date'=>SORT_DESC])->limit(50)->all();
   }
   
-  public function run(){
-    if($this->data_provider==null){
-      return;
-    }    
-    return $this->render('news_widget',array('data'=> $this->data_provider));
+  public function run(){    
+    return $this->render('news_widget',array('data'=> $this->data));
   }
   
 }

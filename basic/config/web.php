@@ -44,13 +44,13 @@ $config = [
     'params' => $params,
 ];
 
-if (YII_ENV_DEV) {
+/*if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = ['class'=>'yii\debug\Module','allowedIPs' => ['10.0.6.101','10.0.6.104', '127.0.0.1', '::1']];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = 'yii\gii\Module';
-}
+}*/
 
 return $config;

@@ -114,7 +114,7 @@ class SearchProviderBase extends Object {
    * @return string
    */
   public static function _clearStr($text) {    
-    return preg_replace("/[^a-zA-Z0-9\s]/", "", $text);    
+    return preg_replace("/[^a-zA-Z0-9]/", "", $text);    
   }
   /**
    * ПОЛНОСТЬЮ очищает из базы запчастей все данные от указанного производителя

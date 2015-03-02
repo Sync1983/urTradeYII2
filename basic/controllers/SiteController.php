@@ -7,14 +7,14 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\data\Pagination;
-use app\models\SiteModel;
 use app\models\forms\LoginForm;
 use app\models\news\NewsProvider;
 use app\models\SetupModel;
 use app\models\prices\OverpriceModel;
-use app\models\search\SearchModel;
+use app\models\forms\SearchForm;
 use app\models\PartRecord;
 use app\models\SearchHistoryRecord;
+use app\models\search\SearchProviderBase;
 
 class SiteController extends Controller
 {
@@ -49,26 +49,9 @@ class SiteController extends Controller
             ]            
         ];
     }
-    
-    public function beforeAction($action){      
-      $model = SiteModel::_instance();
-      $get = Yii::$app->request->get();
-      if(isset($get['cross'])){
-        $get['cross'] = $get['cross']==="true"?1:0;
-      }
-      $model->load($get,'');
-      $model->validate();
-      return parent::beforeAction($action);
-    }
 
-    public function actionIndex() {
-      //var_dump(YII::$app->user);
-      $paginator = new Pagination();
-      $paginator->defaultPageSize = 3;
-      $news = new NewsProvider();
-      $paginator->totalCount = $news->totalCount;
-      $news->setPagination($paginator);      
-      return $this->render('index',['news_provider'=>$news]);
+    public function actionIndex() {      
+      return $this->render('index');
     }
 
     public function actionLogin() {
@@ -122,35 +105,32 @@ class SiteController extends Controller
     }
     
     public function actionSearch(){
-      /*$cross = SiteModel::_instance()->cross;
-      $serach = SiteModel::_instance()->search;
-      $over_price_model = new OverpriceModel();
-      $over_price = $over_price_model->getValue(SiteModel::_instance()->op);
-      */
-      
-      $search = new SearchModel();      
-      if($search->load(SiteModel::_instance()->getAttributes(),'') && $search->validate()){
-        SearchHistoryRecord::addQuery($search->search);
+      $search = new SearchForm();      
+      if($search->load(Yii::$app->request->get(),'') && $search->validate()){
+        SearchHistoryRecord::addQuery($search->search_text);
         return $this->render('search',['model'=>$search]);
       }
       throw new \yii\web\NotAcceptableHttpException("Ошибка параметров запроса. Попробуйте повторить запрос");
     }
     
-    public function actionAjaxsearchdata(){      
+    public function actionAjaxSearchData(){      
       $post = Yii::$app->request->post();
+      $post = SearchProviderBase::_clearStr($post);
       if(!isset($post['text'])){
-        return "none";        
+        return json_encode([]);
       }
       
       if((!$search_helper = PartRecord::getHelperByPartId($post['text']))||(count($search_helper)<2)){
-        return "none";
-      }
-      $items = [];
-      foreach ($search_helper as $item) {
-        $items[$item->getAttribute("articul")." - ".$item->getAttribute("producer")] = [$item->getAttribute("articul") => $item->getAttribute("name")];
+        return json_encode([]);
       }
       
-      return $this->renderPartial("parts/search_help",['items'=>$items]);
+      $items = [];
+      foreach ($search_helper as $item) {
+        $items[$item->getAttribute("articul")] = $item->getAttribute("articul")." - <b>".$item->getAttribute("producer")."</b>";
+      } 
+      ksort($items);
+      echo json_encode($items);
+      Yii::$app->end();
     }
     
     public function actionAjaxLoadParts(){

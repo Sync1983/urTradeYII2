@@ -1,61 +1,67 @@
 var windows_quene = new Object();
 
-function windows(id,name,init){
+var windows = function (id,name,init){
+  this.id = id;
+  this.item = null;
+  this.name = name;  
+  this.dwnX = 0;
+  this.dwnY = 0;
+  this.itemLeft = 0;
+  this.itemTop = 0;
+  this.drag = false;
+  
   if(windows_quene.hasOwnProperty(id))
-      return windows_quene[id];
-    
-  var id = id;
-  var item = null
-  var name = name;
-  var text = "text";
-  var dwnX = 0;
-  var dwnY = 0;
-  var itemLeft = 0;
-  var itemTop = 0;
-  var drag = false;
-  
-  function onMouseDown(event){
-    dwnX = event.clientX;
-    dwnY = event.clientY;    
-    itemLeft = item.position().left;
-    itemTop  = item.position().top;        
-    drag = true;
-  };
-  
-  function onMouseUp(event){
-    drag = false;
-  };
-  
-  function onMouseMove(event){
-    if(!drag)
-      return;
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    if(event.buttons!==1)
-      return;
-    
-    var posX = event.clientX;
-    var posY = event.clientY;
-    
-    posX = posX - dwnX;
-    posY = posY - dwnY;    
-    
-    item.css({
-      left: (itemLeft + posX)+"px",
-      top: (itemTop + posY)+"px"
-    });
-  }
-  
-  this.initWindow = function(){    
-    if(windows_quene.hasOwnProperty(id))
       return windows_quene[id];    
-    windows_quene[id] = this;
+  
+  if(init)
+    this.initWindow();
+};
+
+windows.prototype.mouseDown = function(event){
+  item = event.data;  
+  item.dwnX = event.clientX;
+  item.dwnY = event.clientY;    
+  item.itemLeft = item.item.position().left;
+  item.itemTop  = item.item.position().top;        
+  item.drag = true;
+};
+
+windows.prototype.mouseUp = function(event){
+  item = event.data;  
+  item.drag = false;
+};
+
+windows.prototype.mouseMove = function(event){
+  item = event.data;
+  if(item.drag!==true)
+        return;
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  if(event.buttons!==1)
+    return;
+
+  var posX = event.clientX;
+  var posY = event.clientY;
+
+  posX = posX - item.dwnX;
+  posY = posY - item.dwnY;    
+
+  item.item.css({
+    left: (item.itemLeft + posX)+"px",
+    top: (item.itemTop + posY)+"px"
+  });
+};
+
+windows.prototype.initWindow = function(){
     
-    text = $("#"+id).html();
-    console.log(text);
-    $("#"+id).remove();    
-    text = '<div id="'+id+'" class="panel panel-primary">'+
-              '  <div class="panel-heading window-heading">'+name+'<a href="#" class="pull-right close" onclick="windowsCloseById(\''+id+'\');"><span aria-hidden="true">&times;</span></a></div>'+
+    if(windows_quene.hasOwnProperty(this.id))
+      return windows_quene[this.id];    
+    windows_quene[this.id] = this;
+    
+    text = $("#"+this.id).html();    
+    $("#"+this.id).remove();    
+    text = '<div id="'+this.id+'" class="panel panel-primary">'+
+              '  <div class="panel-heading window-heading">'+this.name+'<a href="#" class="pull-right close" onclick="windowsCloseById(\''+this.id+'\');"><span aria-hidden="true">&times;</span></a></div>'+
               '   <div class="panel-body">'+
               '     <div class="window">'+
               text +
@@ -64,48 +70,50 @@ function windows(id,name,init){
               '  </div>'+
               '</div>';      
     $( "body" ).append(text);
-    item = $("#"+id);
-    item.children("div.panel-heading").mousedown(onMouseDown);    
-    item.children("div.panel-heading").mouseup(onMouseUp);    
-    $("body").mousemove(onMouseMove);    
-    item.css({
+    this.item = $("#"+this.id);
+    
+    this.item.children("div.panel-heading").mousedown(this,this.mouseDown);    
+    this.item.children("div.panel-heading").mouseup(this,this.mouseUp);    
+    $("body").mousemove(this,this.mouseMove);
+    
+    this.item.css({
       'z-index': 1001,
       'position':'fixed'});
     this.hideWindow();
     this.visibly = false;
   };
-  
-  this.setPosititon = function(posX,posY){
-    if(item===null)
+
+windows.prototype.setPosititon = function(posX,posY){
+    if(this.item===null)
       return false;
-    item.css({
+    this.item.css({
       'left': posX+"px",
       'top':posY+"px"});
     return true;
   };
   
-  this.showWindow = function(){
-    if((this.visibly)||(item===null))
+windows.prototype.showWindow = function(){
+    if((this.visibly)||(this.item===null))
       return false;
-    item.removeClass("hidden");    
+    this.item.removeClass("hidden");    
     this.visibly = true;
     return true;
   };
   
-  this.hideWindow = function(){
-    if((!this.visibly)||(item===null))
+windows.prototype.hideWindow = function(){
+    if((!this.visibly)||(this.item===null))
       return false;
-    item.addClass("hidden");
+    this.item.addClass("hidden");
     this.visibly = false;
     return true;
   };
   
-  this.setWindowToCenter = function(){
-    if(item===null)
+windows.prototype.setWindowToCenter = function(){
+    if(this.item===null)
       return false;
-    var width = item.width()/2;
-    var height= item.height()/2;
-    item.css({
+    var width = this.item.width()/2;
+    var height= this.item.height()/2;
+    this.item.css({
       'left':'50%',
       'top':'50%',
       'margin-left':'-'+width.toFixed(0)+'px',
@@ -113,10 +121,6 @@ function windows(id,name,init){
     });    
   };
   
-  if(init)
-    this.initWindow();
-}
-
 function windowsCloseById(id){  
   windows_quene[id+""].hideWindow();
 }
