@@ -9,7 +9,6 @@ use yii\mongodb\ActiveRecord;
 use yii\helpers\Html;
 
 class NewsModel extends ActiveRecord {  
-  public $show = false;
   
   public function attributes(){
     return ['_id', 'icon', 'header', 'text', 'date', 'show'];
