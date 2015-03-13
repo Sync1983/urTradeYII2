@@ -12,7 +12,7 @@ use app\models\search\SearchProviderBase;
 class SearchModel extends Model{
   
   public $cross;
-  public $search;
+  public $search_text;
   public $op;
   public $provider;
   public $maker_id;
@@ -31,12 +31,12 @@ class SearchModel extends Model{
     if(!$class = $this->getProviderByCLSID($this->provider)){
       return [];
     }
-    $search = SearchProviderBase::_clearStr($this->search);    
+    $search = SearchProviderBase::_clearStr($this->search_text);    
     $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);
     $isGuest = yii::$app->user->isGuest;
     $over_price = 0;
     if (!$isGuest) {
-      $over_price = yii::$app->user->getIdentity()->getUserOverPriver();
+      $over_price = yii::$app->user->getIdentity()->getAttribute("over_price");
     }
     foreach ($parts as $key=>$part){
       if(!$isGuest){
@@ -86,7 +86,7 @@ class SearchModel extends Model{
       if(isset($default_data[$provider])){
         $default = $default_data[$provider];
       }      
-      $class = yii::createObject($provider,[$default]);
+      $class = yii::createObject($provider,[$default,[]]);
       $this->_providers[$class->getCLSID()] = $class;
     }
   }
@@ -94,7 +94,7 @@ class SearchModel extends Model{
   public function rules() {
     return [
       ['cross','boolean'],
-      ['search','string'],
+      ['search_text','string'],
       ['op','string'],
       ['provider','integer'],
       ['maker_id','string'],      
@@ -102,7 +102,7 @@ class SearchModel extends Model{
   }
   
   public function attributes() {
-    return ['cross','search','op','maker_id','provider'];
+    return ['cross','search_text','op','maker_id','provider'];
   }
   
   

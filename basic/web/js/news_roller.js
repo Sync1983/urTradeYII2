@@ -15,7 +15,7 @@ news_roller.prototype.init = function(){
     this.right  = this.head.children("button.new-scroll-right");
     this.left.attr('disabled',1);
     var width = this.clip.width()/3.4;
-    console.log(childs,width);
+    
     this.roller.children().width(width);
     
     this.right.click(this,this.onRight);

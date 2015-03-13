@@ -18,7 +18,13 @@
         "yiisoft/yii2": "*",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-	"yiisoft/yii2-mongodb": "*"
+        "yiisoft/yii2-mongodb": "*",        
+        "kartik-v/yii2-krajee-base": "@dev",
+        "kartik-v/yii2-grid": "*",
+        "kartik-v/yii2-checkbox-x": "*",
+        "bower-asset/bootbox": "*",
+        "bower-asset/bootstrap-select":"*",
+        "kartik-v/yii2-mpdf": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

@@ -5,12 +5,12 @@ use yii\web\View;
 
 $this->title = 'Поиск';
 $this->params['breadcrumbs'][] = $this->title;
-/* @var  $model SearchModel */
+/* @var  $search_model SearchModel */
 /* @var $this View */
 $this->registerCssFile("/css/dataTables.css");
 $this->registerJsFile("/js/jquery.dataTables.min.js", ['depends'=>'yii\web\JqueryAsset']);
 
-$maker = $model->generateMakerList();
+$maker = $search_model->generateMakerList();
 ksort($maker,SORT_STRING);
 
 $items = [];

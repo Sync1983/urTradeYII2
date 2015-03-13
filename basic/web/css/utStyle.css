@@ -2,24 +2,29 @@
     Created on : 11.12.2014, 23:24:02
     Author     : Sync
 */
-.container{margin: -10px 20%;width: 60%;position: relative;}
+/*.container{margin: -10px 20%;width: 60%;position: relative;}
 .contact-image{top: -8px;position: relative;}
 .contact-ref{font-size: 14pt;font-weight: bold;}
 .index-big-icon{left: 50%;width: 136px;height: 136px;margin-left: -68px;position: relative;}
 .index-icon-text{font-size: 14pt;font-weight: bold;text-align: center;}
 .index-list{list-style-image: url(/img/list_item.png);font-size: 14pt;font-weight: bold;text-align: left;}
 
+#news-roller > .panel-heading{
+  height: 20px;
+  line-height: 10px;
+  font-size: 10pt;
+  padding: 5px;
+}
+
 .news-line{
   text-align: center;
-  padding: 0 15px;
-  width: 220px;
+  padding: 0 15px;  
   height: 220px;
   border: none;
   border-right: 2px solid rgba(120,120,120,0.5);
   display: inline-block;
   vertical-align: middle;
-  cursor: pointer;
-  z-index: 1;
+  cursor: pointer;  
 }
 
 .news-line:last-of-type {
@@ -29,16 +34,15 @@
 .news-clip{
   margin: 0 auto;
   width: 90%;
-  position: relative;
-  z-index: 1001;
-  overflow: hidden;
   max-height: 240px;
+  overflow: hidden;
+  position: relative;  
 }
 
 .news-roller{  
+  height: 240px;    
   line-height: 12px;
   font-size: 10px;  
-  height: 240px;    
   display: inline-block;
   position: relative;
 }
@@ -61,7 +65,14 @@ button.new-scroll-right{
 }
 
 .news-line label.news-date{
+  top: 0px;
+  width: 100%;
   font-weight: bold;
+  position: relative;
+}
+
+.news-line label.news-header{
+  width: 90%;
 }
 
 .setup-style label{min-width: 200px;}
@@ -82,4 +93,4 @@ button.new-scroll-right{
 .provider-header > div.panel-heading{
   height: 30px;
   padding: 7px 0 0 15px;
-}
+}*/
