@@ -37,16 +37,31 @@ class SearchModel extends Model{
     $over_price = 0;
     if (!$isGuest) {
       $over_price = yii::$app->user->getIdentity()->getAttribute("over_price");
+    } else {
+      $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;
     }
-    foreach ($parts as $key=>$part){
-      if(!$isGuest){
-        $parts[$key]["price"] += round($over_price*$part["price"]/100,2);
-      } else {
-        //Цена для гостей
-        //$parts[$key]["price"] = 0;
-      }
+    $answer_data = [];    
+    foreach ($parts as $key=>$part){      
+        $data = $parts[$key];
+        $data["price"] += round($over_price*$part["price"]/100,2);
+        if(is_array($data["info"])){
+          $data["info"] = "";
+        }
+        $answer_data[$key] = [
+          "id"          => strval($data["_id"]),
+          "articul"     => $data["articul"],
+          "producer"    => $data["producer"],
+          "name"        => $data["name"],
+          "price"       => $data["price"],
+          "shiping"     => $data["shiping"],
+          "info"        => strval($data["info"]),
+          "update_time" => $data["update_time"],
+          "is_original" => boolval($data["is_original"]),
+          "count"       => $data["count"],
+          "lot_quantity"=> $data["lot_quantity"]
+        ];
     }
-    return $parts;
+    return $answer_data;
   }
   
   /**

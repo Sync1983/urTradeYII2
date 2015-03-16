@@ -6,6 +6,7 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models\search;
+use yii;
 use app\models\search\SearchProviderBase;
 use app\models\PartRecord;
 
@@ -21,6 +22,7 @@ class ProviderOnline extends SearchProviderBase{
   
   public function getPartList($part_id="",$maker_id="",$cross=false){    
     $xml = $this->onlineRequest($this->url, ['ident'=>$maker_id],false);
+    
     $answer = $this->xmlToArray($xml);
     
     if(!isset($answer['detail'])){return [];}      
@@ -28,11 +30,12 @@ class ProviderOnline extends SearchProviderBase{
     if(isset($answer['detail']['uid'])){      //Такое бывает когда запись одна - массив приходит не вложенный
       $answer['detail'] = [$answer['detail']];
     }
-    
-    PartRecord::deleteAll(['provider'=>$this->_CLSID,'search_articul'=>$part_id]);
+    $uid = yii::$app->user->getId();
+    PartRecord::deleteAll(['provider'=>$this->_CLSID,'search_articul'=>$part_id,'for_user'=>$uid]);
     foreach ($answer['detail'] as $part){
       $item = $this->_dataToStruct($part,['search_articul'=>$part_id,'maker_id'=>$maker_id,'lot_quantity'=>1]);      
       $part_model = new PartRecord();
+      $part_model->setAttribute("for_user", $uid);
       $part_model->setAttributes($item,false);
       $part_model->save();
     }    

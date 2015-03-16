@@ -126,12 +126,14 @@ main_fucnt.prototype.loadPartList = function(item,params,table){
       return;      
     
     var parts = answer.parts;
-    data_flow = Array.concat(data_flow,parts);
+    data_flow = data_flow.concat(parts);
+    main.data_flow = data_flow;
     
     var table_class = $("#"+table).DataTable();
     table_class.clear();
     table_class.rows.add(data_flow).draw();      
   }
+  
   for (id in form_query){
     var name = form_query[id].name;
     var value = form_query[id].value;      
@@ -166,7 +168,31 @@ main_fucnt.prototype.insertSearch = function(item){
   $("#search-helper").removeClass("show");
 };
 
-
-
-
-
+main_fucnt.prototype.addToBasket = function(e){  
+  e.stopPropagation();
+  var data = {};
+  var id = e.data;
+  for(var i in main.data_flow){
+    if(main.data_flow[i].id===id){
+      data = main.data_flow[i];
+    }
+  };
+  var wndCount = $('#count-request');
+  wndCount.find("input#basketaddform-id").val(id);
+  wndCount.find("#add-describe").html("<b>"+data.articul+"</b> "+data.name);
+  wndCount.find("#add-step").html("<b>"+data.lot_quantity+"</b> шт.");  
+  wndCount.find("input#basketaddform-count").attr('step',data.lot_quantity);
+  wndCount.find("input#basketaddform-count").val(data.lot_quantity);
+  if(data.info){
+    wndCount.find("#add-info").text(data.info);  
+    wndCount.find("div.basket-info").show();    
+  } else {
+    wndCount.find("div.basket-info").hide();
+  };
+  var form = $("#basket-add-form").each(function(){
+    $(this).find('.has-error').removeClass('has-error');
+    $(this).find('.has-success').removeClass('has-success');
+    $(this).find('.help-block').text('');
+  });
+  wndCount.modal();
+};

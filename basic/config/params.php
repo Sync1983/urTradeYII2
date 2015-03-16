@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'guestOverPrice'  => 18,          //Наценка %
     'adminEmail' => 'sales@atc58.ru',
     'providerUse' =>[
       app\models\search\ProviderOnline::class,

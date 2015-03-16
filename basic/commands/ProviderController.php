@@ -51,7 +51,7 @@ class ProviderController extends Controller{
       if(isset($default_data[$provider])){
         $default = $default_data[$provider];
       }      
-      $this->_providers[] = yii::createObject($provider,[$default]);      
+      $this->_providers[] = yii::createObject($provider,[$default,[]]);      
     }
     foreach ($this->_providers as $key=>$provider){
       $parents = class_parents($provider);
