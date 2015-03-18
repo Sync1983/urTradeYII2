@@ -8,9 +8,10 @@ namespace app\models;
 use Yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
+use app\models\PartRecord;
 
 class MongoUser extends ActiveRecord implements IdentityInterface {  
-  public $basket      = [];
+  protected $_list    = [];
   
   public static function createNew($login,$pass,$name="new name"){
     $old_user = MongoUser::findByUsername($login);
@@ -46,7 +47,6 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $this->informer = $arr;
     $this->save();
   }
-
   /**
    * Возвращает отображаемое имя пользователя
    * @return string
@@ -74,6 +74,30 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   public function getOverPiceList(){
     return $this->getAttribute("over_price_list");
   } 
+  /**
+   * Добавляет деталь в корзину пользователя
+   * @param PartRecord $part
+   */
+  public function addPartToBasket($part,$notify=true){
+    /* @var $basket_part PartRecord */
+    if($notify){
+      $this->addNotify("Деталь добавлена в корзину");
+    }
+    foreach ($this->_list as $basket_part){
+      if($part->compare($basket_part)){
+        $basket_part->setAttribute("sell_count", $basket_part->getAttribute("sell_count")+$part->getAttribute("sell_count"));
+        return;
+      }
+    }
+    $this->_list[] = $part;    
+  }
+  /**
+   * Возвращает список деталей в корзине
+   * @return array
+   */
+  public function getBasketParts(){
+    return $this->_list;
+  }
 
   public function attributes(){
     return [
@@ -108,6 +132,29 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   
   public function validatePassword($password) {
     return $this->getAttribute('user_pass') === md5($password);
+  }
+
+  public function beforeSave($insert) {    
+    $this->basket = [];    
+    $list = [];
+    foreach ($this->_list as $part) {      
+      $list[] = $part->getAttributes();
+    }
+    
+    $this->basket = $list;
+    return parent::beforeSave($insert);
+  }
+  
+  public function afterFind() {
+    parent::afterFind();
+    if(!$this->basket){
+      return;
+    }
+    foreach ($this->basket as $part){
+      $list_part = new PartRecord();
+      $list_part->setAttributes($part,false);
+      $this->_list[] = $list_part;
+    }
   }
   
   // =================== Interface ====================

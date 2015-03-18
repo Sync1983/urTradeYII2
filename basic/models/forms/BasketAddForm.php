@@ -72,42 +72,41 @@ class BasketAddForm extends Model
       }
       return true;      
     }
-    
+    /**
+     * Добавляем деталь в корзину пользователя
+     */
     public function addToUserBasket(){
       $part = PartRecord::getById($this->id);      
       $part->sell_count  = intval($this->count);
       $part->price_change = intval($this->price_change);
+      $part->update_time = time();
+      
+      /* @var $user MongoUser*/
       $user = Yii::$app->user->identity;
-      $list = $user->basket;
-      $list[] = $part->getAttributes();
-    }
-    
+      $user->addPartToBasket($part);      
+      $user->save();
+    }    
+    /**
+     * Добавляем деталь в гостевую корзину
+     */    
     public function addToGuestBasket(){
       $part = PartRecord::getById($this->id);      
       $part->sell_count  = intval($this->count);
       $part->price_change = intval($this->price_change);
+      $part->update_time = time();
       
-      $cookie_basket = Yii::$app->getRequest()->getCookies()->getValue("basket",false);
-      $basket_id = json_decode($cookie_basket);
-      if($cookie_basket){
+      $basket_id = GuestBasket::getIdFromCookie();
+      if($basket_id){
         $basket = GuestBasket::findOne(["_id"=>new MongoId($basket_id)]);        
       } else {
-        $basket = false;
-      }
-      
-      if(!$basket){
         $basket = new GuestBasket();
         $basket->save();        
-        $basket_id = strval($basket->getAttribute("_id"));
+        $basket_id = strval($basket->getAttribute("_id"));        
+        GuestBasket::setIdToCookie($basket_id);
       }
       
       $basket->addPart($part);
       $basket->save();
-      
-      $cookie = new Cookie(['name'=>"basket"]);      
-      $cookie->value = json_encode($basket_id);
-      $cookie->expire= time()+30*24*3600;
-      Yii::$app->getResponse()->getCookies()->add($cookie);      
     }
     
 }

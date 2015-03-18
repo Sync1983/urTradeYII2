@@ -66,7 +66,7 @@ $form = $this->params['search_model'];
       <nav class="navbar-2">
         <ul class="nav-line">
           <li>
-            <a class="disabled" href="<?= Url::to(['site/basket']);?>">
+            <a class="disabled" href="<?= Url::to(['basket/index']);?>">
               <p class="menu-title basket">Корзина</p>
               <p class="menu-describe">Содержит сохраненные детали для формирования заказов</p>
             </a>

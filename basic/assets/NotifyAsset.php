@@ -28,7 +28,7 @@ class NotifyAsset extends AssetBundle{
   //protected vars
   //private vars  
   //============================= Public =======================================
-  /*public static function overrideSystemConfirm() {
+  public static function overrideSystemConfirm() {
         Yii::$app->view->registerJs('
             yii.confirm = function(message, ok, cancel) {
                 bootbox.confirm(message, function(result) {
@@ -36,7 +36,7 @@ class NotifyAsset extends AssetBundle{
                 });
             }
         ');
-    }*/
+    }
   //============================= Protected ====================================
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================

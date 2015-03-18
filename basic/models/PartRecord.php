@@ -11,7 +11,7 @@ use yii\mongodb\ActiveRecord;
 class PartRecord extends ActiveRecord {
   protected $_compare_fields =[    
       "provider", "articul","producer","maker_id","name","price","shiping","stock",
-      "is_original","lot_quantity","price_change"
+      "is_original","lot_quantity"
   ];
   
   /**
@@ -67,6 +67,28 @@ class PartRecord extends ActiveRecord {
   }
 
   //====================================================================
+  public function rules() {
+    return [
+      [['sell_count'],'checkSellCount'],
+      /*[['price'],'number'],
+      ['shiping','integer'],
+      [["articul","producer","name","comment"],'string'],
+      [["update_time"],"integer"]*/
+    ];
+  }
+  
+  public function checkSellCount($attribute,$params){
+    if(!$this->hasAttribute($attribute)){
+      return true;
+    }
+    $mod = $this->sell_count % $this->lot_quantity;
+    if($mod!==0){
+      $this->addError($attribute, "Количество детаелй должно быть кратно ".$this->lot_quantity." шт.");
+      return false;
+    }
+    return true;
+  }
+
   public static function collectionName(){
     return "parts";
   }  
@@ -75,7 +97,8 @@ class PartRecord extends ActiveRecord {
     return ['_id','search_articul',  
       "provider", "articul","producer","maker_id",
       "name","price","shiping","stock","info",
-      "update_time","is_original","count","lot_quantity", "for_user","price_change","sell_count"];
+      "update_time","is_original","count","lot_quantity", 
+      "for_user","price_change","sell_count","comment"];
   }
   
   public function beforeSave($insert) {

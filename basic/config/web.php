@@ -14,6 +14,9 @@ $config = [
         ],
     ],
     'components' => [
+        'assetManager' => [          
+          'forceCopy'  => true,
+        ], 
         'request' => [            
             'cookieValidationKey' => 'nGL57l_yqQrai_FQAYuDEwZoYnfrJZdg',
         ],

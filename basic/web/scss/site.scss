@@ -133,7 +133,7 @@ ul.nav-line {
 
 .menu-describe {padding: 5px 0;height: ($nav_height/2);width: 90%;line-height: 10px;font-weight: bold;font-size: 8pt;font-family: Arial, Helvetica, sans-serif;}
 
-input[type="checkbox"]{
+/*input[type="checkbox"]{
   display: none;
   text-align: right;
   vertical-align: middle;
@@ -158,7 +158,7 @@ input[type="checkbox"]{
     font-weight: bold;
     background-image: url('/img/checked.png');
   }
-}
+}*/
 
 select.over-price{
   height: 34px;
@@ -379,4 +379,8 @@ table.over-price-panel{
   .carousel-control.right{
       background-image: linear-gradient(to right, transparent 0%,#269ABC 100%)      
     }
+}
+
+.basket-time{
+  font-size: 8pt; 
 }

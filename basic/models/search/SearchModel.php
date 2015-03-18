@@ -32,18 +32,12 @@ class SearchModel extends Model{
       return [];
     }
     $search = SearchProviderBase::_clearStr($this->search_text);    
-    $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);
-    $isGuest = yii::$app->user->isGuest;
-    $over_price = 0;
-    if (!$isGuest) {
-      $over_price = yii::$app->user->getIdentity()->getAttribute("over_price");
-    } else {
-      $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;
-    }
+    $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);    
+    
     $answer_data = [];    
     foreach ($parts as $key=>$part){      
         $data = $parts[$key];
-        $data["price"] += round($over_price*$part["price"]/100,2);
+        $data["price"] = yii::$app->user->getUserPrice($data["price"]);
         if(is_array($data["info"])){
           $data["info"] = "";
         }

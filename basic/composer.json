@@ -19,12 +19,16 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-mongodb": "*",        
-        "kartik-v/yii2-krajee-base": "@dev",
+        "kartik-v/yii2-krajee-base": "*",
         "kartik-v/yii2-grid": "*",
         "kartik-v/yii2-checkbox-x": "*",
+        "kartik-v/yii2-editable": "*",
+        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-mpdf": "*",
         "bower-asset/bootbox": "*",
+        "bower-asset/bootstrap":"*",
         "bower-asset/bootstrap-select":"*",
-        "kartik-v/yii2-mpdf": "@dev"
+        "yiisoft/jquery-pjax":"*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

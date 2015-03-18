@@ -142,28 +142,32 @@ ul.nav-line {
   font-size: 8pt;
   font-family: Arial, Helvetica, sans-serif; }
 
-input[type="checkbox"] {
+/*input[type="checkbox"]{
   display: none;
   text-align: right;
-  vertical-align: middle; }
-  input[type="checkbox"] + label {
-    font-size: 11pt;
+  vertical-align: middle;
+  
+  & + label{
+    font-size: 11pt;    
     height: 34px;
     color: #FFF;
     padding: 6px 10px 0px 40px;
     text-align: center;
-    vertical-align: middle;
-    background-image: url("/img/unchecked.png");
+    vertical-align: middle;    
+    background-image: url('/img/unchecked.png');
     background-repeat: no-repeat;
     background-size: 24px 24px;
     background-position: 5px 4px;
-    position: relative; }
-  input[type="checkbox"] + label:hover {
-    background-image: url("/img/over_checked.png"); }
-  input[type="checkbox"]:checked + label {
+    position: relative;
+  }
+  & + label:hover{
+    background-image: url('/img/over_checked.png');    
+  }
+  &:checked + label {
     font-weight: bold;
-    background-image: url("/img/checked.png"); }
-
+    background-image: url('/img/checked.png');
+  }
+}*/
 select.over-price {
   height: 34px; }
 
@@ -321,5 +325,8 @@ table.over-price-panel {
   background-image: linear-gradient(to right, #269ABC 0%, transparent 100%); }
 .carousel .carousel-control.right {
   background-image: linear-gradient(to right, transparent 0%, #269ABC 100%); }
+
+.basket-time {
+  font-size: 8pt; }
 
 /*# sourceMappingURL=site.css.map */

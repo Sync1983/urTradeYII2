@@ -9,6 +9,7 @@ namespace app\models;
 
 use yii\mongodb\ActiveRecord;
 use app\models\PartRecord;
+use yii\web\Cookie;
 
 class GuestBasket extends ActiveRecord{
   //public vars
@@ -16,6 +17,32 @@ class GuestBasket extends ActiveRecord{
   public $_list =[];
   //private vars  
   //============================= Public =======================================
+  /**
+   * Возвращает ID гостевой корзины, сохраненной в куках
+   * @return string basket_id 
+   */
+  public static function getIdFromCookie(){
+    $cookie_basket = Yii::$app->getRequest()->getCookies()->getValue("basket",false);
+    if(!$cookie_basket){
+      return false;      
+    }
+    $basket_id = json_decode($cookie_basket);
+    if(!$basket_id){
+      return false;
+    }
+    $cookie = new Cookie(['name'=>"basket"]);      
+    $cookie->value = json_encode($basket_id);
+    $cookie->expire= time()+30*24*3600;
+    Yii::$app->getResponse()->getCookies()->add($cookie); 
+    return $basket_id;
+  }
+  
+  public static function setIdToCookie($basket_id){
+    $cookie = new Cookie(['name'=>"basket"]);      
+    $cookie->value = json_encode(strval($basket_id));
+    $cookie->expire= time()+30*24*3600;
+    Yii::$app->getResponse()->getCookies()->add($cookie); 
+  }
   /**
    * Добавляет деталь в гостевую корзину с проверкой на дублирование
    * @param PartRecord $part

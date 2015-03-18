@@ -56,7 +56,7 @@ class SiteUser extends User{
     /* @var $identity MongoUser */
     return $identity->getAttribute("name");
   }
-  /*
+  /**
    * Поверяет имеет ли пользователь права администратора
    */
   public function isAdmin(){
@@ -67,7 +67,10 @@ class SiteUser extends User{
     /* @var $identity MongoUser */
     return $identity->isAdmin();    
   }
-  
+  /**
+   * Проверяет является ли пользователь компанией
+   * @return boolean
+   */
   public function isCompany(){
     if($this->isGuest){
       return false;
@@ -76,7 +79,10 @@ class SiteUser extends User{
     /* @var $identity MongoUser */
     return $identity->type=="company";    
   }
-
+  /**
+   * Возвращает список наценок пользователя
+   * @return type
+   */
   public function getOverPiceList(){
     if($this->isGuest){
       return ["Без наценки"=>0];
@@ -85,7 +91,11 @@ class SiteUser extends User{
     /* @var $identity MongoUser */
     return array_merge($identity->getOverPiceList(),["Без наценки"=>0]);
   }
-  
+  /**
+   * Сохраняет список наценок
+   * @param type $list
+   * @return boolean
+   */
   public function saveOverPriceList($list = []){
     if($this->isGuest){
       return false;
@@ -93,5 +103,28 @@ class SiteUser extends User{
     $identity = $this->getIdentity();
     $identity->setAttribute('over_price_list', $list);
     return $identity->save();
+  }
+  /**
+   * Пересчитывает сумму start_price с наценкой пользователя или
+   * общей наценкой для гостей
+   * @param float $start_price
+   * @return float
+   * @throws \yii\base\InvalidValueException
+   */
+  public function getUserPrice($start_price){
+    if(!is_numeric($start_price)){
+      throw new \yii\base\InvalidValueException("Ошибка в формате цены");
+    }
+    $start_price = floatval($start_price);
+    $over_price = 0;    
+    if (!$this->isGuest) {
+      $over_price = $this->getIdentity()->getAttribute("over_price");
+      if(!$over_price){
+        $over_price = 18;
+      }
+    } else {
+      $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;
+    }    
+    return $start_price + round($over_price*$start_price/100,2);
   }
 }
