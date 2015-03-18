@@ -6,8 +6,9 @@ use app\components\NewsWidget;
 <div class="site-index">
     <div class="body-content">
       <h3>Добро пожаловать на сайт АвтоТехСнаб - Вашего поставщика автомобильных запчастей.</h3>      
-      <?= NewsWidget::widget() ?>
-  
+      <?= NewsWidget::widget()?>
+      
+      
       
       <div class="row">
         <h4>Для наших клиентов мы предлагаем:</h4>
@@ -39,6 +40,6 @@ use app\components\NewsWidget;
         <div class="col-lg-6">
           
         </div>
-
+      </div>
     </div>
 </div>

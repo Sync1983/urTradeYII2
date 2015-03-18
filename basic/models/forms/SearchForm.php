@@ -13,9 +13,10 @@ use app\models\search\SearchProviderBase;
 class SearchForm extends Model{
   protected $_providers;
   
-  public $cross = true;
+  public $cross = false;
   public $search_text;
   public $over_price = 0;
+  public $over_price_list = [];
   public $history = [];
   
   /**
@@ -39,33 +40,32 @@ class SearchForm extends Model{
   
   public function init() {
     parent::init();
-    if(!isset(yii::$app->params['providerUse'])){
+    $param = isset(yii::$app->params['providerUse'])?yii::$app->params['providerUse']:false;
+    $default_data = isset(yii::$app->params['providers'])?yii::$app->params['providers']:false;
+    if( !$param || !$default_data|| !is_array($param)){
       return;
     }
-    $param = yii::$app->params['providerUse'];
-    $default_data = yii::$app->params['providers'];
-    if(!is_array($param)){
-      return;
-    }
+    
     foreach ($param as $provider){
       $default = [];
       if(isset($default_data[$provider])){
         $default = $default_data[$provider];
       }      
-      $class = yii::createObject($provider,[$default]);
+      
+      $class = yii::createObject($provider,[$default,[]]);
       $this->_providers[$class->getCLSID()] = $class;
     }
-    $this->over_price = yii::$app->user->getOverPiceList();
+    $this->over_price_list = yii::$app->user->getOverPiceList();
     $op_items = [];    
-    foreach ($this->over_price as $key=>$value){
+    foreach ($this->over_price_list as $key=>$value){
       $op_items[$value] = $key."($value%)";
     }
     ksort($op_items);
-    $this->over_price = $op_items;
+    $this->over_price_list = $op_items;
   }
   
   public function validateSearch($attribute, $params){
-    //var_dump($attribute);
+    $this->$attribute = SearchProviderBase::_clearStr($this->$attribute);
     return true;
   }
 

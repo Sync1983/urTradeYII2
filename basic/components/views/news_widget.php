@@ -4,32 +4,39 @@ use app\models\news\NewsModel;
 use yii\web\View;
 /* @var $data NewsProvider */
 /* @var $this View */
-$this->registerJsFile('/js/news_roller.js',['depends' => ['yii\web\YiiAsset']]);
+$this->registerJs("$('.carousel').carousel();");
 ?>
-<div class="panel panel-info" style="margin-top: 20px;" id="news-roller">
-  <div class="panel-heading">
-    Новости
-  </div>
-  <div class="panel-body" style="padding: 0;position: relative;">
-    <button type="button" class="btn btn-default new-scroll-left" disabled>
-      <span class="glyphicon glyphicon-chevron-left"></span>
-    </button>
-    <button type="button" class="btn btn-default new-scroll-right">
-      <span class="glyphicon glyphicon-chevron-right"></span>
-    </button>
-    <div class="news-clip">
-      <div class="news-roller">      
-        <?php foreach ($data as $row):
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">  
+  <ol class="carousel-indicators">
+   <?php $pos = 0;
+    foreach ($data as $key=>$row):     
               /* @var $row NewsModel */?>      
-          <div class="news-line">
-            <?= $row->date() ?>          
-            <?= $row->icon() ?>
-            <?= $row->head() ?> 
-          </div>
-        <?php endforeach;?>
+     <li data-target="#carousel-example-generic" data-slide-to="<?=$key?>" class="<?=!($pos++)?"active":""?>"></li>    
+   <?php endforeach;?>    
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+   <?php  $pos = 0;
+          foreach ($data as $key=>$row):     
+              /* @var $row NewsModel */?>     
+    <div class="item <?=!($pos++)?"active":""?>">
+      <img src="<?=$row->icon?>" alt="">
+      <div class="carousel-caption">
+        <h4><?= $row->header?></h4>
+        <p><?= $row->text ?></p>        
       </div>
     </div>
+   <?php endforeach;?>
   </div>
-</div>
 
-<?php $this->registerJs('news.init();',View::POS_READY);?>
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Назад</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Вперед</span>
+  </a>
+</div>

@@ -80,7 +80,7 @@ class SearchProviderBase extends Object {
     if($is_post){
       curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array_merge($param,$this->_default_params)));
     }    
-	  $answer = curl_exec($ch);
+	  $answer = curl_exec($ch);    
     curl_close($ch);
     return $answer;
   }
@@ -100,8 +100,7 @@ class SearchProviderBase extends Object {
       }        
     }
     
-    $result['provider'] = $this->_CLSID;
-    $result['update_time'] = time();    
+    $result['provider'] = $this->_CLSID;    
     
     foreach ($add_fields as $key => $value) {
       $result[$key] = $value;
