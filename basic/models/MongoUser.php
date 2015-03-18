@@ -126,7 +126,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     return "users";
   }
   
-  public function findByUsername($name){
+  public static function findByUsername($name){
     return MongoUser::findOne(['user_name'=>$name]);
   }
   

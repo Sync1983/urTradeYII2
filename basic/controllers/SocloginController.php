@@ -8,7 +8,7 @@ use app\models\socnet\SocNetInterface;
 use app\models\SocAuth;
 use yii\helpers\ArrayHelper;
 
-class SocLoginController extends Controller
+class SocloginController extends Controller
 {
   const state     = "atc_auth";
   public $layout  = "initial";
