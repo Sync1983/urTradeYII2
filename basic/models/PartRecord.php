@@ -65,28 +65,19 @@ class PartRecord extends ActiveRecord {
     }
     return true;
   }
+  
+  public function getStrID(){
+    return strval($this->getAttribute("_id"));
+  }
 
   //====================================================================
   public function rules() {
-    return [
-      [['sell_count'],'checkSellCount'],
-      /*[['price'],'number'],
-      ['shiping','integer'],
-      [["articul","producer","name","comment"],'string'],
-      [["update_time"],"integer"]*/
+    return [      
+      [['_id','search_articul',  
+        "provider", "articul","producer","maker_id",
+        "name","price","shiping","stock","info",
+        "update_time","is_original","count","lot_quantity","for_user"],'safe'],      
     ];
-  }
-  
-  public function checkSellCount($attribute,$params){
-    if(!$this->hasAttribute($attribute)){
-      return true;
-    }
-    $mod = $this->sell_count % $this->lot_quantity;
-    if($mod!==0){
-      $this->addError($attribute, "Количество детаелй должно быть кратно ".$this->lot_quantity." шт.");
-      return false;
-    }
-    return true;
   }
 
   public static function collectionName(){
@@ -97,10 +88,9 @@ class PartRecord extends ActiveRecord {
     return ['_id','search_articul',  
       "provider", "articul","producer","maker_id",
       "name","price","shiping","stock","info",
-      "update_time","is_original","count","lot_quantity", 
-      "for_user","price_change","sell_count","comment"];
+      "update_time","is_original","count","lot_quantity","for_user"];
   }
-  
+
   public function beforeSave($insert) {
     $this->update_time = time();
     return parent::beforeSave($insert);

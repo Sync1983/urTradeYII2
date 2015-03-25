@@ -7,6 +7,7 @@
  */
 namespace app\models;
 
+use yii;
 use yii\web\User;
 use app\models\MongoUser;
 

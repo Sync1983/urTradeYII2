@@ -8,11 +8,18 @@ namespace app\models;
 use Yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
-use app\models\PartRecord;
+use app\models\basket\BasketModel;
+use app\models\basket\GuestBasket;
+
 
 class MongoUser extends ActiveRecord implements IdentityInterface {  
   protected $_list    = [];
   
+  /* @var $_guest_basket GuestBasket */
+  protected $_guest_basket;
+  /* @var $_user_basket BasketModel */
+  protected $_user_basket;
+
   public static function createNew($login,$pass,$name="new name"){
     $old_user = MongoUser::findByUsername($login);
     if($old_user){
@@ -40,8 +47,14 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $user->save();
     return $user;
   }
-  
+  /**
+   * Добавляет всплывающее уведомление пользователю
+   * @param string $text
+   */
   public function addNotify($text){
+    if(Yii::$app->user->isGuest){
+      return;
+    }
     $arr = $this->informer;
     $arr[] = $text;
     $this->informer = $arr;
@@ -73,30 +86,21 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
    * **/
   public function getOverPiceList(){
     return $this->getAttribute("over_price_list");
-  } 
-  /**
-   * Добавляет деталь в корзину пользователя
-   * @param PartRecord $part
-   */
-  public function addPartToBasket($part,$notify=true){
-    /* @var $basket_part PartRecord */
-    if($notify){
-      $this->addNotify("Деталь добавлена в корзину");
-    }
-    foreach ($this->_list as $basket_part){
-      if($part->compare($basket_part)){
-        $basket_part->setAttribute("sell_count", $basket_part->getAttribute("sell_count")+$part->getAttribute("sell_count"));
-        return;
-      }
-    }
-    $this->_list[] = $part;    
   }
   /**
    * Возвращает список деталей в корзине
    * @return array
    */
-  public function getBasketParts(){
-    return $this->_list;
+  public function getBasketParts(){    
+    var_dump($this->_user_basket);
+    return $this->_user_basket->getRawList();
+  }
+  /**
+   * Возвращает список деталей в гостевой корзине
+   * @return array
+   */
+  public function getGuestBasketParts(){    
+    return $this->_guest_basket->getRawList();
   }
 
   public function attributes(){
@@ -120,8 +124,14 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
       'basket',            //Записи корзины
       'informer'          //Записи сообщений
       ];
-  }  
+  }
   
+  public function init() {
+    parent::init();
+    $this->_guest_basket = new GuestBasket();
+    //$this->_user_basket = ew
+  }
+
   public static function collectionName(){
     return "users";
   }
@@ -135,26 +145,15 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   }
 
   public function beforeSave($insert) {    
-    $this->basket = [];    
-    $list = [];
-    foreach ($this->_list as $part) {      
-      $list[] = $part->getAttributes();
-    }
-    
-    $this->basket = $list;
+    $this->basket = $this->_user_basket->getList();    
     return parent::beforeSave($insert);
   }
   
   public function afterFind() {
-    parent::afterFind();
-    if(!$this->basket){
-      return;
-    }
-    foreach ($this->basket as $part){
-      $list_part = new PartRecord();
-      $list_part->setAttributes($part,false);
-      $this->_list[] = $list_part;
-    }
+    parent::afterFind();    
+    $this->_user_basket = new BasketModel([
+      "basket_list" => $this->basket
+    ]);
   }
   
   // =================== Interface ====================
