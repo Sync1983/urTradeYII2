@@ -99,7 +99,10 @@ class GuestBasket extends BasketModel{
    */
   protected function buildList($list = []){
     $result = [];
-    var_dump($list);
+    if( !$list ){
+      return [];
+    }
+    
     foreach ($list as $item){
       if(!isset($item["_id"])){
         continue;
