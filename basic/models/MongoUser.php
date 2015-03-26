@@ -5,14 +5,14 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models;
-use Yii;
+use yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
-use app\models\PartRecord;
+use app\models\events\NotifyEvent;
+use MongoId;
 
-class MongoUser extends ActiveRecord implements IdentityInterface {  
-  protected $_list    = [];
-  
+class MongoUser extends ActiveRecord implements IdentityInterface {    
+
   public static function createNew($login,$pass,$name="new name"){
     $old_user = MongoUser::findByUsername($login);
     if($old_user){
@@ -39,9 +39,15 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $user->informer       = ["Списибо за регистрацию!"];        //Записи корзины
     $user->save();
     return $user;
-  }
-  
+  }  
+  /**
+   * Добавляет всплывающее уведомление пользователю
+   * @param string $text
+   */
   public function addNotify($text){
+    if(Yii::$app->user->isGuest){
+      return;
+    }
     $arr = $this->informer;
     $arr[] = $text;
     $this->informer = $arr;
@@ -73,30 +79,6 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
    * **/
   public function getOverPiceList(){
     return $this->getAttribute("over_price_list");
-  } 
-  /**
-   * Добавляет деталь в корзину пользователя
-   * @param PartRecord $part
-   */
-  public function addPartToBasket($part,$notify=true){
-    /* @var $basket_part PartRecord */
-    if($notify){
-      $this->addNotify("Деталь добавлена в корзину");
-    }
-    foreach ($this->_list as $basket_part){
-      if($part->compare($basket_part)){
-        $basket_part->setAttribute("sell_count", $basket_part->getAttribute("sell_count")+$part->getAttribute("sell_count"));
-        return;
-      }
-    }
-    $this->_list[] = $part;    
-  }
-  /**
-   * Возвращает список деталей в корзине
-   * @return array
-   */
-  public function getBasketParts(){
-    return $this->_list;
   }
 
   public function attributes(){
@@ -120,8 +102,13 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
       'basket',            //Записи корзины
       'informer'          //Записи сообщений
       ];
-  }  
+  }
   
+  public function init() {
+    parent::init();
+    Yii::$app->on(NotifyEvent::USER_NOTIFY_EVENT, [$this,"onNotify"]);        
+  }
+
   public static function collectionName(){
     return "users";
   }
@@ -132,29 +119,13 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   
   public function validatePassword($password) {
     return $this->getAttribute('user_pass') === md5($password);
-  }
-
-  public function beforeSave($insert) {    
-    $this->basket = [];    
-    $list = [];
-    foreach ($this->_list as $part) {      
-      $list[] = $part->getAttributes();
-    }
-    
-    $this->basket = $list;
-    return parent::beforeSave($insert);
-  }
-  
-  public function afterFind() {
-    parent::afterFind();
-    if(!$this->basket){
-      return;
-    }
-    foreach ($this->basket as $part){
-      $list_part = new PartRecord();
-      $list_part->setAttributes($part,false);
-      $this->_list[] = $list_part;
-    }
+  }  
+  /**
+   * Слушатель события Notify
+   * @param NotifyEvent $event
+   */
+  protected function onNotify($event){
+    $this->addNotify($event->text);
   }
   
   // =================== Interface ====================
@@ -176,7 +147,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   }
 
   public static function findIdentity($id) {
-    $result = MongoUser::findOne(["_id"=>new \MongoId($id)]);
+    $result = MongoUser::findOne(["_id"=>new MongoId($id)]);
     return $result;
   }
 
