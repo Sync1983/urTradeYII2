@@ -63,9 +63,12 @@ class SiteController extends Controller
 
         $login_model = new LoginForm();        
         if ($login_model->load(Yii::$app->request->post(),"") && $login_model->login()) {          
-          return $this->render("error",['name'=>'Ошибка авторизации','message'=>'Неверные имя или пароль']);
+          $event = new \app\models\events\NotifyEvent();
+          $event->text = "Добро пожаловать";
+          Yii::$app->trigger(\app\models\events\NotifyEvent::USER_NOTIFY_EVENT,$event);
+        } else {
+          return $this->render("error",['name'=>'Ошибка авторизации','message'=>'Неверные имя или пароль']);          
         }
-        Yii::$app->user->identity->addNotify("Добро пожаловать");
         return $this->goHome();
     }
     
