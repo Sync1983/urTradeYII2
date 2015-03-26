@@ -3,10 +3,8 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use app\models\SetupModel;
 use app\models\prices\OverpriceModel;
-use app\controllers\SocLoginController;
+use app\controllers\SocloginController;
 use yii\helpers\Url;
-use kartik\grid\GridView;
-use yii\data\ArrayDataProvider;
 
 /* @var $price_model OverpriceModel */
 /* @var $this yii\web\View */
@@ -14,7 +12,7 @@ use yii\data\ArrayDataProvider;
 /* @var $model SetupModel */
 
 $nets = SocLoginController::getAvaibleNets();
-$active_nets = SocLoginController::getActiveNets();
+$active_nets = SocloginController::getActiveNets();
 $not_active_nets = array_diff($nets, $active_nets);      
 
 $this->title = 'Настройки пользователя';

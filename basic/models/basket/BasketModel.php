@@ -232,6 +232,9 @@ class BasketModel extends Model{
    */
   protected function buildList($list = []){
     $result = [];
+    if( !$list ){
+      return [];
+    }
     foreach ($list as $item){
       if(!isset($item["_id"])){
         continue;
