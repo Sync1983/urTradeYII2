@@ -86,7 +86,7 @@ class BasketAddForm extends Model
         $event->type = BasketEvent::USER_BASKET;
       }       
       
-      $this->trigger(\app\models\basket\BasketModel::EVENT_ADD_TO_BASKET, $event);
+      yii::$app->trigger(\app\models\basket\BasketModel::EVENT_ADD_TO_BASKET, $event);      
     }
     
 }

@@ -10,6 +10,7 @@ namespace app\models\basket;
 use yii;
 use app\models\basket\BasketModel;
 use app\models\basket\GuestBasketRecord;
+use app\models\basket\GuestBasketPart;
 use yii\web\Cookie;
 use MongoId;
 
@@ -19,6 +20,7 @@ class GuestBasket extends BasketModel{
   //private vars  
   /* @var $_basket_record GuestBasketRecord */
   private $_basket_record;
+  protected $_type = 0;
   //============================= Public =======================================
   public function init() {
     parent::init();
@@ -29,10 +31,15 @@ class GuestBasket extends BasketModel{
       $id = strval($this->_basket_record->getAttribute("_id"));
       self::setIdToCookie($id);
     }
-    $this->_basket_record = self::getById($id);
+    $this->_basket_record = self::getById($id);    
     $this->_list = $this->buildList($this->_basket_record->basket);
+    yii::$app->on(self::EVENT_CHANGE, [$this,"onSave"]);
   }
-
+  
+  public function onSave($event){
+    $this->_basket_record->setAttribute("basket",$this->getList());    
+    $this->_basket_record->save();
+  }
   /**
    * Возвращает элемент Гостевая корзина по id
    * @param string $id
@@ -75,17 +82,39 @@ class GuestBasket extends BasketModel{
    */
   public function addTo($item, $count) {
     parent::addTo($item, $count);
-    $this->_basket_record->basket = $this->getItems();
-    $this->_basket_record->save();
+    $this->_basket_record->setAttribute("basket",$this->getList());    
+    $this->_basket_record->save();    
   }
   
   public function remove($key) {
     parent::remove($key);
-    $this->_basket_record->basket = $this->getItems();
+    $this->_basket_record->setAttribute("basket",$this->getList());
     $this->_basket_record->save();
   }
-  
   //============================= Protected ====================================  
+  /**
+   * Строит список деталей по входному массиву параметров
+   * @param array $list
+   * @return array BasketPart
+   */
+  protected function buildList($list = []){
+    $result = [];
+    foreach ($list as $item){
+      if(!isset($item["_id"])){
+        continue;
+      }
+      foreach ($item as $key=>$value){
+        if( is_array($value) && (count($value)==0) ){
+          $item[$key] = null;
+        }
+      }
+      $id = strval($item["_id"]);
+      $new_item = new GuestBasketPart();
+      $new_item->setAttributes($item);
+      $result[$id] = $new_item;
+    }
+    return $result;
+  }
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================
 }

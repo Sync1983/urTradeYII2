@@ -28,8 +28,8 @@ class GuestBasketRecord extends ActiveRecord{
   }
   
   public function beforeSave($insert) {
-    $this->update_time = time();
-    parent::beforeSave($insert);
+    $this->update_time = time();    
+    return parent::beforeSave($insert);
   }
   //============================= Protected ====================================
   //============================= Private ======================================

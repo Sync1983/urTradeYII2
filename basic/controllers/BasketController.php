@@ -12,7 +12,6 @@ use yii\widgets\ActiveForm;
 use yii\web\Response;
 use yii\web\Controller;
 use app\models\forms\BasketAddForm;
-use app\models\GuestBasket;
 use app\models\forms\SearchForm;
 use app\models\BasketDataProvider;
 use yii\web\NotFoundHttpException;
@@ -24,6 +23,7 @@ use kartik\editable\Editable;
 use kartik\grid\ActionColumn;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use app\models\events\BasketEvent;
 
 class BasketController extends Controller{
   //public vars  
@@ -41,8 +41,8 @@ class BasketController extends Controller{
   }
   
   public function actionIndex(){    
-    /* @var $user \app\models\MongoUser */
-    $user = yii::$app->user->identity;    
+    /* @var $user \app\models\SiteUser */
+    $user = yii::$app->user;
     $all_models = $user->getBasketParts();
     $guest_models = $user->getGuestBasketParts();
     
@@ -79,7 +79,29 @@ class BasketController extends Controller{
       'guest_columns' => $this->getGuestBasketColumnsDescription()]);
   }
   
-  public function actionChangeBasketCount(){
+  public function actionItemChange(){
+    $index = yii::$app->request->post('editableIndex',-1);
+    $key = yii::$app->request->post('editableKey', "");
+    $type = yii::$app->request->get('type',-1);
+    if( ($type==-1) || ($index==-1) || ($key=="") ){
+      throw new NotFoundHttpException("Данные не верны");
+    }
+    $data = [];
+    if( $type==0 ){
+      $data = yii::$app->request->post('GuestBasketPart',[]);
+    } elseif( $type==1 ){
+      $data = yii::$app->request->post('BasketPart',[]);      
+    }
+    
+    $event = new BasketEvent();
+    $event->key = $key;
+    $event->type = intval($type);
+    $event->params = $data[$index];
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_CHANGE_FIELDS,$event);
+  }
+
+
+  /*public function actionChangeBasketCount(){
     $parts = yii::$app->user->identity->getBasketParts();
     
     $item = $this->findAndChangeValueInList($parts, "PartRecord", "sell_count");
@@ -141,37 +163,35 @@ class BasketController extends Controller{
       $guest_basket->save();
     }    
     return;        
-  }
+  }*/
   
   public function actionItemDelete(){
     $key = yii::$app->request->get("id",false);
-    if(!$key){
+    $type = yii::$app->request->get("type",-1);
+    if( !$key || ($type == -1) ){
       throw new NotFoundHttpException("Строка не найден");
     }
-    /* @var $user \app\models\MongoUser */
-    $user = Yii::$app->user->identity;
-    $user->removePartById($key);
-    $user->save();
-    yii::$app->user->identity->addNotify("Деталь удалена");
+    
+    $event = new BasketEvent();
+    $event->key = $key;
+    $event->type = $type;    
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_REMOVE_FROM_BASKET,$event);
+    
     return $this->redirect(Url::to(['basket/index']));
   }
   
   public function actionDeleteList(){
     $keys = yii::$app->request->post("ids",[]);
+    $type = yii::$app->request->post("type",-1);
     
-    /* @var $user \app\models\MongoUser */
-    $user = Yii::$app->user->identity;
-    $cnt = 0;
-    foreach ($keys as $key){
-      $user->removePartById($key);
-      $cnt++;
-    }
-    $user->save();
-    yii::$app->user->identity->addNotify($cnt." деталей удалено");
+    $event = new BasketEvent();
+    $event->params['keys'] = $keys;
+    $event->type = intval($type);
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_REMOVE_FROM_BASKET_LIST,$event);
     return $this->redirect(Url::to(['basket/index']));
   }
 
-  public function actionGuestItemTobasket(){
+  public function actionItemTobasket(){
     if(yii::$app->user->isGuest){
       return $this->redirect(Url::to(['basket/index']));      
     }
@@ -179,77 +199,42 @@ class BasketController extends Controller{
     if( $key==-1) {
       throw new NotFoundHttpException("Ключ записи не найден");
     }
-    $guest_id = GuestBasket::getIdFromCookie();    
-    $guest_basket = GuestBasket::getById($guest_id);          
-    
-    if( !$guest_id || !$guest_basket ){
-      throw new NotFoundHttpException("Корзина не найдена");
-    }    
-    
-    $item = $guest_basket->getItemById($key);
-    if($item){
-      /* @var $user MongoUser*/
-      $user = Yii::$app->user->identity;
-      $user->addPartToBasket($item);      
-      $user->save();
-        
-      $guest_basket->removePart($key);
-      $guest_basket->save();        
+    $item = yii::$app->user->getGuestBasketPart($key);
+    if(!$item){
+      throw new NotFoundHttpException("Запись не найдена");
     }
+    $event = new BasketEvent();
+    $event->params = $item;
+    $event->type = BasketEvent::USER_BASKET;    
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_ADD_TO_BASKET,$event);
+    $event = new BasketEvent();
+    $event->key = $key;
+    $event->type = BasketEvent::GUEST_BASKET;
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_REMOVE_FROM_BASKET,$event);
     
     return $this->redirect(Url::to(['basket/index']));      
   }
   
-  public function actionGuestItemDelete(){    
-    $key = yii::$app->request->get("id",-1);    
-    if( $key==-1) {
-      throw new NotFoundHttpException("Ключ записи не найден");
+  public function actionToBasketList(){    
+    $keys = yii::$app->request->post("ids",[]);
+    $type = yii::$app->request->post("type",-1);
+    
+    $event = new BasketEvent();
+    $event->type = BasketEvent::USER_BASKET;
+    $event->params['items'] = [];
+    
+    foreach ($keys as $key){
+      $item = yii::$app->user->getGuestBasketPart($key);
+      if(!$item){
+        continue;
+      }
+      $event->params['items'][] = $item;      
     }
-    $guest_id = GuestBasket::getIdFromCookie();    
-    $guest_basket = GuestBasket::getById($guest_id);          
-    
-    if( !$guest_id || !$guest_basket ){
-      throw new NotFoundHttpException("Корзина не найдена");
-    }    
-    
-    $guest_basket->removePart($key);
-    $guest_basket->save();        
-    
-    return $this->redirect(Url::to(['basket/index']));      
-  }
-  
-  public function actionGuestDeleteList(){
-    $ids = yii::$app->request->post('ids',[]);
-    $guest_id = GuestBasket::getIdFromCookie();    
-    $guest_basket = GuestBasket::getById($guest_id);          
-    
-    if( !$guest_id || !$guest_basket ){
-      throw new NotFoundHttpException("Корзина не найдена");
-    }    
-    foreach ($ids as $key) {
-      $guest_basket->removePart($key);
-    }
-    $guest_basket->save();
-    return $this->redirect(Url::to(['basket/index']));      
-  }
-  
-  public function actionGuestTobasketList(){
-    $ids = yii::$app->request->post('ids',[]);
-    $guest_id = GuestBasket::getIdFromCookie();    
-    $guest_basket = GuestBasket::getById($guest_id);          
-    
-    if( !$guest_id || !$guest_basket ){
-      throw new NotFoundHttpException("Корзина не найдена");
-    }    
-    /* @var $user MongoUser*/
-    $user = Yii::$app->user->identity;
-    foreach ($ids as $key) {
-      $item = $guest_basket->getItemById($key);
-      $user->addPartToBasket($item);      
-      $guest_basket->removePart($key);
-    }
-    $user->save();
-    $guest_basket->save();
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_ADD_TO_BASKET_LIST,$event);
+    $event = new BasketEvent();
+    $event->params['keys'] = $keys;
+    $event->type = BasketEvent::GUEST_BASKET;
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_REMOVE_FROM_BASKET_LIST,$event);
     return $this->redirect(Url::to(['basket/index']));      
   }
 
@@ -272,50 +257,6 @@ class BasketController extends Controller{
     return ActiveForm::validate($model);
   }
   //============================= Protected ====================================
-  /**
-   * Находит и заменяет поле в списк list, затем запускает валидацию элемента
-   * Данные берутся из POST запроса от EditableColumn
-   * @param array $list Список моделей
-   * @param string $object_name Имя объекта
-   * @param string $field_name Имя заменяемого поля
-   * @return boolean
-   */
-  /*protected function findAndChangeValueInList(&$list,$object_name,$field_name){
-    $key = yii::$app->request->post("editableKey",-1);    
-    $index = yii::$app->request->post("editableIndex",-1);
-    if( $key==-1 || $index==-1 ){
-      echo json_encode(['output'=>0, 'message'=>'Ключ записи не найден']);      
-      yii::$app->end();
-      return false;
-    }
-    
-    $new_fields = yii::$app->request->post($object_name,false);
-    if(!$new_fields || !isset($new_fields[$index]) || !isset($new_fields[$index][$field_name])){
-      echo json_encode(['output'=>0, 'message'=>'Запись нового значения не найдена']);
-      yii::$app->end();
-      return false;
-    }
-    
-    /* @var $item \app\models\PartRecord */
-    /*foreach ($list as $list_index=>$item){
-      if( $item->getStrID() !== $key ){
-        continue;
-      }
-      $item->setAttribute($field_name,$new_fields[$index][$field_name]);
-      $list[$list_index] = $item;
-      if(!$item->validate()){
-        echo json_encode(['output'=>0, 'message'=>$item->getErrors($field_name)]);
-        yii::$app->end();
-        return false;
-      }
-      echo json_encode(['output'=>$item->getAttribute($field_name)]);
-      return $item;
-    }
-    
-    echo json_encode(['output'=>0, 'message'=>'Указаная строка не найдена']);
-    yii::$app->end();
-    return false;
-  }*/
   //============================= Private ======================================
   private function Column1(){
     return [
@@ -379,7 +320,7 @@ class BasketController extends Controller{
             'header'=>'Количество', 
             'inputType'=>  Editable::INPUT_SPIN,
             "formOptions"=>[
-              "action"=>  Url::to(["basket/change-basket-count"])
+              "action"=> Url::to(["basket/item-change",'type'=> BasketEvent::USER_BASKET])
             ],       
             'pluginEvents'      => [
               "editableSuccess"=>"function(event, val, form, data) { "
@@ -430,7 +371,7 @@ class BasketController extends Controller{
             'header'      =>'Количество', 
             'inputType'   =>  Editable::INPUT_TEXT,
             'formOptions' =>[
-              "action"=>  Url::to(["basket/change-basket-comment"])
+              "action"=>  Url::to(["basket/item-change",'type'=> BasketEvent::USER_BASKET])
             ],        
           ];
         },
@@ -459,7 +400,7 @@ class BasketController extends Controller{
             return Html::a($label, $url,$options);
           }],
         'deleteOptions' => ['label' => '<i class="glyphicon glyphicon-remove"></i>','title'=>'Удалить запись из корзины', 'data-toggle'=>'tooltip'],    
-        'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['basket/item-'.$action,"id"=>$key]); },
+        'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['basket/item-'.$action,"id"=>$key,"type"=>  BasketEvent::USER_BASKET]); },
         'headerOptions'=>['class'=>'kartik-sheet-style'],
       ];
   }
@@ -485,7 +426,7 @@ class BasketController extends Controller{
         'header'=>'Количество', 
         'inputType'=>  Editable::INPUT_SPIN,
         "formOptions"=>[
-          "action"=>  Url::to(["basket/change-guest-basket-count"])
+          "action"=> Url::to(["basket/item-change",'type'=> BasketEvent::GUEST_BASKET])
         ],       
         'pluginEvents'      => [
           "editableSuccess"=>"function(event, val, form, data) { "
@@ -518,7 +459,7 @@ class BasketController extends Controller{
         'header'      =>'Количество', 
         'inputType'   =>  Editable::INPUT_TEXT,
         'formOptions' =>[
-          "action"=>  Url::to(["basket/change-guest-basket-comment"])
+          "action"=> Url::to(["basket/item-change",'type'=> BasketEvent::GUEST_BASKET])
           ],        
         ];
       },
@@ -547,7 +488,7 @@ class BasketController extends Controller{
         return Html::a($label, $url,$options);
       }],
     'deleteOptions' => ['label' => '<i class="glyphicon glyphicon-remove"></i>','title'=>'Удалить запись', 'data-toggle'=>'tooltip'],    
-    'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['basket/guest-item-'.$action,"id"=>$key]); },
+    'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['basket/item-'.$action,"id"=>$key,"type"=> BasketEvent::GUEST_BASKET]); },
     'headerOptions'=>['class'=>'kartik-sheet-style'],
     ];
   }

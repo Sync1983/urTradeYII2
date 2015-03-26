@@ -88,16 +88,7 @@ echo GridView::widget([
 Pjax::end();
 
 ActiveForm::begin([
-  "id"=>"guest-delete",
-  "method"=>"POST",
-  "action" => Url::to(['basket/guest-delete-list']),
-  "options" => [
-    "style" => "display: none"
-    ]
-]);
-ActiveForm::end();
-ActiveForm::begin([
-  "id"=>"user-delete",
+  "id"=>"delete",
   "method"=>"POST",
   "action" => Url::to(['basket/delete-list']),
   "options" => [
@@ -108,7 +99,7 @@ ActiveForm::end();
 ActiveForm::begin([
   "id"=>"guest-all",
   "method"=>"POST",
-  "action" => Url::to(['basket/guest-tobasket-list']),
+  "action" => Url::to(['basket/to-basket-list']),
   "options" => [
     "style" => "display: none"
     ]
@@ -124,11 +115,13 @@ ActiveForm::end();
       return;
     }
     if(confirm("Удалить набор из "+keys.length+" деталей?")){      
-      var form = $("#guest-delete");
+      var form = $("#delete");
       form.children("[name=\"ids[]\"]").remove();
+      form.children("[name=\"type\"]").remove();
       for(var index in keys){
         form.append('<input type="hidden" name="ids[]" value="'+keys[index]+'" />');
       }
+      form.append('<input type="hidden" name="type" value="0" />');
       $(form).submit();      
     }
   }
@@ -139,11 +132,13 @@ ActiveForm::end();
       return;
     }
     if(confirm("Удалить набор из "+keys.length+" деталей?")){      
-      var form = $("#user-delete");
+      var form = $("#delete");
       form.children("[name=\"ids[]\"]").remove();
+      form.children("[name=\"type\"]").remove();
       for(var index in keys){
         form.append('<input type="hidden" name="ids[]" value="'+keys[index]+'" />');
       }
+      form.append('<input type="hidden" name="type" value="1" />');
       $(form).submit();      
     }
   }

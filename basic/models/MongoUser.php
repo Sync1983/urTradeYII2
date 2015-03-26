@@ -5,20 +5,13 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models;
-use Yii;
+use yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
-use app\models\basket\BasketModel;
-use app\models\basket\GuestBasket;
+use app\models\events\NotifyEvent;
+use MongoId;
 
-
-class MongoUser extends ActiveRecord implements IdentityInterface {  
-  protected $_list    = [];
-  
-  /* @var $_guest_basket GuestBasket */
-  protected $_guest_basket;
-  /* @var $_user_basket BasketModel */
-  protected $_user_basket;
+class MongoUser extends ActiveRecord implements IdentityInterface {    
 
   public static function createNew($login,$pass,$name="new name"){
     $old_user = MongoUser::findByUsername($login);
@@ -46,7 +39,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $user->informer       = ["Списибо за регистрацию!"];        //Записи корзины
     $user->save();
     return $user;
-  }
+  }  
   /**
    * Добавляет всплывающее уведомление пользователю
    * @param string $text
@@ -87,21 +80,6 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   public function getOverPiceList(){
     return $this->getAttribute("over_price_list");
   }
-  /**
-   * Возвращает список деталей в корзине
-   * @return array
-   */
-  public function getBasketParts(){    
-    var_dump($this->_user_basket);
-    return $this->_user_basket->getRawList();
-  }
-  /**
-   * Возвращает список деталей в гостевой корзине
-   * @return array
-   */
-  public function getGuestBasketParts(){    
-    return $this->_guest_basket->getRawList();
-  }
 
   public function attributes(){
     return [
@@ -128,8 +106,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   
   public function init() {
     parent::init();
-    $this->_guest_basket = new GuestBasket();
-    //$this->_user_basket = ew
+    Yii::$app->on(NotifyEvent::USER_NOTIFY_EVENT, [$this,"onNotify"]);        
   }
 
   public static function collectionName(){
@@ -142,18 +119,13 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   
   public function validatePassword($password) {
     return $this->getAttribute('user_pass') === md5($password);
-  }
-
-  public function beforeSave($insert) {    
-    $this->basket = $this->_user_basket->getList();    
-    return parent::beforeSave($insert);
-  }
-  
-  public function afterFind() {
-    parent::afterFind();    
-    $this->_user_basket = new BasketModel([
-      "basket_list" => $this->basket
-    ]);
+  }  
+  /**
+   * Слушатель события Notify
+   * @param NotifyEvent $event
+   */
+  protected function onNotify($event){
+    $this->addNotify($event->text);
   }
   
   // =================== Interface ====================
@@ -175,7 +147,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   }
 
   public static function findIdentity($id) {
-    $result = MongoUser::findOne(["_id"=>new \MongoId($id)]);
+    $result = MongoUser::findOne(["_id"=>new MongoId($id)]);
     return $result;
   }
 
