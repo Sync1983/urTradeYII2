@@ -7,3 +7,4 @@ themes/classic/views/
 /nbproject/private/
 *.csv
 /basic/config/params.php
+/log
