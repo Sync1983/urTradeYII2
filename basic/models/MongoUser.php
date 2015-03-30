@@ -15,7 +15,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
 
   public static function createNew($login,$pass,$name="new name"){
     $old_user = MongoUser::findByUsername($login);
-    if($old_user){
+    if($old_user && (bool) $login && (bool) $pass){
       return false;
     }
     
@@ -113,12 +113,12 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     return "users";
   }
   
-  public static function findByUsername($name){
-    return MongoUser::findOne(['user_name'=>$name]);
+  public static function findByUsername($name){    
+    return (bool) $name?MongoUser::findOne(['user_name'=>$name]):false;
   }
   
   public function validatePassword($password) {
-    return $this->getAttribute('user_pass') === md5($password);
+    return ($this->getAttribute('user_pass') === md5($password)) && ( (bool) $password);
   }  
   /**
    * Слушатель события Notify

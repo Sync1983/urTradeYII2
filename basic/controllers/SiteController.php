@@ -9,7 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\forms\LoginForm;
 use app\models\forms\SignUpForm;
 use app\models\forms\SetupModel;
-use app\models\forms\SearchForm;
+//use app\models\forms\SearchForm;
 use app\models\PartRecord;
 use app\models\SearchHistoryRecord;
 use app\models\search\SearchProviderBase;
@@ -40,6 +40,9 @@ class SiteController extends Controller
                     'logout' => ['post'],
                 ],
             ],
+            'form' => [
+                'class' => \app\components\behaviors\SearchFormBehavior::className(),
+            ]
         ];
     }
 
@@ -148,8 +151,8 @@ class SiteController extends Controller
     }
 
     public function actionSearch(){
-      if($this->search->validate()){        
-        SearchHistoryRecord::addQuery($this->search->search_text);
+      if($this->getSearchForm()->validate()){        
+        SearchHistoryRecord::addQuery($this->getSearchForm()->search_text);
         return $this->render('search');
       }
       throw new \yii\web\NotAcceptableHttpException("Ошибка параметров запроса. Попробуйте повторить запрос");
@@ -184,7 +187,7 @@ class SiteController extends Controller
       return json_encode(['id'=>$model->getCurrentCLSID(),'parts'=>$answer]);
     }
     
-    public function beforeAction($action) {
+    /*public function beforeAction($action) {
       if(!$this->search){
         $this->search =  new SearchForm();
       }
@@ -200,6 +203,6 @@ class SiteController extends Controller
       $params['search_model'] = $this->search;      
        $this->view->params['search_model'] = $this->search;
       return parent::render($view, $params);
-    }
+    }*/
 
 }

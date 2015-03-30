@@ -72,7 +72,7 @@ $form = $this->params['search_model'];
             </a>
           </li>
           <li>
-            <a href="<?= Url::to(['site/orders']);?>">
+            <a href="<?= Url::to(['order/index']);?>">
               <p class="menu-title order">Заказы</p>
               <p class="menu-describe">Детали в заказе и состояние по ним</p>
             </a>

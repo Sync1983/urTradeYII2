@@ -122,12 +122,12 @@ class SiteUser extends User{
     if(!is_numeric($start_price)){
       throw new \yii\base\InvalidValueException("Ошибка в формате цены");
     }
-    $start_price = floatval($start_price);
+    $start_price *= 1.0;
     $over_price = 0;    
     if (!$this->isGuest) {
       $over_price = $this->getIdentity()->getAttribute("over_price");
       if(!$over_price){
-        $over_price = 18;
+        $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;;
       }
     } else {
       $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;
@@ -155,6 +155,14 @@ class SiteUser extends User{
    */
   public function getGuestBasketPart($key){    
     return $this->_guest_basket->getPartById($key);
+  }
+  /**
+   * Возвращает деталь из корзины по ID
+   * @param string $key
+   * @return basket\BasketPart
+   */
+  public function getBasketPart($key){    
+    return $this->_user_basket->getPartById($key);
   }
   
   public function init() {

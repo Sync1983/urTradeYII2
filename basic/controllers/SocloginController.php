@@ -148,10 +148,7 @@ class SocloginController extends Controller
       SocAuth::createRecord($net->getSocNetName(), $user->getId(), $data["id"]);
       return $this->redirect(['site/setup']);
     } else {
-      $sn = SocAuth::findBySocNetID($net->getSocNetName(),$data['id']."");
-      /*var_dump($sn);
-      var_dump($data);
-      var_dump($net->getSocNetName());*/
+      $sn = SocAuth::findBySocNetID($net->getSocNetName(),$data['id']."");      
       if($sn){
         $uid = $sn->getUserId();
         $load_user = \app\models\MongoUser::findOne(['_id'=> new \MongoId($uid)]);

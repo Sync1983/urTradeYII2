@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerCssFile("/css/dataTables.css");
 $this->registerJsFile("/js/jquery.dataTables.min.js", ['depends'=>'yii\web\JqueryAsset']);
 
-$maker = $search_model->generateMakerList();
+$maker = $this->params['search_model']->generateMakerList();
 ksort($maker,SORT_STRING);
 
 $items = [];
