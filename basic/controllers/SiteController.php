@@ -9,7 +9,6 @@ use yii\filters\VerbFilter;
 use app\models\forms\LoginForm;
 use app\models\forms\SignUpForm;
 use app\models\forms\SetupModel;
-//use app\models\forms\SearchForm;
 use app\models\PartRecord;
 use app\models\SearchHistoryRecord;
 use app\models\search\SearchProviderBase;
@@ -68,7 +67,7 @@ class SiteController extends Controller
         if ($login_model->load(Yii::$app->request->post(),"") && $login_model->login()) {          
           $event = new \app\models\events\NotifyEvent();
           $event->text = "Добро пожаловать";
-          Yii::$app->trigger(\app\models\events\NotifyEvent::USER_NOTIFY_EVENT,$event);
+          Yii::$app->user->trigger(\app\models\events\NotifyEvent::USER_NOTIFY_EVENT,$event);
         } else {
           return $this->render("error",['name'=>'Ошибка авторизации','message'=>'Неверные имя или пароль']);          
         }
@@ -186,23 +185,5 @@ class SiteController extends Controller
       
       return json_encode(['id'=>$model->getCurrentCLSID(),'parts'=>$answer]);
     }
-    
-    /*public function beforeAction($action) {
-      if(!$this->search){
-        $this->search =  new SearchForm();
-      }
-      $request = Yii::$app->request->get();
-      if(isset($request['over-price'])){
-        $request['over_price'] = intval($request['over-price']);      
-      }
-      $this->search->load($request,'');       
-      return parent::beforeAction($action);
-    }
-
-    public function render($view, $params = array()) {      
-      $params['search_model'] = $this->search;      
-       $this->view->params['search_model'] = $this->search;
-      return parent::render($view, $params);
-    }*/
 
 }

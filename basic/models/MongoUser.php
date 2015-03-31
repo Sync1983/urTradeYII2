@@ -5,13 +5,14 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models;
-use yii;
+
+use Yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
-use app\models\events\NotifyEvent;
 use MongoId;
 
 class MongoUser extends ActiveRecord implements IdentityInterface {    
+  
 
   public static function createNew($login,$pass,$name="new name"){
     $old_user = MongoUser::findByUsername($login);
@@ -34,36 +35,22 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $user->addres         = "";        //Адрес доставки
     $user->phone          = "";        //Телефон для связи
     $user->email          = "";        //Почта для связи
+    $user->credit         = 0.0;        //Кредит пользователя
     $user->over_price_list= [];        //Список наценок пользователя      
     $user->basket         = [];        //Записи корзины
-    $user->informer       = ["Списибо за регистрацию!"];        //Записи корзины
+    $user->informer       = ["Списибо за регистрацию!"];        //Записи информера
     $user->save();
     return $user;
   }  
-  /**
-   * Добавляет всплывающее уведомление пользователю
-   * @param string $text
-   */
-  public function addNotify($text){
-    if(Yii::$app->user->isGuest){
-      return;
-    }
-    $arr = $this->informer;
-    $arr[] = $text;
-    $this->informer = $arr;
-    $this->save();
-  }
+  
   /**
    * Возвращает отображаемое имя пользователя
    * @return string
    */
   public function getUserName(){
     if(Yii::$app->user->isGuest){
-      return "guest";
-    }
-    if($this->getAttribute("type")=="company"){
-      return $this->getAttribute("name");
-    }
+      return "Гость";
+    }    
     return $this->getAttribute("first_name"). " " .$this->getAttribute("second_name");
   }
   /**
@@ -98,15 +85,11 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
       'addres',           //Адрес доставки
       'phone',            //Телефон для связи
       'email',            //Почта для связи
-      'over_price_list',  //Список наценок пользователя      
-      'basket',            //Записи корзины
+      'over_price_list',  //Список наценок пользователя  
+      'credit',           //Кредит пользователя
+      'basket',           //Записи корзины
       'informer'          //Записи сообщений
       ];
-  }
-  
-  public function init() {
-    parent::init();
-    Yii::$app->on(NotifyEvent::USER_NOTIFY_EVENT, [$this,"onNotify"]);        
   }
 
   public static function collectionName(){
@@ -118,15 +101,8 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   }
   
   public function validatePassword($password) {
-    return ($this->getAttribute('user_pass') === md5($password)) && ( (bool) $password);
+    return ( $this->getAttribute('user_pass') === md5($password) ) && ( (bool) $password);
   }  
-  /**
-   * Слушатель события Notify
-   * @param NotifyEvent $event
-   */
-  protected function onNotify($event){
-    $this->addNotify($event->text);
-  }
   
   // =================== Interface ====================
   public function getAuthKey() {

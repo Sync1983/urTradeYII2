@@ -134,7 +134,7 @@ class BasketModel extends Model{
     if( $this->addTo($basket_part, $basket_part->getAttribute("sell_count")) ){
       $notify_event = new NotifyEvent();
       $notify_event->text = "Деталь добавлена";
-      yii::$app->trigger(NotifyEvent::USER_NOTIFY_EVENT, $notify_event);
+      yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT, $notify_event);
     }
   }
   /**
@@ -155,7 +155,7 @@ class BasketModel extends Model{
     }    
     $notify_event = new NotifyEvent();
     $notify_event->text = $cnt. " деталей добавлено";
-    yii::$app->trigger(NotifyEvent::USER_NOTIFY_EVENT, $notify_event);
+    yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT, $notify_event);
   }
   /**
    * Слушатель события "Удалить"
@@ -170,15 +170,14 @@ class BasketModel extends Model{
     $this->remove($event->key);
     $notify_event = new NotifyEvent();
     $notify_event->text = "Деталь удалена";
-    yii::$app->trigger(NotifyEvent::USER_NOTIFY_EVENT,$notify_event);
+    yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,$notify_event);
   }
   /**
    * Слушатель события "Удалить список"
    * @param \app\models\events\BasketEvent $event
    * @return boolean
    */
-  protected function onRemoveList($event){
-    yii::info("Event Trigger ".$event->name);
+  protected function onRemoveList($event){    
     if($event->type!= $this->_type){
       return false;
     }
@@ -190,7 +189,7 @@ class BasketModel extends Model{
     }    
     $notify_event = new NotifyEvent();
     $notify_event->text = $cnt . " деталей удалено";
-    yii::$app->trigger(NotifyEvent::USER_NOTIFY_EVENT,$notify_event);
+    yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,$notify_event);
   }
   /**
    * Изменяет поля записи в корзине
@@ -211,10 +210,8 @@ class BasketModel extends Model{
       $item->setAttribute($param_name, $param_value);
       echo json_encode(['output'=>$param_value]);
     }
-    yii::$app->trigger(self::EVENT_CHANGE);
-    $notify_event = new NotifyEvent();
-    $notify_event->text = "Записи изменены";
-    yii::$app->trigger(NotifyEvent::USER_NOTIFY_EVENT,$notify_event);
+    yii::$app->trigger(self::EVENT_CHANGE);    
+    yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT, new NotifyEvent(['text'=>"Изменения записаны"]));
   }
 
   protected function initListner(){
@@ -222,8 +219,7 @@ class BasketModel extends Model{
     yii::$app->on(self::EVENT_ADD_TO_BASKET_LIST, [$this,'onAddList']);
     yii::$app->on(self::EVENT_REMOVE_FROM_BASKET, [$this,'onRemove']);
     yii::$app->on(self::EVENT_REMOVE_FROM_BASKET_LIST, [$this,'onRemoveList']);
-    yii::$app->on(self::EVENT_CHANGE_FIELDS, [$this,'onFieldsChange']);
-    yii::info("Listener`s init for ".$this->className());
+    yii::$app->on(self::EVENT_CHANGE_FIELDS, [$this,'onFieldsChange']);    
   }
   /**
    * Строит список деталей по входному массиву параметров

@@ -5,6 +5,7 @@ namespace app\models\forms;
 use Yii;
 use yii\base\Model;
 use app\models\MongoUser;
+use app\models\UserIdentity;
 
 /**
  * LoginForm is the model behind the login form.
@@ -62,14 +63,14 @@ class SignUpForm extends Model
       if($user->user_pass!=md5($this->userpass)) {
         return false;
       }
-      return Yii::$app->user->login($user, 3600*24*30);       
+      return Yii::$app->user->login(new UserIdentity(), 3600*24*30);       
     }
     
     /**
      * Create new User
      */
     public function createUser(){
-      $user = MongoUser::createNew($this->username, $this->userpass, false);
+      $user = MongoUser::createNew($this->username, $this->userpass,$this->username);
       if(!$user){
         return false;
       }

@@ -15,12 +15,22 @@ class OrderRecord extends ActiveRecord{
   const STATE_IN_STORAGE = 4;
   const STATE_IN_PLACE = 5;
   const STATE_REJECTED = 6;
-  
   //public vars
   //protected vars  
+  protected $states = [
+    self::STATE_WAIT_PAY        => "Ожидает оплаты",
+    self::STATE_WAIT_PLACEMENT  => "Ожидает размещения",
+    self::STATE_PLACEMENT       => "Заказано",
+    self::STATE_IN_WAY          => "В пути",
+    self::STATE_IN_STORAGE      => "На складе",
+    self::STATE_IN_PLACE        => "Выдано",
+    self::STATE_REJECTED        => "Отказ",    
+  ];  
   //private vars  
   //============================= Public =======================================
-  
+  public function textStatus(){
+    return isset($this->states[$this->status])?($this->states[$this->status]):$this->status;
+  }
   //============================= Protected ====================================
   protected function onUpdate($event){
     $this->update_time = time();    
@@ -29,7 +39,7 @@ class OrderRecord extends ActiveRecord{
   //============================= Constructor - Destructor =====================
   public function init(){
     parent::init();
-    $this->on(self::EVENT_BEFORE_UPDATE, [  $this, "onUpdate"]);
+    $this->on(self::EVENT_BEFORE_UPDATE, [$this, "onUpdate"]);
   }
   public function attributes(){    
     return ['_id','search_articul',  

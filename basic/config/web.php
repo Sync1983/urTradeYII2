@@ -1,4 +1,6 @@
 <?php
+use app\models\events\BalanceEvent;
+use app\components\behaviors\BalanceBehavior;
 
 $params = require(__DIR__ . '/params.php');
 
@@ -13,7 +15,7 @@ $config = [
           'class' => '\kartik\grid\Module'
         ],
     ],
-    'components' => [
+    'components' => [        
         /*'assetManager' => [          
           'forceCopy'  => true,
         ],*/ 
@@ -43,15 +45,21 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
                 ],
-            ],
+                [ 
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['balance'],
+                    'except'  => ['application'],
+                    'logVars' => [],
+                    'logFile' => '@app/runtime/logs/balance/balance.log',
+                    'maxFileSize' => 1024 * 20,
+                    'maxLogFiles' => 20,
+                ],
+            ]
         ],
         'mongodb' => require(__DIR__ . '/db.php'),
-        'orders' => [
-          'class' => 'app\models\orders\OrderModel',
-          'on USER_ORDER_ADD_EVENT' => 'onAdd',
-        ],
     ],
     'params' => $params,
 ];

@@ -26,6 +26,9 @@ SelectorAsset::registerJS();
 $user = Yii::$app->user;
 /* @var $form SearchForm */
 $form = $this->params['search_model'];
+$basket_count = $this->params['basket_count'];
+$order_count  = $this->params['order_count'];
+$balance      = $this->params['balance'];
 ?>
 
 <?php $this->beginPage() ?>
@@ -67,19 +70,19 @@ $form = $this->params['search_model'];
         <ul class="nav-line">
           <li>
             <a class="disabled" href="<?= Url::to(['basket/index']);?>">
-              <p class="menu-title basket">Корзина</p>
+              <p class="menu-title basket">Корзина<span class="badge"><?= $basket_count?$basket_count:"" ?></span></p>
               <p class="menu-describe">Содержит сохраненные детали для формирования заказов</p>
             </a>
           </li>
           <li>
             <a href="<?= Url::to(['order/index']);?>">
-              <p class="menu-title order">Заказы</p>
+              <p class="menu-title order">Заказы<span class="badge"><?= $order_count?$order_count:"" ?></span></p>
               <p class="menu-describe">Детали в заказе и состояние по ним</p>
             </a>
           </li>
           <li>
-            <a href="<?= Url::to(['site/balance']);?>">
-              <p class="menu-title balance">Баланс</p>
+            <a href="<?= Url::to(['balance/index']);?>">
+              <p class="menu-title balance">Баланс<span class="badge"><?= $balance?$balance:"" ?></span></p>
               <p class="menu-describe">История платежей и расшифровка списаний</p>
             </a>
           </li>

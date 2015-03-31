@@ -5,12 +5,15 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models\events;
+
+use yii;
 use yii\base\Event;
 
 class NotifyEvent extends Event{  
   const USER_NOTIFY_EVENT = "USER_NOTIFY_EVENT";
   //public vars  
   public $text;
+  public $reciver = null;
   //protected vars
   //private vars  
   //============================= Public =======================================
@@ -18,4 +21,11 @@ class NotifyEvent extends Event{
   //============================= Protected ====================================
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================
+  public function init(){
+    parent::init();
+    if( yii::$app->user ){
+      $this->reciver = yii::$app->user->getIdentity()->getId();
+    }
+  }
+
 }

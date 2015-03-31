@@ -38,11 +38,15 @@ class OrderController extends Controller{
   //============================= Private ======================================
   private function columns(){
     return [
-      GridHelper::Column1(),
+      GridHelper::ColumnStatus(),      
       GridHelper::Column2(),      
       GridHelper::Column4(),
       GridHelper::Column5O(),
       GridHelper::Column6O(),
+      GridHelper::ColumnPay(),
+      GridHelper::ColumnPayValue(),
+      GridHelper::ColumnComment(),
+      GridHelper::ColumnPayAction(),
     ];
   }
   //============================= Constructor - Destructor =====================  

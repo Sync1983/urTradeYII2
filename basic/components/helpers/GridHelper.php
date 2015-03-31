@@ -14,15 +14,16 @@ use kartik\editable\Editable;
 use kartik\grid\ActionColumn;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use app\models\events\BasketEvent;
 
 class GridHelper{
   //============================= Public =======================================
   public static function Column1(){
-    return ['attribute'=>'update_time','class'=> DataColumn::className(),'header'=>'От','width'=>'50px','format'=>'raw','headerOptions'=>['class'=>'kartik-sheet-style'],'value'=>function ($model, $key, $index, $widget) {return "<span>".date("H:i",$model->update_time)."<br>".date("d-m-y",$model->update_time)."</span>";},];
+    return ['attribute'=>'update_time','class'=> DataColumn::className(),'header'=>'От','width'=>'50px','format'=>'raw','headerOptions'=>['class'=>'kartik-sheet-style'],'value'=>function ($model, $key, $index, $widget) {return "<span>".date("H:i",$model->update_time)."<br>".date("d-m-y",$model->update_time)."</span>";},'vAlign'=>'middle',];
   }
   
   public static function Column2(){
-    return ['headerOptions'=>['class'=>'kartik-sheet-style'],'header'=>'Деталь','format' => 'raw','hAlign'=>'center','value'=>function ($model, $key, $index, $widget) {return "<span>[ ".$model->articul." ] ".$model->producer."<br><b>".$model->name."</b></span>";},];
+    return ['headerOptions'=>['class'=>'kartik-sheet-style'],'header'=>'Деталь','format' => 'raw','hAlign'=>'center','value'=>function ($model, $key, $index, $widget) {return "<span>[ ".$model->articul." ] ".$model->producer."<br><b>".$model->name."</b></span>";},'vAlign'=>'middle',];
   }
   
   public static function Column3(){
@@ -30,6 +31,7 @@ class GridHelper{
         'attribute'=>'price',    
         'header'=>'Цена',
         'headerOptions'=>['class'=>'kartik-sheet-style'],
+        'vAlign'=>'middle',
         'format' => 'raw',
         'value'=>function ($model, $key, $index, $widget) { 
             $price = yii::$app->user->getUserPrice($model->price);
@@ -40,7 +42,7 @@ class GridHelper{
   }
   
   public static function Column4(){
-    return ['attribute'=>'shiping','header'=>'Срок','headerOptions'=>['class'=>'kartik-sheet-style'],'width'=>'50px'];
+    return ['attribute'=>'shiping','header'=>'Срок','headerOptions'=>['class'=>'kartik-sheet-style'],'width'=>'50px','vAlign'=>'middle',];
   }
   
   public static function Column5(){
@@ -50,6 +52,7 @@ class GridHelper{
         'headerOptions'=>['class'=>'kartik-sheet-style'],
         'pageSummary'=>true,    
         'width'=>'50px',
+        'vAlign'=>'middle',
         'format'=>['decimal', 0],    
         'class'=>  EditableColumn::className(),
         'editableOptions'=> function ($model, $key, $index) {      
@@ -83,6 +86,7 @@ class GridHelper{
         'header'=>'Кол-во',
         'headerOptions'=>['class'=>'kartik-sheet-style'],
         'width'=>'50px',
+        'vAlign'=>'middle',
         'format'=>['decimal', 0],    
     ];
   }
@@ -94,6 +98,7 @@ class GridHelper{
         'headerOptions' =>['class'=>'kartik-sheet-style'],
         'format'        =>['decimal', 2],
         'width'         =>'100px',
+        'vAlign'=>'middle',
         'value'         => function ($model, $key, $index, $widget) { 
             $p = compact('model', 'key', 'index');
             $price = yii::$app->user->getUserPrice($model->price);
@@ -112,6 +117,7 @@ class GridHelper{
         'headerOptions' =>['class'=>'kartik-sheet-style'],
         'format'        =>['decimal', 2],
         'width'         =>'100px',
+        'vAlign'=>'middle',
         'value'         => function ($model, $key, $index, $widget) {             
             $price = yii::$app->user->getUserPrice($model->price)*$model->sell_count;
             return $price;
@@ -129,6 +135,7 @@ class GridHelper{
         'class'           =>  EditableColumn::className(),
         'headerOptions'   =>['class'=>'kartik-sheet-style'],    
         'width'           =>'150px',
+        'vAlign'=>'middle',
         'refreshGrid'     => true,
         'editableOptions' => function ($model, $key, $index) {      
           return[
@@ -147,6 +154,7 @@ class GridHelper{
         'class'=> ActionColumn::className(),
         'header' => 'Действия',
         "template" => '{delete} {order}',
+        'vAlign'=>'middle',
         'buttons' => [      
           'order'=> function($url,$model){
             $label = '<i class="glyphicon glyphicon-shopping-cart"></i>';
@@ -170,7 +178,7 @@ class GridHelper{
   }
   
   public static function Column9(){
-    return ['class'         =>  CheckboxColumn::className(),'headerOptions' => ['class'=>'kartik-sheet-style'],'width' => "35px"];
+    return ['class'         =>  CheckboxColumn::className(),'headerOptions' => ['class'=>'kartik-sheet-style'],'width' => "35px",'vAlign'=>'middle',];
   }
   
   public static function Column5G(){
@@ -180,6 +188,7 @@ class GridHelper{
     'headerOptions'=>['class'=>'kartik-sheet-style'],
     'pageSummary'=>true,    
     'width'=>'50px',
+    'vAlign'=>'middle',
     'format'=>['decimal', 0],    
     'class'=>  EditableColumn::className(),
     'editableOptions'=> function ($model, $key, $index) {      
@@ -215,6 +224,7 @@ class GridHelper{
     'headerOptions'   =>['class'=>'kartik-sheet-style'],    
     'width'           =>'150px',
     'refreshGrid'     => true,
+    'vAlign'=>'middle',
     'editableOptions' => function ($model, $key, $index) {      
       return[
         'header'      =>'Количество', 
@@ -232,6 +242,7 @@ class GridHelper{
     'class'=> ActionColumn::className(),
     'header' => 'Действия',
     "template" => yii::$app->user->isGuest?'{delete}':'{delete} {tobasket}',
+    'vAlign'=>'middle',
     'buttons' => [      
       'tobasket'=> function($url,$model){
         $label = '<i class="glyphicon glyphicon-open-file"></i>';
@@ -251,6 +262,102 @@ class GridHelper{
     'deleteOptions' => ['label' => '<i class="glyphicon glyphicon-remove"></i>','title'=>'Удалить запись', 'data-toggle'=>'tooltip'],    
     'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['basket/item-'.$action,"id"=>$key,"type"=> BasketEvent::GUEST_BASKET]); },
     'headerOptions'=>['class'=>'kartik-sheet-style'],
+    ];
+  }
+  
+  public static function ColumnPay(){
+    return [
+      'class'=>'kartik\grid\BooleanColumn',
+      'header' => 'Оплачено',
+      'attribute'=>'pay', 
+      'vAlign'=>'middle'
+    ];
+  }
+  
+  public static function ColumnPayValue(){
+    return [      
+      'header' => 'Сумма оплаты',
+      'format'        =>['decimal', 2],
+      'attribute'=>'pay_value', 
+      'vAlign'=>'middle'
+    ];
+  }
+  
+  public static function ColumnStatus(){
+    return [      
+      'header' => 'Статус',      
+      'attribute'=>'status', 
+      'vAlign'=>'middle',
+      'value'=>function ($model, $key, $index, $widget) { 
+        return $model->textStatus();
+      }
+    ];
+  }
+  
+  public static function ColumnComment(){
+    return [      
+      'header' => 'Комментарий',      
+      'attribute'=>'comment', 
+      'vAlign'=>'middle',      
+    ];    
+  }
+  
+  public static function ColumnPayAction(){
+    return [
+    'class'=> ActionColumn::className(),
+    'header' => 'Действия',
+    "template" => '{by-balance} {by-yandex} {delete}',
+    'vAlign'=>'middle',
+    'buttons' => [      
+      'delete' => function ($url,$model){
+        if( ((bool)$model->pay) || ($model->status > 0) ){
+          return "";
+        }
+        $label = '<i class="glyphicon glyphicon glyphicon glyphicon-remove"></i>';
+        $options = [ 
+          'label' => '<i class="glyphicon glyphicon-remove"></i>',
+          'title'=>'Удалить запись', 
+          'data-toggle'=>'tooltip',
+          'data-confirm' => "Вы уверены, что хотите удалить запись?"];
+        return Html::a($label, $url,$options);
+      },
+      'by-balance' => function($url,$model){
+        if( (bool)$model->pay || !yii::$app->user->isCompany()){
+          return "";
+        }
+        if( yii::$app->user->getUserPrice($model->price) > yii::$app->user->getBalance()->getFullBalance() ){
+          return "";
+        }
+        $label = '<i class="glyphicon glyphicon glyphicon-rub"></i>';
+        $options = [
+          'title' => 'Оплатить из денег на балансе',
+          'disabled'=> 'disabled',
+          'data-toggle'=>'tooltip',
+          'data-confirm' => 
+            "Вы хотите оплатить заказ деталей из Ваших денег <b>на балансе?</b><br>".
+            "В количестве <b>".$model->sell_count."</b> шт. <br>".
+            "По цене: <b>".yii::$app->user->getUserPrice($model->price)."</b> руб. за шт.<br>".
+            "Общая сумма составит: ".(yii::$app->user->getUserPrice($model->price)*$model->sell_count)." руб.",
+        ];
+        return Html::a($label, $url,$options);
+      },
+      'by-yandex' => function($url,$model){
+        if( (bool)$model->pay ){
+          return "";
+        }
+        $label = '<i> <img src="img/yandex-money.png" alt="Оплатить через Yandex-деньги" style="width:30px;heoght:20px;margin-top:-5px;"/></i>';
+        $options = [
+          'title' => 'Оплатить из через Yandex-деньги',
+          'data-toggle'=>'tooltip',
+          'data-confirm' => 
+            "Вы хотите оплатить заказ деталей через <b>Yandex-деньги?</b><br>".            
+            "В количестве <b>".$model->sell_count."</b> шт. <br>".
+            "По цене: <b>".yii::$app->user->getUserPrice($model->price)."</b> руб. за шт.<br>".
+            "Общая сумма составит: ".(yii::$app->user->getUserPrice($model->price)*$model->sell_count)." руб.",
+          ];
+        return Html::a($label, $url,$options);
+      }],    
+    'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['order/pay-'.$action,"id"=>$key]); },    
     ];
   }
   //============================= Protected ====================================

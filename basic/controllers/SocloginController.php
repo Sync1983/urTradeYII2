@@ -7,6 +7,7 @@ use yii\web\Controller;
 use app\models\socnet\SocNetInterface;
 use app\models\SocAuth;
 use yii\helpers\ArrayHelper;
+use app\models\events\NotifyEvent;
 
 class SocloginController extends Controller
 {
@@ -177,7 +178,7 @@ class SocloginController extends Controller
     if(!$login){
       return $this->render('error',['name'=>'Ошибка авторизации','message'=>"Пользователь не найден"]);      
     }
-    $this->_user->addNotify("Добро пожаловать");
+    Yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,new NotifyEvent(['text'=>"Добро пожаловать"]));
     return $this->goHome();
   }
   
