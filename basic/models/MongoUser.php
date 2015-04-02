@@ -15,12 +15,13 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
 
   public static function createNew($login,$pass,$name="new name"){
     $old_user = MongoUser::findByUsername($login);
-    if($old_user){
+
+    if($old_user && (($login !== "") || ($pass !== "") ) ){
       return false;
     }
     
     $user = new MongoUser();
-    $user->user_name      = $login;     //Логин
+    $user->user_name      = $login?$login:$name;     //Логин
     $user->user_pass      = md5($pass); //Пароль
     $user->role           = "user";     //Роль пользователя      
     $user->over_price     = 20;         //Наценка для пользователя
