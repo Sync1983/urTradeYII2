@@ -31,10 +31,8 @@ class SearchForm extends Model{
         $makers = $provider->getMakerList($search, $this->cross);        
       } else {
         $makers = \yii\helpers\ArrayHelper::merge($makers, $provider->getMakerList($search, $this->cross));
-        $makers = array_merge_recursive($makers, $provider->getMakerList($search, $this->cross));        
       }
     }
-    //var_dump($makers);
     return $makers;
   }
   
