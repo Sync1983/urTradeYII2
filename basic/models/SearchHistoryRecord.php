@@ -18,7 +18,7 @@ class SearchHistoryRecord extends ActiveRecord{
     $answer = [];
     foreach ($items as $item) {
       $answer[] = [
-        'label'   => "\"".$item['_id'] ."\" в ". date("H:i:s",$item['time']),
+        'label'   => date("d-m-y в H:i:s",$item['time']).": \"".$item['_id'] ."\"",
         'url'     => "#",
         'options' =>[
           'onclick' => "main.historyItemClick('".$item['_id']."');"          

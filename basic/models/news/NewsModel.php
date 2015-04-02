@@ -9,9 +9,9 @@ use yii\mongodb\ActiveRecord;
 use yii\helpers\Html;
 
 class NewsModel extends ActiveRecord {  
-
+  
   public function attributes(){
-    return ['_id', 'icon', 'header', 'text', 'date'];
+    return ['_id', 'icon', 'header', 'text', 'date', 'show'];
   }  
   
   public static function collectionName(){
@@ -25,7 +25,7 @@ class NewsModel extends ActiveRecord {
   }
 
   public function head(){
-    return Html::label($this->getAttribute("header"));
+    return Html::label($this->getAttribute("header"),null,['class'=>'news-header']);
   }
   
   public function icon(){
@@ -33,15 +33,18 @@ class NewsModel extends ActiveRecord {
   }
   
   public function text(){
-    return Html::label($this->getAttribute("text"));
+    return Html::label($this->getAttribute("text"),null,['class'=>'news-text']);
   }
   
   public function date(){
     $date = $this->getAttribute("date");
-    $date_fmt = date("H:i:s d/m/Y", $date);
-    return Html::label($date_fmt);
+    setlocale(LC_TIME, "ru_RU");
+    $date_fmt = date("H:i:s d-M-Y", $date);
+    return Html::label($date_fmt,null,['class'=>'news-date']);
   }
   
-  
+  public function isVisible(){
+    return $this->getAttribute('show');
+  }
   
 }

@@ -1,3 +1,6 @@
 
+<<<<<<< HEAD
 2015/04/02 14:55:19 [error] 9136#0: *9 FastCGI sent in stderr: "PHP message: PHP Warning:  require(/mnt/hgfs/urTradeYII2/basic/web/../vendor/autoload.php): failed to open stream: No such file or directory in /mnt/hgfs/urTradeYII2/basic/web/index.php on line 7
 PHP message: PHP Fatal error:  require(): Failed opening required '/mnt/hgfs/urTradeYII2/basic/web/../vendor/autoload.php' (include_path='.:/usr/share/php:/usr/share/pear') in /mnt/hgfs/urTradeYII2/basic/web/index.php on line 7" while reading response header from upstream, client: 192.168.0.104, server: atc58.bit, request: "GET / HTTP/1.1", upstream: "fastcgi://unix:/var/run/php5-fpm.sock:", host: "192.168.0.109"
+=======
+>>>>>>> alcohol

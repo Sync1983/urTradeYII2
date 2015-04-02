@@ -12,7 +12,7 @@ use app\models\search\SearchProviderBase;
 class SearchModel extends Model{
   
   public $cross;
-  public $search;
+  public $search_text;
   public $op;
   public $provider;
   public $maker_id;
@@ -27,43 +27,37 @@ class SearchModel extends Model{
    * строки поиска артикула детали
    * @return array
    */
-  public function loadParts(){
-    $clsid = $this->provider;
-    /** @var app\models\search\SearchProviderBase $class **/
-    if(!$class = $this->getProviderByCLSID($clsid)){
+  public function loadParts(){    
+    if(!$class = $this->getProviderByCLSID($this->provider)){
       return [];
     }
-    $parts = $class->getPartList($this->search,  $this->maker_id,  $this->cross);
-    $isGuest = yii::$app->user->isGuest;
-    $over_price = 0;
-    if (!$isGuest) {
-      $over_price = yii::$app->user->getIdentity()->getUserOverPriver();
+    $search = SearchProviderBase::_clearStr($this->search_text);    
+    $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);    
+    
+    $answer_data = [];    
+    foreach ($parts as $key=>$part){      
+        $data = $parts[$key];
+        $data["price"] = yii::$app->user->getUserPrice($data["price"]);
+        if(is_array($data["info"])){
+          $data["info"] = "";
+        }
+        $answer_data[$key] = [
+          "id"          => strval($data["_id"]),
+          "articul"     => $data["articul"],
+          "producer"    => $data["producer"],
+          "name"        => $data["name"],
+          "price"       => $data["price"],
+          "shiping"     => $data["shiping"],
+          "info"        => strval($data["info"]),
+          "update_time" => $data["update_time"],
+          "is_original" => boolval($data["is_original"]),
+          "count"       => $data["count"],
+          "lot_quantity"=> $data["lot_quantity"]
+        ];
     }
-    foreach ($parts as $key=>$part){
-      if(!$isGuest){
-        $parts[$key]["price"] += round($over_price*$part["price"]/100,2);
-      } else {
-        //$parts[$key]["price"] = 0;
-      }
-    }
-    return $parts;
+    return $answer_data;
   }
-  /**
-   * Возвращает список производителей запрашиваемого артикула
-   * @return array
-   */
-  public function generateMakerList(){
-    $makers = [];
-    foreach ($this->_providers as $provider){
-      /* @var SearchProviderBase $provider */
-      if(count($makers)==0){
-        $makers = $provider->getMakerList($this->search, $this->cross);        
-      } else {
-        $makers = array_merge_recursive($makers, $provider->getMakerList($this->search, $this->cross));        
-      }
-    }
-    return $makers;
-  }
+  
   /**
    * Возвращает класс поставщика по указанном CLSID
    * @param int $clsid
@@ -101,7 +95,7 @@ class SearchModel extends Model{
       if(isset($default_data[$provider])){
         $default = $default_data[$provider];
       }      
-      $class = yii::createObject($provider,[$default]);
+      $class = yii::createObject($provider,[$default,[]]);
       $this->_providers[$class->getCLSID()] = $class;
     }
   }
@@ -109,7 +103,7 @@ class SearchModel extends Model{
   public function rules() {
     return [
       ['cross','boolean'],
-      ['search','string'],
+      ['search_text','string'],
       ['op','string'],
       ['provider','integer'],
       ['maker_id','string'],      
@@ -117,7 +111,7 @@ class SearchModel extends Model{
   }
   
   public function attributes() {
-    return ['cross','search','op','maker_id','provider'];
+    return ['cross','search_text','op','maker_id','provider'];
   }
   
   

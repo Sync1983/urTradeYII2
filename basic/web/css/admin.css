@@ -1,0 +1,126 @@
+/*
+  Стили для страниц управления
+*/
+/* 
+    Created on : 01.03.2015, 1:23:10
+    Author     : Sync<atc58.ru>
+*/
+.admin-page{  
+  margin: 0px auto;
+  width: 60%;
+  margin-top: 70px;
+  display: table;
+}
+
+div.a-row{
+  display: table-row;
+}
+
+ul.a-menu{
+  padding: 10px 20px 0;
+  margin: 0;
+  width: 18%;  
+  list-style: none;
+  background: #31B0D5;
+  border: 3px solid rgba(0,0,0,0.7);
+  border-left: none;
+  box-shadow: inset 5px 1px 25px 2px #202020;
+  border-radius: 5px 0 0px 5px;
+  float:left;
+  display: table-cell;
+  position: relative;
+}
+
+ul.a-menu > li{
+  padding: 5px 10px;
+  margin: 0px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  text-shadow: 0 0 5px white;
+  cursor: pointer;
+}
+ul.a-menu > li:hover{color: white;font-weight: bold;}
+
+div.admin-content{
+  padding: 5px 20px 5px 10px;
+  width: 82%;  
+  float:left;
+  background: white;
+  border: 3px solid rgba(0,0,0,0.5);
+  border-left: none;
+  box-shadow: inset -10px 0 10px 5px #dAdAdA;
+  display: table-cell; 
+  overflow-y: scroll;
+}
+
+.a-news-list{
+  list-style: none;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.a-news-list li{
+  width: 100%;
+  border-bottom: 2px solid black;
+}
+
+.a-news-line .row{
+  margin: 0;
+}
+
+.a-news-list li input[type="text"]{
+  width: 100%;
+}
+
+.a-news-list li textarea{
+  width: 100%;
+  height: 100px;
+  resize: none;
+}
+
+.a-news-line img{ 
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.news-view{
+  padding: 5px 10px;
+  width: 100%;
+  max-height: 210px;
+  min-height: 200px;
+  overflow: hidden;
+  background-color: #dAdAdA;
+}
+
+.news-view img{
+  margin: auto 0;
+  max-width: 200px;
+  max-height: 200px;
+  display: block;
+  position: absolute;
+}
+
+.news-view label.news-header{  
+  margin-left: 210px;
+  border-bottom: 2px solid rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.news-view label.news-text{  
+  line-height: 25px;
+  text-align: justify;
+  font-weight: normal;
+  margin-left: 210px;  
+  max-height: 200px;
+  position: relative;  
+}
+
+.news-view label.news-date{  
+  font-size: 8pt;  
+  line-height: 15px;  
+  font-weight: bold;
+  margin-left: 210px;  
+  position: relative;  
+}  
+
+

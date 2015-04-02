@@ -22,7 +22,7 @@ class SearchProviderFile extends SearchProviderBase{
               ["provider" => $this->_CLSID] ,
               ["articul"  => strval($part_id)],
               ["maker_id" => strval($maker_id)]
-    ]);
+    ]);    
     $answer = PartRecord::find()->where($cond)->orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])->limit(20)->asArray()->all();    
     return $answer;
   }
@@ -179,7 +179,7 @@ class SearchProviderFile extends SearchProviderBase{
     return [];
   }  
 
-  public function __construct($Name, $CLSID, $default_params, $config) {
+  public function __construct($Name, $CLSID, $default_params, $config=[]) {
     parent::__construct($Name, $CLSID, $default_params, $config);
     if(!isset($default_params['dir'])){
       throw \BadMethodCallException("Класс должен содержать описание пути к директории прайсов \"dir\"");

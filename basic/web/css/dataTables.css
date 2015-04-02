@@ -7,13 +7,9 @@ table.dataTable {
   clear: both;
   border-collapse: separate;
   border-spacing: 0;
-  /*
-   * Header and footer styles
-   */
-  /*
-   * Body styles
-   */
+  table-layout: fixed;  
 }
+
 table.dataTable thead th,
 table.dataTable tfoot th {
   font-weight: bold;
@@ -82,6 +78,7 @@ table.dataTable tbody tr.selected {
 table.dataTable tbody th,
 table.dataTable tbody td {
   padding: 8px 10px;
+  overflow: hidden;
 }
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
   border-top: 1px solid #dddddd;

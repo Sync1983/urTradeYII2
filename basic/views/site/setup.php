@@ -3,124 +3,168 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use app\models\SetupModel;
 use app\models\prices\OverpriceModel;
+use app\controllers\SocloginController;
+use yii\helpers\Url;
 
-/* @var $model SetupModel */
 /* @var $price_model OverpriceModel */
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
+/* @var $model SetupModel */
+
+$nets = SocLoginController::getAvaibleNets();
+$active_nets = SocloginController::getActiveNets();
+$not_active_nets = array_diff($nets, $active_nets);      
 
 $this->title = 'Настройки пользователя';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<h3>Карточка клиента</h3>  
+<h4>Укажите Ваши реальные данные, чтобы мы могли правильно оформить документы и доставить Вам товар.</h4>
+<div class="alert alert-info" role="alert">Для редактирования просто кликните на текст</div>
 <div class="site-contact">
-    <h3><?= Html::encode($this->title) ?></h3>  
-    <h5>Укажите Ваши контактные данные, чтобы мы могли правильно оформить документы и доставить Вам товар.</h5>
-    <div class="row setup-style">
-
-      <div class="col-lg-6">
-        <?php $form = ActiveForm::begin([
+  <?php $form = ActiveForm::begin([
             'id' => 'setup-form',
             'action'=>['site/setup'],
             'enableClientValidation'=>false,            
           ]);?>
-        <?= Html::hiddenInput("type","data"); ?>
-        
-        <?= $form->errorSummary($model); ?>
-        <div class="row">
-          <?= Html::activeLabel($model, "type",['label'=>'Заказчик']); ?>
-          <?= Html::activeDropDownList($model, "type",
-              [0=>"Юридическое лицо",
-               1=>"Частное лицо"]);?>          
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "name",['label'=>'Название организации']); ?>
-          <?= Html::activeInput("text", $model, "name",['size'=>50]);?>          
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "first_name",['label'=>'Имя контактного лица']); ?>
-          <?= Html::activeInput("text", $model, "first_name",['size'=>50]); ?>
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "second_name",['label'=>'Фамилия контактного лица']); ?>
-          <?= Html::activeInput("text", $model, "second_name",['size'=>50]); ?>
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "inn",['label'=>'ИНН (Для юр.лиц)']); ?>
-          <?= Html::activeInput("text", $model, "inn",['size'=>50,'maxlength'=>12]); ?>
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "kpp",['label'=>'КПП (Для юр.лиц)']); ?>
-          <?= Html::activeInput("text", $model, "kpp",['size'=>50]); ?>
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "phone",['label'=>'Номер телефона']); ?>
-          <?= Html::activeInput("tel", $model, "phone",['size'=>50,'maxlength'=>11]); ?>
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "email",['label'=>'Почта для связи']); ?>
-          <?= Html::activeInput("text", $model, "email",['size'=>50]); ?>
-        </div>
-        <div class="row">
-          <?= Html::activeLabel($model, "addres",['label'=>'Адрес доставки груза']); ?>
-          <?= Html::activeInput("text", $model, "addres",['size'=>50]); ?>
-        </div>
-        <div class="row center-block" style="left:50%; position: relative;">
-          <?= Html::submitButton("Сохранить");?>
-        </div>
-        <?php ActiveForm::end();?>
-      </div>
-      <div class="col-lg-6">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <h5 class="center-block">Управление наценками для вывода в поиске</h5>
-          </div>
-        </div>
-        <div class="panel-body">
-        <?php $form_price = ActiveForm::begin([
-            'id' => 'overprice-form',
-            'action'=>['site/setup'],
-            'enableClientValidation' => false            
-          ]); ?>
-        <?= $form_price->errorSummary($price_model); ?>
-        <?= Html::hiddenInput("type","overprice"); ?>
-        <div class="row" style="margin-left: 10px;margin-top:-30px;padding-bottom: 5px;">
-          <?= Html::button("Добавить строку",['hint'=>"asd", 'onclick'=>'add_price_row(this);']); ?>
-        </div>
-        <?php foreach ($price_model->prices as $name=>$value):?>
-          <div class="row" style="margin-left: 10px;padding-bottom: 5px;">
-            <?= Html::button(Html::img("/img/cross.png"),['hint'=>"asd", 'onclick'=>'delete_price_row(this);']); ?>
-            <?= Html::activeLabel($price_model,"price_name[]",['label'=>"Имя"]); ?>
-            <?= Html::activeInput("text", $price_model, "prices_name[]",['value'=>$name,'size'=>'20']); ?>
-            <?= Html::activeLabel($price_model,"price_value[]",['label'=>"Значение, %"]); ?>
-            <?= Html::activeInput("text", $price_model, "prices_value[]",['value'=>$value,'size'=>'20']); ?>            
-          </div>
-        <?php endforeach;?>
-        <?= Html::submitButton("Сохранить");?>
-        <?php ActiveForm::end(); ?>
-        </div>
-      </div>
-    </div>    
-</div>
-
-<script type="text/javascript">
-  function delete_price_row(item){
-    var parent = $(item).parent();
-    parent.remove();
-  }
+  <?= $form->errorSummary($model); ?>
+  <div class="user-badge">
+    <div class="id"><p>ID: <?= $model->_id?></p></div>
+    <div class="photo"><?= Html::img($model->photo)?></div>
+    <div class="text name" style="top:80px;">
+      <?= Html::activeLabel($model, "first_name",['label'=>'Имя:']); ?>
+      <p class="viewer">
+      <span><?= $model->first_name?></span>
+        <?= Html::activeInput("text", $model, "first_name"); ?>      
+      </p>
+    </div>
+    <div class="text name" style="top:100px;">
+      <?= Html::activeLabel($model, "second_name",['label'=>'Фамилия:']); ?>
+      <p class="viewer">
+      <span><?= $model->second_name?></span>
+        <?= Html::activeInput("text", $model, "second_name"); ?>
+      </p>
+    </div>
+    <div class="text name">
+      <?= Html::activeLabel($model, "phone",['label'=>'Телефон:']); ?>
+      <p class="viewer">
+      <span><?= $model->phone?></span>
+        <?= Html::activeInput("tel", $model, "phone",['maxlength'=>11]); ?>
+      </p>
+    </div>
+    <div class="text name">
+      <?= Html::activeLabel($model, "email",['label'=>'Почта:']); ?>
+      <p class="viewer">
+      <span><?= $model->email?></span>
+        <?= Html::activeInput("text", $model, "email"); ?>
+      </p>
+    </div>
+    <?php if($model->company):?>      
+    <div class="text name">      
+      <?= Html::activeLabel($model, "name",['label'=>'Название:']); ?>
+      <p class="viewer">
+      <span><?= $model->name?></span>
+          <?= Html::activeInput("text", $model, "name");?>
+      </p>
+    </div>
+    <div class="text name">      
+      <?= Html::activeLabel($model, "inn",['label'=>'ИНН:']); ?>
+      <p class="viewer">
+      <span><?= $model->inn?></span>
+        <?= Html::activeInput("text", $model, "inn",['maxlength'=>12]); ?>        
+      </p>
+    </div>
+    <div class="text name">      
+      <?= Html::activeLabel($model, "kpp",['label'=>'КПП:']); ?>
+      <p class="viewer">
+      <span><?= $model->kpp?></span>
+        <?= Html::activeInput("text", $model, "kpp"); ?>
+      </p>
+    </div>
+    <?php endif;?>    
+    <div class="text name">
+      <?= Html::activeLabel($model, "addres",['label'=>'Адрес доставки:']); ?>
+      <p class="viewer">
+      <span><?= $model->addres?></span>
+        <?= Html::activeInput("text", $model, "addres"); ?>
+      </p>
+    </div>
+    <?php if(!$model->company):?>
+      <?= Html::a("Я юридическое лицо",Url::to(["site/i-company"]),['class'=>'btn btn-info']);?>
+    <?php endif;?>
+    <?= Html::submitButton("Сохранить",['class'=>'btn btn-info']);?>
+    <?php ActiveForm::end();?>
+  </div>
   
-  function add_price_row(item){
-    var parent = $(item).parent().last();
-    var text = '<div class="row panel-info" style="margin-left: 10px;padding-bottom: 5px;">'+
-            '<?= Html::button(Html::img("/img/cross.png"),["hint"=>"asd", "onclick"=>"delete_price_row(this);","style"=>"margin-right: 5px;"]); ?>'+
-            '<?= Html::activeLabel($price_model,"price_name[]",["label"=>"Имя","style"=>"padding-right:5px;"]); ?>'+
-            '<?= Html::activeInput("text", $price_model, "prices_name[]",['value'=>"New",'size'=>'20']); ?>'+
-            '<?= Html::activeLabel($price_model,"price_value[]",['label'=>"Значение, %","style"=>"padding-right:4px; padding-left:4px"]); ?>'+
-            '<?= Html::activeInput("text", $price_model, "prices_value[]",['value'=>"10",'size'=>'20']); ?>'+
-            '</div>';
-    parent.after(text);
-  }
-</script>
+  <div class="socnet-info panel panel-info">
+    <div class="panel-heading">
+      <h5 class="center-block">Вы можете обновить данные из доступных соц. сетей</h5>
+    </div>   
+    <div class="panel-body">  
+      <ul class="socnet-list">
+      <?php foreach ($active_nets as $net_name):?>
+        <li class="<?=$net_name?>-icon"><?= Html::a($net_name, Url::to(["soclogin/update-info","net"=>$net_name]),['data-confirm'=>"При обновлении старые данные будет утеряны. Выполнить обновление?"]);?></li>
+      <?php endforeach;?>
+      </ul>
+    </div>
+  </div>
+  <div class="socnet-info panel panel-info">
+    <div class="panel-heading">
+      <h5 class="center-block">Вы можете добавить авторизацию через следующие соц.сети</h5>
+    </div>   
+    <div class="panel-body">  
+      <ul class="socnet-list">
+      <?php foreach ($not_active_nets as $net_name):?>
+        <li class="<?=$net_name?>-icon"><?= Html::a($net_name, Url::to(["soclogin/register","net"=>$net_name]));?></li>
+      <?php endforeach;?>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="socnet-info panel panel-info">
+    <div class="panel-heading">
+      <h5 class="center-block">Здесь вы можете управлять списком наценок строки поиска</h5>
+    </div>   
+    <div class="panel-body">  
+      <?php $form = ActiveForm::begin([
+              'id' => 'prices-form',
+              'action'=>['site/setup-prices'],
+              'enableClientValidation'=>true,            
+              'validateOnType'=>true
+              ]);?>
+        <table class="over-price-panel">        
+          <thead>
+            <tr>
+              <th style="width: 50%;">Имя</th>
+              <th style="width: 50%;">Значение (%)</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td colspan="3">
+              <button type="button" class="btn btn-info btn-add" onclick="add_row('over-price-panel');">+</button>
+              <?= Html::submitButton("Сохранить",['class'=>'btn btn-info'])?></td>
+            </tr>
+          </tfoot>
+          <tbody>
+            <?php foreach ($prices as $name=>$value):?>                
+              <tr>
+                <td><?= Html::input("text", "name[]", $name)?></td>                
+                <td><?= Html::input("number", "value[]", $value,['min'=>0,"max"=>1000])?></td>
+                <td><a href="" class="btn btn-danger" onclick="del_row(this); return false">&#x232B;</a></td>
+              </tr>
+            <?php endforeach;?>
+          </tbody>
+        </table>
+      <?php ActiveForm::end(); ?>
+    </div>
+  </div>
+  
+</div>
+  
+
 
 
 

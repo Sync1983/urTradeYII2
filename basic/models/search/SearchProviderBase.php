@@ -80,7 +80,7 @@ class SearchProviderBase extends Object {
     if($is_post){
       curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array_merge($param,$this->_default_params)));
     }    
-	  $answer = curl_exec($ch);
+	  $answer = curl_exec($ch);	  
     curl_close($ch);
     return $answer;
   }
@@ -100,8 +100,7 @@ class SearchProviderBase extends Object {
       }        
     }
     
-    $result['provider'] = $this->_CLSID;
-    $result['update_time'] = time();    
+    $result['provider'] = $this->_CLSID;    
     
     foreach ($add_fields as $key => $value) {
       $result[$key] = $value;
@@ -113,8 +112,8 @@ class SearchProviderBase extends Object {
    * @param string $text
    * @return string
    */
-  protected function _clearStr($text) {    
-    return preg_replace("/[^a-zA-Z0-9\s]/", "", $text);    
+  public static function _clearStr($text) {    
+    return preg_replace("/[^a-zA-Z0-9]/", "", $text);    
   }
   /**
    * ПОЛНОСТЬЮ очищает из базы запчастей все данные от указанного производителя
@@ -150,7 +149,7 @@ class SearchProviderBase extends Object {
     } catch (Exception $exc) {    
       Yii::error($exc);
       $json = '[]';
-    } 
+    } 	
     return json_decode($json,true);
   }
   /**

@@ -18,7 +18,16 @@
         "yiisoft/yii2": "*",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-	"yiisoft/yii2-mongodb": "*"
+        "yiisoft/yii2-mongodb": "*",        
+        "kartik-v/yii2-krajee-base": "*",
+        "kartik-v/yii2-grid": "*",
+        "kartik-v/yii2-checkbox-x": "*",
+        "kartik-v/yii2-editable": "*",
+        "kartik-v/yii2-widgets": "*",
+        "kartik-v/yii2-mpdf": "*",
+        "bower-asset/bootbox": "~4.3.0",
+        "bower-asset/bootstrap-select":"*",
+        "yiisoft/jquery-pjax":"*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
