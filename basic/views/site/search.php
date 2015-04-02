@@ -47,7 +47,7 @@ foreach ($maker as $key => $providers) {
   $items[0]['contentOptions'] = ['class' => 'in'];
 }*/
 if(count($items)==0){
-  echo "По Вашему запросу \"$model->search\" ничего не найдено!";
+  echo "По Вашему запросу ничего не найдено!";
 } else {
   echo Collapse::widget(['items' => $items]);
 }
