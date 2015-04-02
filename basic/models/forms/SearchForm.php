@@ -30,6 +30,7 @@ class SearchForm extends Model{
       if(count($makers)==0){
         $makers = $provider->getMakerList($search, $this->cross);        
       } else {
+        $makers = \yii\helpers\ArrayHelper::merge($makers, $provider->getMakerList($search, $this->cross));
         $makers = array_merge_recursive($makers, $provider->getMakerList($search, $this->cross));        
       }
     }
