@@ -14,6 +14,7 @@ use app\models\basket\GuestBasket;
 use app\models\basket\BasketModel;
 use app\models\balance\BalanceModel;
 use app\components\behaviors\NotificationBehavior;
+use yii\helpers\ArrayHelper;
 
 class SiteUser extends User{
   /* @var $_guest_basket GuestBasket */
@@ -118,17 +119,14 @@ class SiteUser extends User{
     if(!is_numeric($start_price)){
       throw new \yii\base\InvalidValueException("Ошибка в формате цены");
     }
-    $start_price *= 1.0;
-    $over_price = 0;    
-    if (!$this->isGuest) {
-      $over_price = $this->getIdentity()->getAttribute("over_price");
-      if(!$over_price){
-        $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;
-      }
-    } else {
-      $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;
-    }    
-    return $start_price + round($over_price*$start_price/100,2);
+    
+    $over_price = ArrayHelper::getValue(yii::$app->params, 'guestOverPrice', 18.0);
+    
+    if ( !$this->isGuest && $this->getIdentity()->hasAttribute("over_price")) {
+      $over_price = $this->getIdentity()->getAttribute("over_price") * 1.0;      
+    }
+    
+    return $start_price + round($over_price*$start_price*1.0/100.0,2);
   }
   /**
    * Возвращает список деталей в корзине

@@ -23,42 +23,43 @@ class OrderBehavior extends Behavior{
    * @param OrderEvent $event
    * @return type
    */
-  protected function onAdd(OrderEvent $event){
+  public function onAdd(OrderEvent $event){
     if( empty($event->items) ){
       return;
     }    
     foreach( $event->items as $item ){
       $order_item = new OrderRecord();
-      $order_item->setAttributes($item);
-      $order_item->setAttribute("_id", null);
+      $order_item->setAttributes($item);      
       $order_item->setAttribute("status", OrderRecord::STATE_WAIT_PAY);
       $order_item->setAttribute("pay", false);
       $order_item->setAttribute("pay_request", false);
       $order_item->setAttribute("pay_time", 0);
       $order_item->setAttribute("pay_value", 0.0);
       if($order_item->validate()){
-        $order_item->save();
+        $order_item->insert();
       }
     }    
   }
   
-  protected function onChangeBalance(BalanceEvent $event){
+  public function onChangeBalance(BalanceEvent $event){
     $notify = new NotifyEvent();
-    if( $event->status !== BalanceEvent::STATUS_OK ){
-      $notify->reciver = \yii::$app->user->getId();
-      $notify->text = "Ошибка при изменении баланаса";
-      \yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,$notify);
-      return;
-    }
-    
+    $notify->reciver = \yii::$app->user->getId();
+    if( $event->status === BalanceEvent::STATUS_OK){
+      $notify->text = "Баланс изменен на значение ".$event->value;
+    } elseif ($event->status === BalanceEvent::STATUS_MONEY_ADD_OK){
+      $notify->text = "Баланс увеличен на ".$event->value;
+    } elseif ($event->status === BalanceEvent::STATUS_MONEY_DEC_OK){
+      $notify->text = "Баланс уменьшен на ".$event->value;      
+    }    
+    \yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,$notify);    
   }
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================
   
   public function events(){
     return [
-      OrderEvent::EVENT_ORDER_ADD => 'onAdd',
-      BalanceEvent::EVENT_BALANCE_CHANGE => 'onChangeBalance'
+      OrderEvent::EVENT_ORDER_ADD => [ $this, 'onAdd' ],
+      BalanceEvent::EVENT_BALANCE_CHANGE => [  $this, 'onChangeBalance'],
     ];
   }
 

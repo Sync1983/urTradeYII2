@@ -27,7 +27,15 @@ class BalanceEvent extends Event{
   //protected vars
   //private vars  
   //============================= Public =======================================
-  //put your code here
+  public function serialize(){    
+    return json_encode([
+      'initiator' => $this->initiator->getAttribute("_id"),
+      'reciver'   => $this->reciver->getAttribute("_id"),
+      'item'      => $this->item->getAttribute("_id"),
+      'status'    => $this->status * 1,
+      'value'     => $this->value * 1.0
+    ]);
+  }
   //============================= Protected ====================================
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================

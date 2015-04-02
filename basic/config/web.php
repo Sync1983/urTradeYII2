@@ -9,6 +9,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language'  => 'ru-RU',
+    'timeZone'  => 'Europe/Moscow',
     'name'      => 'АвтоТехСнаб',
     'modules'   => [
       'gridview' =>[
@@ -41,11 +42,11 @@ $config = [
             'useFileTransport' => true,
         ],
         'log' => [
-            //'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning', 'info'],
+                    'levels' => ['error', 'warning'],
                 ],
                 [ 
                     'class' => 'yii\log\FileTarget',
@@ -53,9 +54,8 @@ $config = [
                     'categories' => ['balance'],
                     'except'  => ['application'],
                     'logVars' => [],
-                    'logFile' => '@app/runtime/logs/balance/balance.log',
-                    'maxFileSize' => 1024 * 20,
-                    'maxLogFiles' => 20,
+                    'logFile' => '@app/runtime/logs/balance.log',
+                    'enableRotation' => false,
                 ],
             ]
         ],

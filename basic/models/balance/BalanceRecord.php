@@ -39,7 +39,7 @@ class BalanceRecord extends ActiveRecord{
       $message['session'] = \yii::$app->session;
     }
     $message['request'] = \yii::$app->request;
-    \yii::info(json_encode($message), 'balance');
+    \yii::info("Try delete!!!".json_encode($message), 'balance');
     return false;
   }
   /**
@@ -51,7 +51,11 @@ class BalanceRecord extends ActiveRecord{
    */
   public function beforeSave($insert){
     $this->time = time();
-    \yii::info(json_encode($this), 'balance');
+    $attr = [];
+    foreach($this->attributes() as $attribute){
+      $attr[$attribute] = \yii\helpers\Html::decode(json_encode($this->$attribute));
+    }
+    \yii::info("Balance event: ".json_encode($attr), 'balance');
     return parent::beforeSave($insert);
   }
   //============================= Protected ====================================
@@ -61,7 +65,7 @@ class BalanceRecord extends ActiveRecord{
    * @param type $item
    * @return boolean
    */
-  protected function inTypeList($attribute,$item){
+    public function inTypeList($attribute,$item){
     if(!in_array($this->$attribute, $this->_item_types,true)){
       $this->addError($attribute, "Неверное значение поля");
       return false;
@@ -74,7 +78,7 @@ class BalanceRecord extends ActiveRecord{
    * @param type $item
    * @return boolean
    */
-  protected function inOperationList($attribute,$item){
+  public function inOperationList($attribute,$item){
     if(!in_array($this->$attribute, $this->_operations,true)){
       $this->addError($attribute, "Неверное значение поля");
       return false;

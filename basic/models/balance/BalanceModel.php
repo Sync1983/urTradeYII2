@@ -10,6 +10,7 @@ use yii;
 use yii\base\Component;
 use app\models\events\BalanceEvent;
 use app\models\balance\BalanceRecord;
+use app\models\orders\OrderRecord;
 
 class BalanceModel extends Component {
   //public vars
@@ -20,6 +21,26 @@ class BalanceModel extends Component {
   
   //private vars  
   //============================= Public =======================================
+  public function isNotDublicate(OrderRecord $part){
+    if( $part->pay ){
+      return false;
+    }
+    if( $part->pay_value >= yii::$app->user->getUserPrice($part->price) * $part->sell_count){
+      return false;
+    }
+    return true;
+  }
+  /**
+   * Проверяет возможность покупки детали из средств счета клиента
+   * @param OrderRecord $part
+   * @return boolean
+   */
+  public function isCanBay(OrderRecord $part){
+    $money = $this->getFullBalance();
+    $part_price = yii::$app->user->getUserPrice($part->price);
+    $part_count = (int) $part->sell_count;    
+    return $money >= ($part_count * $part_price);
+  }
   /**
    * Возвращает баланс по средствам пользователя, включая кредит
    * @return float
@@ -45,6 +66,7 @@ class BalanceModel extends Component {
                 'reciver_type' => BalanceRecord::IT_USER,
                 'reciver_id' => strval(\yii::$app->user->getId()),])
             ->sum("value");
+        
     $out = BalanceRecord::find()
             ->where([
               'operation'   => BalanceRecord::OP_DEC,
