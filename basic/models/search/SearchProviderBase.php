@@ -75,12 +75,18 @@ class SearchProviderBase extends Object {
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_POST, $is_post==1);
-    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    curl_setopt($ch, CURLOPT_VERBOSE, false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     if($is_post){
       curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array_merge($param,$this->_default_params)));
     }    
-	  $answer = curl_exec($ch);	  
+    if( curl_errno($ch)!==0 ){
+      $answer = "[]";
+      var_dump("12313423525243542");
+      //var_dump($answer);
+    } else {
+      $answer = curl_exec($ch);	  
+    }
     curl_close($ch);
     return $answer;
   }
@@ -142,14 +148,15 @@ class SearchProviderBase extends Object {
    * @param string $xml
    * @return array
    */
-  protected function xmlToArray($xml){
-    try {
-      $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);    
-      $json = json_encode($xml_string,JSON_FORCE_OBJECT);
-    } catch (Exception $exc) {    
-      Yii::error($exc);
-      $json = '[]';
-    } 	
+  protected function xmlToArray($xml){    
+    try{
+      $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);
+    }catch(\yii\base\ErrorException $err){
+      \yii::error($err->getMessage());      
+      $xml_string = false;
+      return [];
+    }    
+    $json = json_encode($xml_string,JSON_FORCE_OBJECT);    
     return json_decode($json,true);
   }
   /**

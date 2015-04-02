@@ -20,7 +20,8 @@ class ProviderIxora extends SearchProviderBase{
     parent::__construct(self::Name, self::CLSID, $default_params, $config);
   }
   
-  public function getPartList($part_id="",$maker_id="",$cross=false){    
+  public function getPartList($part_id="",$maker_id="",$cross=false){
+    $maker_id = str_replace($this->getCLSID(), "", $maker_id);
     $xml = $this->onlineRequest($this->url."/FindDetailsXML", ['MakerID'=>$maker_id,'DetailNumber'=>$part_id]);
     
     $answer = $this->xmlToArray($xml);
@@ -46,9 +47,9 @@ class ProviderIxora extends SearchProviderBase{
   
   public function getMakerList($part_id="",$cross=false){
     $param = ['DetailNumber'=>$part_id];
-    $xml  = $this->onlineRequest($this->url."/GetMakersByDetailNubmerXML", $param);	
+    $xml  = $this->onlineRequest($this->url."/GetMakersByDetailNubmerXML", $param);    
     $answer = $this->xmlToArray($xml);
-    return $this->convertMakersAnswerToStandart($answer);
+    return $this->convertMakersAnswerToStandart($answer);    
   }
   
   /**
@@ -64,7 +65,7 @@ class ProviderIxora extends SearchProviderBase{
     $clsid = $this->getCLSID();    
     foreach ($data['row'] as $value) {      
       $name     = (isset($value['name']))?$value['name']:"";      
-      $id       = (isset($value['id']))?$value['id']:"";      
+      $id       = $clsid.(isset($value['id']))?$value['id']:"";      
       $result[$name] = [$clsid => $id];
     }
     return $result;    
