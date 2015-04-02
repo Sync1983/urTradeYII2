@@ -4,10 +4,10 @@ return [
     'guestOverPrice'  => 18,          //Наценка %
     'adminEmail' => 'sales@atc58.ru',
     'providerUse' =>[
-      //app\models\search\ProviderOnline::class,
+      app\models\search\ProviderOnline::class,
 	  app\models\search\ProviderIxora::class,
-      //app\models\search\ProviderArmtek::class,      
-      //app\models\search\ProviderForum::class,
+      app\models\search\ProviderArmtek::class,      
+      app\models\search\ProviderForum::class,
     ],
     'vk_id'      => '4708880',
     'vk_secret'  => 'D1B1u4DaxiQV2JgEJxZ9',
