@@ -25,7 +25,7 @@
         "kartik-v/yii2-editable": "*",
         "kartik-v/yii2-widgets": "*",
         "kartik-v/yii2-mpdf": "*",
-        "bower-asset/bootbox": "~4.3.0",
+        "bower-asset/bootbox": "*",
         "bower-asset/bootstrap-select":"*",
         "yiisoft/jquery-pjax":"*"
     },

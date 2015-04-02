@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b92336b49c8aa51c3612d1df1b63df58",
+    "hash": "0afaec7f7b69e87895c525779627fc53",
     "packages": [
         {
             "name": "bower-asset/bootbox",
-            "version": "v4.3.0",
+            "version": "v4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/makeusabrew/bootbox.git",
-                "reference": "ed5c62a02ab1eb512c38f4be1d0f6774c51a85c6"
+                "reference": "cb756203e250ed0ff2539359ff0ad1c3ffb8e8d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/makeusabrew/bootbox/zipball/ed5c62a02ab1eb512c38f4be1d0f6774c51a85c6",
-                "reference": "ed5c62a02ab1eb512c38f4be1d0f6774c51a85c6",
+                "url": "https://api.github.com/repos/makeusabrew/bootbox/zipball/cb756203e250ed0ff2539359ff0ad1c3ffb8e8d3",
+                "reference": "cb756203e250ed0ff2539359ff0ad1c3ffb8e8d3",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,8 @@
                 {
                     "name": "Edward Z. Yang",
                     "email": "admin@htmlpurifier.org",
-                    "homepage": "http://ezyang.com"
+                    "homepage": "http://ezyang.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Standards compliant HTML filter written in PHP",
@@ -1954,7 +1955,6 @@
             ],
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
-            "abandoned": true,
             "time": "2014-05-07 05:00:09"
         },
         {
