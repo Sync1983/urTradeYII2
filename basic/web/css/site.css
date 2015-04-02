@@ -90,6 +90,11 @@ html, body {
   background-image: url("/img/search_icon.png"); }
 .navbar-2 .setup {
   background-image: url("/img/setup_icon.png"); }
+.navbar-2 .badge {
+  top: 80px;
+  margin-left: -5px;
+  background-color: #F00;
+  position: fixed; }
 
 .navbar-3 form {
   padding: 0 10px; }
@@ -142,32 +147,6 @@ ul.nav-line {
   font-size: 8pt;
   font-family: Arial, Helvetica, sans-serif; }
 
-/*input[type="checkbox"]{
-  display: none;
-  text-align: right;
-  vertical-align: middle;
-  
-  & + label{
-    font-size: 11pt;    
-    height: 34px;
-    color: #FFF;
-    padding: 6px 10px 0px 40px;
-    text-align: center;
-    vertical-align: middle;    
-    background-image: url('/img/unchecked.png');
-    background-repeat: no-repeat;
-    background-size: 24px 24px;
-    background-position: 5px 4px;
-    position: relative;
-  }
-  & + label:hover{
-    background-image: url('/img/over_checked.png');    
-  }
-  &:checked + label {
-    font-weight: bold;
-    background-image: url('/img/checked.png');
-  }
-}*/
 select.over-price {
   height: 34px; }
 

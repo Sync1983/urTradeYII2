@@ -32,6 +32,12 @@ class GuestBasket extends BasketModel{
       self::setIdToCookie($id);
     }
     $this->_basket_record = self::getById($id);    
+    if( !$this->_basket_record ){
+      $this->_basket_record = new GuestBasketRecord();
+      $this->_basket_record->save();
+      $id = strval($this->_basket_record->getAttribute("_id"));
+      self::setIdToCookie($id);
+    }
     $this->_list = $this->buildList($this->_basket_record->basket);
     yii::$app->on(self::EVENT_CHANGE, [$this,"onSave"]);
   }

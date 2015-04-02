@@ -12,18 +12,14 @@ use yii\widgets\ActiveForm;
 use yii\web\Response;
 use yii\web\Controller;
 use app\models\forms\BasketAddForm;
-use app\models\forms\SearchForm;
 use app\models\BasketDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\data\Pagination;
-use kartik\grid\CheckboxColumn;
-use kartik\grid\DataColumn;
-use kartik\grid\EditableColumn;
-use kartik\editable\Editable;
-use kartik\grid\ActionColumn;
-use yii\helpers\Url;
-use yii\helpers\Html;
+use app\components\helpers\GridHelper;
 use app\models\events\BasketEvent;
+use app\models\events\OrderEvent;
+use app\components\behaviors\OrderBehavior;
+use yii\helpers\Url;
 
 class BasketController extends Controller{
   //public vars  
@@ -32,13 +28,6 @@ class BasketController extends Controller{
   protected $items = [];
   //private vars  
   //============================= Public =======================================
-  public function actions() {
-    return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ]
-    ];
-  }
   
   public function actionIndex(){    
     /* @var $user \app\models\SiteUser */
@@ -63,28 +52,24 @@ class BasketController extends Controller{
     ]);    
     
     $pjax = yii::$app->request->get("_pjax",false);
-    
-    if($pjax){      
-      return $this->view->renderAjax("grid", [
+    $params = [
         'user_basket'   =>$user_basket,
         'guest_basket'  =>$guest_basket_provider,
         'grid_columns' =>  $this->getBasketColumnsDescription(),
-        'guest_columns' => $this->getGuestBasketColumnsDescription()]);
+        'guest_columns' => $this->getGuestBasketColumnsDescription()];
+    
+    if($pjax){      
+      return $this->view->renderAjax("@app/views/basket/grid", $params);
     } 
-
-    return $this->render("index",[
-      'user_basket'  =>$user_basket,
-      'guest_basket' =>$guest_basket_provider,
-      'grid_columns' =>  $this->getBasketColumnsDescription(),
-      'guest_columns' => $this->getGuestBasketColumnsDescription()]);
+    return $this->render("index",$params);
   }
   
   public function actionItemChange(){
-    $index = yii::$app->request->post('editableIndex',-1);
-    $key = yii::$app->request->post('editableKey', "");
-    $type = yii::$app->request->get('type',-1);
+    $index  = yii::$app->request->post('editableIndex',-1);
+    $key    = yii::$app->request->post('editableKey', "");
+    $type   = yii::$app->request->get('type',-1);
     if( ($type==-1) || ($index==-1) || ($key=="") ){
-      throw new NotFoundHttpException("Данные не верны");
+      throw new NotFoundHttpException("Данные неверны");
     }
     $data = [];
     if( $type==0 ){
@@ -99,77 +84,12 @@ class BasketController extends Controller{
     $event->params = $data[$index];
     yii::$app->trigger(\app\models\basket\BasketModel::EVENT_CHANGE_FIELDS,$event);
   }
-
-
-  /*public function actionChangeBasketCount(){
-    $parts = yii::$app->user->identity->getBasketParts();
-    
-    $item = $this->findAndChangeValueInList($parts, "PartRecord", "sell_count");
-    if($item){
-      yii::$app->user->identity->addNotify("Изменено количество на ".$item->getAttribute("sell_count")." шт.");
-    }
-    return;        
-  }
-  
-  public function actionChangeBasketComment(){
-    $parts = yii::$app->user->identity->getBasketParts();
- 
-    $item = $this->findAndChangeValueInList($parts, "PartRecord", "comment");
-    if($item){
-      yii::$app->user->identity->addNotify("Изменено количество на ".$item->getAttribute("comment")." шт.");
-    }
-    return;        
-  }
-  
-  public function actionChangeGuestBasketCount(){
-    $guest_id = GuestBasket::getIdFromCookie();
-    if($guest_id){
-      $guest_basket = GuestBasket::getById($guest_id);      
-    }
-    
-    if(!$guest_basket){
-      echo json_encode(['output'=>1,'message'=>'Гостевая корзина пуста']);
-      yii::$app->end();
-      return;        
-    }    
-    
-    $list = &$guest_basket->getItems();
-    
-    $item = $this->findAndChangeValueInList($list, "GuestPartRecord", "sell_count");
-    if($item){
-      yii::$app->user->identity->addNotify("Изменено количество на ".$item->getAttribute("sell_count")." шт.");
-      $guest_basket->save();
-    }    
-    return;        
-  }
-  
-  public function actionChangeGuestBasketComment(){
-    $guest_id = GuestBasket::getIdFromCookie();
-    if($guest_id){
-      $guest_basket = GuestBasket::getById($guest_id);      
-    }
-    
-    if(!$guest_basket){
-      echo json_encode(['output'=>1,'message'=>'Гостевая корзина пуста']);
-      yii::$app->end();
-      return;        
-    }    
-    
-    $list = &$guest_basket->getItems();
-    
-    $item = $this->findAndChangeValueInList($list, "GuestPartRecord", "comment");
-    if($item){
-      yii::$app->user->identity->addNotify("Комментарий изменен на ".$item->getAttribute("comment"));
-      $guest_basket->save();
-    }    
-    return;        
-  }*/
   
   public function actionItemDelete(){
     $key = yii::$app->request->get("id",false);
     $type = yii::$app->request->get("type",-1);
     if( !$key || ($type == -1) ){
-      throw new NotFoundHttpException("Строка не найден");
+      throw new NotFoundHttpException("Строка не найдена");
     }
     
     $event = new BasketEvent();
@@ -237,6 +157,28 @@ class BasketController extends Controller{
     yii::$app->trigger(\app\models\basket\BasketModel::EVENT_REMOVE_FROM_BASKET_LIST,$event);
     return $this->redirect(Url::to(['basket/index']));      
   }
+  
+  public function actionItemOrder(){
+    $key = yii::$app->request->get("id",false);
+    if(!$key){
+      return $this->redirect(Url::to(['basket/index']));      
+    }
+    $user = yii::$app->user;
+    $item = $user->getBasketPart($key);
+    
+    if(!$item){
+      return $this->redirect(Url::to(['basket/index']));      
+    }
+    
+    $order_event = new OrderEvent();    
+    $order_event->items[$key] = $item->getAttributes();    
+    $this->trigger(OrderEvent::EVENT_ORDER_ADD,$order_event);
+    $basket_remove = new BasketEvent();
+    $basket_remove->type  = BasketEvent::USER_BASKET;
+    $basket_remove->key   = $key;
+    yii::$app->trigger(\app\models\basket\BasketModel::EVENT_REMOVE_FROM_BASKET,$basket_remove);
+    return $this->redirect(Url::to(['basket/index']));      
+  }
 
   public function actionAddTo(){ 
     /* @var $model BasketAddForm */
@@ -258,284 +200,52 @@ class BasketController extends Controller{
   }
   //============================= Protected ====================================
   //============================= Private ======================================
-  private function Column1(){
-    return [
-        'attribute'=>'update_time',
-        'class'=> DataColumn::className(),    
-        'header'=>'От',
-        'width'=>'50px',
-        'format'=>'raw',
-        'headerOptions'=>['class'=>'kartik-sheet-style'],    
-        'value'=>function ($model, $key, $index, $widget) { 
-            return "<span>".date("H:i",$model->update_time)."<br>".date("d-m-y",$model->update_time)."</span>";
-        },
-      ];        
-  }
-  private function Column2(){
-    return [
-        'headerOptions'=>['class'=>'kartik-sheet-style'],
-        'header'=>'Деталь',
-        'format' => 'raw',    
-        'hAlign'=>'center',
-        'value'=>function ($model, $key, $index, $widget) {    
-            return "<span>[ ".$model->articul." ] ".$model->producer."<br><b>".$model->name."</b></span>";
-        },
-      ];
-  }
   
-  private function Column3(){
-    return [
-        'attribute'=>'price',    
-        'header'=>'Цена',
-        'headerOptions'=>['class'=>'kartik-sheet-style'],
-        'format' => 'raw',
-        'value'=>function ($model, $key, $index, $widget) { 
-            $price = yii::$app->user->getUserPrice($model->price);
-            $delta = round($price-$price*0.1,2)." - ".round($price+$price*0.1,2);
-            return "<span>".$price.($model->price_change==1?"<br>$delta":"")."</span>";
-        },
-      ];
-  }
-  
-  private function Column4(){
-    return [
-        'attribute'=>'shiping',    
-        'header'=>'Срок',
-        'headerOptions'=>['class'=>'kartik-sheet-style'],
-        'width'=>'50px',
-      ];
-  }
-  
-  private function Column5(){
-    return [
-        'attribute'=>'sell_count',    
-        'header'=>'Кол-во',
-        'headerOptions'=>['class'=>'kartik-sheet-style'],
-        'pageSummary'=>true,    
-        'width'=>'50px',
-        'format'=>['decimal', 0],    
-        'class'=>  EditableColumn::className(),
-        'editableOptions'=> function ($model, $key, $index) {      
-          return[    
-            'header'=>'Количество', 
-            'inputType'=>  Editable::INPUT_SPIN,
-            "formOptions"=>[
-              "action"=> Url::to(["basket/item-change",'type'=> BasketEvent::USER_BASKET])
-            ],       
-            'pluginEvents'      => [
-              "editableSuccess"=>"function(event, val, form, data) { "
-              . "$.pjax.reload({container:'#user-basket'});"
-              . "}",
-            ],
-            'options'=>[
-                'pluginOptions'=>[    
-                  'multiple'=>false,
-                  'min'=>1, 
-                  'max'=>100,              
-                  'postfix' => 'шт.',
-                ]
-            ]
-          ];
-        },
-      ];
-  }
-  
-  private function Column6(){
-    return [
-        'class'         =>'kartik\grid\FormulaColumn',
-        'header'        =>'Cумма',
-        'headerOptions' =>['class'=>'kartik-sheet-style'],
-        'format'        =>['decimal', 2],
-        'width'         =>'100px',
-        'value'         => function ($model, $key, $index, $widget) { 
-            $p = compact('model', 'key', 'index');
-            $price = yii::$app->user->getUserPrice($model->price);
-            return $price * $widget->col(4, $p);
-        },
-        'mergeHeader'   => true,
-        'pageSummary'   => true,
-        'footer'        => true
-      ];
-  }
-  
-  private function Column7(){
-    return [
-        'attribute'       =>'comment',
-        'header'          =>'Комментарий',
-        'class'           =>  EditableColumn::className(),
-        'headerOptions'   =>['class'=>'kartik-sheet-style'],    
-        'width'           =>'150px',
-        'refreshGrid'     => true,
-        'editableOptions' => function ($model, $key, $index) {      
-          return[
-            'header'      =>'Количество', 
-            'inputType'   =>  Editable::INPUT_TEXT,
-            'formOptions' =>[
-              "action"=>  Url::to(["basket/item-change",'type'=> BasketEvent::USER_BASKET])
-            ],        
-          ];
-        },
-      ];
-  }
-  
-  private function Column8(){
-    return [
-        'class'=> ActionColumn::className(),
-        'header' => 'Действия',
-        "template" => '{delete} {order}',
-        'buttons' => [      
-          'order'=> function($url,$model){
-            $label = '<i class="glyphicon glyphicon-shopping-cart"></i>';
-            $options = ['title'=>'Разместить заказ', 
-                        'data-toggle'=>'tooltip',
-                        'data-confirm' => 
-                          "Вы хотите заказать эту деталь? <br>[ ".
-                          $model->articul." ] ".
-                          $model->producer."<br><b>".
-                          $model->name."</b><br>".
-                          "В количестве: <b>".$model->sell_count."</b> шт. ".
-                          "По цене: ".yii::$app->user->getUserPrice($model->price)." руб. за шт.<br>".
-                          "Общая цена составит: ".(yii::$app->user->getUserPrice($model->price)*$model->sell_count)." руб.",
-              ];
-            return Html::a($label, $url,$options);
-          }],
-        'deleteOptions' => ['label' => '<i class="glyphicon glyphicon-remove"></i>','title'=>'Удалить запись из корзины', 'data-toggle'=>'tooltip'],    
-        'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['basket/item-'.$action,"id"=>$key,"type"=>  BasketEvent::USER_BASKET]); },
-        'headerOptions'=>['class'=>'kartik-sheet-style'],
-      ];
-  }
-  private function Column9(){
-    return [
-        'class'         =>  CheckboxColumn::className(),    
-        'headerOptions' => ['class'=>'kartik-sheet-style'],
-        'width'         => "35px",
-      ];
-  }
-  
-  private function Column5G(){
-    return [
-    'attribute'=>'sell_count',    
-    'header'=>'Кол-во',
-    'headerOptions'=>['class'=>'kartik-sheet-style'],
-    'pageSummary'=>true,    
-    'width'=>'50px',
-    'format'=>['decimal', 0],    
-    'class'=>  EditableColumn::className(),
-    'editableOptions'=> function ($model, $key, $index) {      
-      return[    
-        'header'=>'Количество', 
-        'inputType'=>  Editable::INPUT_SPIN,
-        "formOptions"=>[
-          "action"=> Url::to(["basket/item-change",'type'=> BasketEvent::GUEST_BASKET])
-        ],       
-        'pluginEvents'      => [
-          "editableSuccess"=>"function(event, val, form, data) { "
-          . "$.pjax.reload({container:'#guest-basket'});"
-          . "}",
-        ],
-        'options'=>[
-            'pluginOptions'=>[    
-              'multiple'=>false,
-              'min'=>1, 
-              'max'=>100,              
-              'postfix' => 'шт.',
-            ]
-          ]
-        ];
-      },
-    ];
-  }
-  
-  private function Column7G(){
-    return [
-    'attribute'       =>'comment',
-    'header'          =>'Комментарий',
-    'class'           =>  EditableColumn::className(),
-    'headerOptions'   =>['class'=>'kartik-sheet-style'],    
-    'width'           =>'150px',
-    'refreshGrid'     => true,
-    'editableOptions' => function ($model, $key, $index) {      
-      return[
-        'header'      =>'Количество', 
-        'inputType'   =>  Editable::INPUT_TEXT,
-        'formOptions' =>[
-          "action"=> Url::to(["basket/item-change",'type'=> BasketEvent::GUEST_BASKET])
-          ],        
-        ];
-      },
-    ];
-  }
-  
-  private function Column8G(){
-    return [
-    'class'=> ActionColumn::className(),
-    'header' => 'Действия',
-    "template" => yii::$app->user->isGuest?'{delete}':'{delete} {tobasket}',
-    'buttons' => [      
-      'tobasket'=> function($url,$model){
-        $label = '<i class="glyphicon glyphicon-open-file"></i>';
-        $options = ['title'=>'Переместить в корзину', 
-                    'data-toggle'=>'tooltip',
-                    'data-confirm' => 
-                      "Вы хотите поместить эту деталь в корзину? <br>[ ".
-                      $model->articul." ] ".
-                      $model->producer."<br><b>".
-                      $model->name."</b><br>".
-                      "В количестве: <b>".$model->sell_count."</b> шт. ".
-                      "По цене: ".yii::$app->user->getUserPrice($model->price)." руб. за шт.<br>".
-                      "Общая цена составит: ".(yii::$app->user->getUserPrice($model->price)*$model->sell_count)." руб.",
-          ];
-        return Html::a($label, $url,$options);
-      }],
-    'deleteOptions' => ['label' => '<i class="glyphicon glyphicon-remove"></i>','title'=>'Удалить запись', 'data-toggle'=>'tooltip'],    
-    'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['basket/item-'.$action,"id"=>$key,"type"=> BasketEvent::GUEST_BASKET]); },
-    'headerOptions'=>['class'=>'kartik-sheet-style'],
-    ];
-  }
   
   private function getBasketColumnsDescription(){
     return [
-      $this->Column1(),
-      $this->Column2(),
-      $this->Column3(),
-      $this->Column4(),
-      $this->Column5(),
-      $this->Column6(),
-      $this->Column7(),
-      $this->Column8(),
-      $this->Column9()
+      GridHelper::Column1(),
+      GridHelper::Column2(),
+      GridHelper::Column3(),
+      GridHelper::Column4(),
+      GridHelper::Column5(),
+      GridHelper::Column6(),
+      GridHelper::Column7(),
+      GridHelper::Column8(),
+      GridHelper::Column9()
     ];
   }
   
   private function getGuestBasketColumnsDescription(){
     return [
-      $this->Column1(),
-      $this->Column2(),
-      $this->Column3(),
-      $this->Column4(),
-      $this->Column5G(),
-      $this->Column6(),
-      $this->Column7G(),
-      $this->Column8G(),
-      $this->Column9()
+      GridHelper::Column1(),
+      GridHelper::Column2(),
+      GridHelper::Column3(),
+      GridHelper::Column4(),
+      GridHelper::Column5G(),
+      GridHelper::Column6(),
+      GridHelper::Column7G(),
+      GridHelper::Column8G(),
+      GridHelper::Column9()
     ];
   }
   //============================= Constructor - Destructor =====================
-  public function beforeAction($action) {
-      if(!$this->search){
-        $this->search =  new SearchForm();
-      }
-      $request = Yii::$app->request->get();
-      if(isset($request['over-price'])){
-        $request['over_price'] = intval($request['over-price']);      
-      }
-      $this->search->load($request,'');       
-      return parent::beforeAction($action);
-    }
-
-  public function render($view, $params = array()) {      
-    $params['search_model'] = $this->search;      
-    $this->view->params['search_model'] = $this->search;
-    return parent::render($view, $params);
+  public function actions() {
+    return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ]
+    ];
   }
+  
+  public function behaviors(){
+    return [
+      [
+        'class' => OrderBehavior::class,        
+      ],
+      //'on '.OrderEvent::EVENT_ORDER_ADD => [  OrderBehavior::class,'onAdd'],
+      \app\components\behaviors\SearchFormBehavior::className(),
+    ];
+  }
+  
 }

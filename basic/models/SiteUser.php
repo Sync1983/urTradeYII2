@@ -12,20 +12,26 @@ use yii\web\User;
 use app\models\MongoUser;
 use app\models\basket\GuestBasket;
 use app\models\basket\BasketModel;
+use app\models\balance\BalanceModel;
+use app\components\behaviors\NotificationBehavior;
+use yii\helpers\ArrayHelper;
 
 class SiteUser extends User{
   /* @var $_guest_basket GuestBasket */
   protected $_guest_basket;
   /* @var $_user_basket BasketModel */
   protected $_user_basket;
-  
+  /* @var $_balance BalanceModel */
+  protected $_balance;
+  /* @var $_record MongoUser */
+  protected $_record;
+
+
   public function getId(){
     if($this->isGuest){
       return 0;
-    }
-    $identity = $this->getIdentity();
-    /* @var $identity MongoUser */
-    return $identity->getId();    
+    }    
+    return $this->getIdentity()->getId();    
   }
    /**
    * Возвращает логин пользователя
@@ -34,10 +40,8 @@ class SiteUser extends User{
   public function getLogin(){
     if($this->isGuest){
       return "";
-    }
-    $identity = $this->getIdentity();
-    /* @var $identity MongoUser */
-    return $identity->getAttribute("user_name");
+    }    
+    return $this->getIdentity()->getAttribute("user_name");
   }
   /**
    * Возвращает Имя пользователя
@@ -46,10 +50,8 @@ class SiteUser extends User{
   public function getCaption(){
     if($this->isGuest){
       return "";
-    }
-    $identity = $this->getIdentity();
-    /* @var $identity MongoUser */
-    return $identity->getUserName();
+    }    
+    return $this->getIdentity()->getUserName();
   }
   /**
    * Возвращает Название компании
@@ -58,21 +60,18 @@ class SiteUser extends User{
   public function getCompanyName(){
     if($this->isGuest){
       return "";
-    }
-    $identity = $this->getIdentity();
-    /* @var $identity MongoUser */
-    return $identity->getAttribute("name");
+    }    
+    return $this->getIdentity()->getAttribute("name");
   }
   /**
    * Поверяет имеет ли пользователь права администратора
+   * @return boolean
    */
   public function isAdmin(){
     if($this->isGuest){
       return false;
-    }
-    $identity = $this->getIdentity();
-    /* @var $identity MongoUser */
-    return $identity->isAdmin();    
+    }    
+    return $this->getIdentity()->isAdmin();    
   }
   /**
    * Проверяет является ли пользователь компанией
@@ -81,14 +80,12 @@ class SiteUser extends User{
   public function isCompany(){
     if($this->isGuest){
       return false;
-    }
-    $identity = $this->getIdentity();
-    /* @var $identity MongoUser */
-    return $identity->type=="company";    
+    }    
+    return $this->getIdentity()->type=="company";    
   }
   /**
    * Возвращает список наценок пользователя
-   * @return type
+   * @return array
    */
   public function getOverPiceList(){
     if($this->isGuest){
@@ -122,17 +119,14 @@ class SiteUser extends User{
     if(!is_numeric($start_price)){
       throw new \yii\base\InvalidValueException("Ошибка в формате цены");
     }
-    $start_price = floatval($start_price);
-    $over_price = 0;    
-    if (!$this->isGuest) {
-      $over_price = $this->getIdentity()->getAttribute("over_price");
-      if(!$over_price){
-        $over_price = 18;
-      }
-    } else {
-      $over_price = isset(yii::$app->params['guestOverPrice'])?yii::$app->params['guestOverPrice']:18;
-    }    
-    return $start_price + round($over_price*$start_price/100,2);
+    
+    $over_price = ArrayHelper::getValue(yii::$app->params, 'guestOverPrice', 18.0);
+    
+    if ( !$this->isGuest && $this->getIdentity()->hasAttribute("over_price")) {
+      $over_price = $this->getIdentity()->getAttribute("over_price") * 1.0;      
+    }
+    
+    return $start_price + round($over_price*$start_price*1.0/100.0,2);
   }
   /**
    * Возвращает список деталей в корзине
@@ -156,11 +150,34 @@ class SiteUser extends User{
   public function getGuestBasketPart($key){    
     return $this->_guest_basket->getPartById($key);
   }
+  /**
+   * Возвращает деталь из корзины по ID
+   * @param string $key
+   * @return basket\BasketPart
+   */
+  public function getBasketPart($key){    
+    return $this->_user_basket->getPartById($key);
+  }
+  /**
+   * Возвращает модель баланс пользователя
+   * @return BalanceModel
+   */
+  public function getBalance(){
+    return $this->_balance;
+  }
   
+  //============================================================================
+  public function behaviors(){
+    return [
+      NotificationBehavior::className(),
+    ];
+  }
+
   public function init() {
     parent::init();
-    $this->_guest_basket = new GuestBasket();
-    $this->_user_basket = new BasketModel();
+    $this->_guest_basket  = new GuestBasket();
+    $this->_user_basket   = new BasketModel();
+    $this->_balance       = new BalanceModel();
     if(!$this->isGuest){
       $this->_user_basket->setList($this->identity->basket);
     }
@@ -176,8 +193,8 @@ class SiteUser extends User{
     $user->save();
   }
   
-  public function afterLogin($identity, $cookieBased, $duration) {
+  public function afterLogin($identity, $cookieBased, $duration) {    
     parent::afterLogin($identity, $cookieBased, $duration);    
-    $this->_user_basket->setList($identity->basket);
+    $this->_user_basket->setList($identity->basket);    
   }
 }

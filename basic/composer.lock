@@ -178,16 +178,16 @@
         },
         {
             "name": "bower-asset/jquery.inputmask",
-            "version": "3.1.61",
+            "version": "3.1.62",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
-                "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2"
+                "reference": "da1a274cefa18a52a0519ac7ffe8e8d31e950eae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
-                "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
+                "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/da1a274cefa18a52a0519ac7ffe8e8d31e950eae",
+                "reference": "da1a274cefa18a52a0519ac7ffe8e8d31e950eae",
                 "shasum": ""
             },
             "require": {
@@ -383,8 +383,7 @@
                 {
                     "name": "Edward Z. Yang",
                     "email": "admin@htmlpurifier.org",
-                    "homepage": "http://ezyang.com",
-                    "role": "Developer"
+                    "homepage": "http://ezyang.com"
                 }
             ],
             "description": "Standards compliant HTML filter written in PHP",
@@ -440,16 +439,16 @@
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
-            "version": "v4.1.7",
+            "version": "v4.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-                "reference": "f95a7e5fa0a9db1ead445e438653aa71e9f599f9"
+                "reference": "dead0e4302567e87e66296290b62da936ec6793e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/f95a7e5fa0a9db1ead445e438653aa71e9f599f9",
-                "reference": "f95a7e5fa0a9db1ead445e438653aa71e9f599f9",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/dead0e4302567e87e66296290b62da936ec6793e",
+                "reference": "dead0e4302567e87e66296290b62da936ec6793e",
                 "shasum": ""
             },
             "type": "library",
@@ -484,7 +483,7 @@
                 "progress",
                 "upload"
             ],
-            "time": "2015-02-13 14:26:42"
+            "time": "2015-03-31 07:23:22"
         },
         {
             "name": "kartik-v/bootstrap-popover-x",
@@ -706,16 +705,16 @@
         },
         {
             "name": "kartik-v/yii2-editable",
-            "version": "v1.7.1",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-editable.git",
-                "reference": "3cff340dbe54052df736171a52aeb6a5fce1e567"
+                "reference": "eddb718d49fe4b21f9b50457066a4091b5a72a4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-editable/zipball/3cff340dbe54052df736171a52aeb6a5fce1e567",
-                "reference": "3cff340dbe54052df736171a52aeb6a5fce1e567",
+                "url": "https://api.github.com/repos/kartik-v/yii2-editable/zipball/eddb718d49fe4b21f9b50457066a4091b5a72a4a",
+                "reference": "eddb718d49fe4b21f9b50457066a4091b5a72a4a",
                 "shasum": ""
             },
             "require": {
@@ -750,20 +749,20 @@
                 "popover-x",
                 "widget"
             ],
-            "time": "2015-02-13 07:46:40"
+            "time": "2015-03-29 14:10:03"
         },
         {
             "name": "kartik-v/yii2-grid",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "b4efc4a20dbad92af3ba0bdd766044cf8044e86b"
+                "reference": "d80540ec05931f819bd0dea16a76f989776ce09c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/b4efc4a20dbad92af3ba0bdd766044cf8044e86b",
-                "reference": "b4efc4a20dbad92af3ba0bdd766044cf8044e86b",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/d80540ec05931f819bd0dea16a76f989776ce09c",
+                "reference": "d80540ec05931f819bd0dea16a76f989776ce09c",
                 "shasum": ""
             },
             "require": {
@@ -794,7 +793,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2015-02-13 03:48:57"
+            "time": "2015-03-25 08:14:18"
         },
         {
             "name": "kartik-v/yii2-krajee-base",
@@ -1281,16 +1280,16 @@
         },
         {
             "name": "kartik-v/yii2-widget-fileinput",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-fileinput.git",
-                "reference": "3640dc1a4ebce964c2cb96abbab092c166a3f0e3"
+                "reference": "be89168cc8c8d2648411b9f400312f1a19851e40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-fileinput/zipball/3640dc1a4ebce964c2cb96abbab092c166a3f0e3",
-                "reference": "3640dc1a4ebce964c2cb96abbab092c166a3f0e3",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-fileinput/zipball/be89168cc8c8d2648411b9f400312f1a19851e40",
+                "reference": "be89168cc8c8d2648411b9f400312f1a19851e40",
                 "shasum": ""
             },
             "require": {
@@ -1327,7 +1326,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2014-11-09 04:40:36"
+            "time": "2015-03-31 07:25:24"
         },
         {
             "name": "kartik-v/yii2-widget-growl",
@@ -1955,6 +1954,7 @@
             ],
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
+            "abandoned": true,
             "time": "2014-05-07 05:00:09"
         },
         {

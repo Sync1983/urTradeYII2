@@ -85,6 +85,12 @@ html, body {width: 100%;background-color: $page_color;}
   .order    {background-image: url('/img/order_icon.png');}
   .search   {background-image: url('/img/search_icon.png');}
   .setup    {background-image: url('/img/setup_icon.png');}
+  .badge {
+    top: 80px;
+    margin-left: -5px;
+    background-color: #F00;
+    position: fixed;
+  }
 }
 
 .navbar-3{
@@ -132,33 +138,6 @@ ul.nav-line {
 .menu-title, .menu-describe{background-repeat: no-repeat;background-size: 25px 25px;background-position: 2px 0;margin: 0 5px;color: black;width: 100%;line-height: 25px;font-size: 16pt;font-family: Impact, Arial, Helvetica, sans-serif;}
 
 .menu-describe {padding: 5px 0;height: ($nav_height/2);width: 90%;line-height: 10px;font-weight: bold;font-size: 8pt;font-family: Arial, Helvetica, sans-serif;}
-
-/*input[type="checkbox"]{
-  display: none;
-  text-align: right;
-  vertical-align: middle;
-  
-  & + label{
-    font-size: 11pt;    
-    height: 34px;
-    color: #FFF;
-    padding: 6px 10px 0px 40px;
-    text-align: center;
-    vertical-align: middle;    
-    background-image: url('/img/unchecked.png');
-    background-repeat: no-repeat;
-    background-size: 24px 24px;
-    background-position: 5px 4px;
-    position: relative;
-  }
-  & + label:hover{
-    background-image: url('/img/over_checked.png');    
-  }
-  &:checked + label {
-    font-weight: bold;
-    background-image: url('/img/checked.png');
-  }
-}*/
 
 select.over-price{
   height: 34px;

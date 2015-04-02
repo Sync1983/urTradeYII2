@@ -1,4 +1,6 @@
 <?php
+use app\models\events\BalanceEvent;
+use app\components\behaviors\BalanceBehavior;
 
 $params = require(__DIR__ . '/params.php');
 
@@ -7,13 +9,14 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language'  => 'ru-RU',
+    'timeZone'  => 'Europe/Moscow',
     'name'      => 'АвтоТехСнаб',
     'modules'   => [
       'gridview' =>[
           'class' => '\kartik\grid\Module'
         ],
     ],
-    'components' => [
+    'components' => [        
         /*'assetManager' => [          
           'forceCopy'  => true,
         ],*/ 
@@ -39,26 +42,35 @@ $config = [
             'useFileTransport' => true,
         ],
         'log' => [
-            //'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
-            ],
+                [ 
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['balance'],
+                    'except'  => ['application'],
+                    'logVars' => [],
+                    'logFile' => '@app/runtime/logs/balance.log',
+                    'enableRotation' => false,
+                ],
+            ]
         ],
         'mongodb' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
 ];
 
-/*if (YII_ENV_DEV) {
+if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = ['class'=>'yii\debug\Module','allowedIPs' => ['91.144.179.85','10.0.6.101','10.0.6.104', '127.0.0.1', '::1']];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = 'yii\gii\Module';
-}*/
+}
 
 return $config;

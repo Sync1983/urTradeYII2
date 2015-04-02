@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerCssFile("/css/dataTables.css");
 $this->registerJsFile("/js/jquery.dataTables.min.js", ['depends'=>'yii\web\JqueryAsset']);
 
-$maker = $search_model->generateMakerList();
+$maker = $this->params['search_model']->generateMakerList();
 ksort($maker,SORT_STRING);
 
 $items = [];
@@ -47,7 +47,7 @@ foreach ($maker as $key => $providers) {
   $items[0]['contentOptions'] = ['class' => 'in'];
 }*/
 if(count($items)==0){
-  echo "По Вашему запросу \"$model->search\" ничего не найдено!";
+  echo "По Вашему запросу ничего не найдено!";
 } else {
   echo Collapse::widget(['items' => $items]);
 }
