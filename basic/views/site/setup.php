@@ -148,7 +148,7 @@ $this->params['breadcrumbs'][] = $this->title;
               <?= Html::submitButton("Сохранить",['class'=>'btn btn-info'])?></td>
             </tr>
           </tfoot>
-          <tbody>
+          <tbody>            
             <?php foreach ($prices as $name=>$value):?>                
               <tr>
                 <td><?= Html::input("text", "name[]", $name)?></td>                

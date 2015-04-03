@@ -39,8 +39,10 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $user->over_price_list= [];        //Список наценок пользователя      
     $user->basket         = [];        //Записи корзины
     $user->informer       = ["Списибо за регистрацию!"];        //Записи информера
-    $user->save();
-    return $user;
+    if( $user->insert() ){      
+      return $user;
+    }
+    return FALSE;
   }  
   
   /**
@@ -65,7 +67,27 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
    * @return array
    * **/
   public function getOverPiceList(){
-    return $this->getAttribute("over_price_list");
+    return $this->getAttribute("over_price_list")?$this->getAttribute("over_price_list"):[];
+  }
+  /**
+   * Пересчитывает сумму start_price с наценкой пользователя или
+   * общей наценкой для гостей
+   * @param float $start_price
+   * @return float
+   * @throws \yii\base\InvalidValueException
+   */
+  public function getUserPrice($start_price){
+    if(!is_numeric($start_price)){
+      throw new \yii\base\InvalidValueException("Ошибка в формате цены");
+    }
+    
+    $over_price = \yii\helpers\ArrayHelper::getValue(yii::$app->params, 'guestOverPrice', 18.0);
+    
+    if ( $this->hasAttribute("over_price")) {
+      $over_price = $this->getAttribute("over_price") * 1.0;      
+    }
+    
+    return $start_price + round($over_price*$start_price*1.0/100.0,2);
   }
 
   public function attributes(){
@@ -90,6 +112,15 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
       'basket',           //Записи корзины
       'informer'          //Записи сообщений
       ];
+  }
+  
+  public function rules(){
+    return[
+      [
+        ['user_name','user_pass','role','over_price','first_name','second_name',
+         'type','photo','name','inn','kpp','addres','phone','email','credit',],'safe'
+      ],
+    ];
   }
 
   public static function collectionName(){

@@ -122,8 +122,9 @@ class SiteController extends Controller
         return $this->goHome();
       }
       $post = Yii::$app->request->post();      
+      /* @var $user \app\models\MongoUser */
       $user = Yii::$app->user->getIdentity();
-      $prices = $user->over_price_list;
+      $prices = $user->getOverPiceList();
       
       $s_model = new SetupModel();
       $s_model->loadParams($user->getAttributes());            

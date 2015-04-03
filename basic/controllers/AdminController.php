@@ -10,13 +10,6 @@ use app\models\news\NewsModel;
 class AdminController extends Controller
 {
   public $layout = 'admin';
-  public $menu_items = [
-            'Новости'      => 'news'   ,
-            'Прайс-листы'  => 'prices' ,
-            'Заказы'       => 'orders' ,
-            'Корзины'      => 'baskets',
-            'Пользователи' => 'users'  
-    ];
   
   public function behaviors(){
       return [];
@@ -24,89 +17,107 @@ class AdminController extends Controller
 
   public function actions(){
     return [
-      'error' => [
+      /*'error' => [
         'class' => 'yii\web\ErrorAction',
-      ]            
+      ] */           
     ];
   }
 
-  public function actionIndex() { 
-    $this->view->registerCssFile('/css/admin.css');    
-    return $this->render('index',['menu_items'=> array_flip($this->menu_items)]);
+  public function actionIndex() {     
+    return $this->render('index');
   }
   
-  public function actionMenuCall(){
-    if(!Yii::$app->request->isAjax){
-      echo json_encode(['error'=>'Запрос должен быть внутренним']);
-      Yii::$app->end();
-      return;
-    }
-    $request = Yii::$app->request->post();
-    $item = $request['item'];
-    if(!isset($this->menu_items[$item])){
-      echo json_encode(['error'=>"Действие не найдено"]);
-      Yii::$app->end();
-      return;      
-    }
-    
-    $name = $this->menu_items[$item];
-    if(!$this->hasMethod("menu".$name)){
-      echo json_encode(['error'=>"Метод $name не найден"]);
-      Yii::$app->end();
-      return;      
-    }
-    $html = call_user_method("menu".$name, $this);
-    echo json_encode(["html"=>$html]);
-    Yii::$app->end();
-    return;    
+  public function actionUsers(){
+    $users = \app\models\MongoUser::find()->all();
+    $list = new \app\models\BasketDataProvider([
+      'allModels'   => $users,
+        'pagination'  => new \yii\data\Pagination([
+          'totalCount'  => count($users),
+          'pageSize'        => 40,
+        ]),
+    ]);
+    return $this->render('users',['list'=>$list]);
   }
   
-  public function actionNewsSave(){
-    if(!Yii::$app->request->isAjax){
-      echo json_encode(['error'=>'Запрос должен быть внутренним']);
-      Yii::$app->end();
-      return;
+  public function actionUserExpand(){
+    $id = \yii::$app->request->post('expandRowKey',false);    
+    if( !$id ){
+      return "Ошибка";
     }
-    $request = Yii::$app->request->post();
-    $uid  = $this->loadFromArray("uid", $request);
-    $head = $this->loadFromArray("head", $request);
-    $icon = $this->loadFromArray("icon", $request);
-    $text = $this->loadFromArray("text", $request);
-    $show = $this->loadFromArray("show", $request);
-    if($show!="true"){
-      $show = false;
-    } else {
-      $show = true;
+    $user = \app\models\MongoUser::findOne(['_id' => new \MongoId($id)]);    
+    $form = new \app\models\admin\forms\AdminUserForm();
+    $form->setAttributes($user->getAttributes());    
+    return $this->renderAjax('forms/admin_user',['form'=>$form]);
+  }
+  
+  public function actionUserAjaxValidate(){
+    $ajax = \yii::$app->request->post("ajax",false);
+    if(!$ajax){
+      throw new \yii\base\Exception("Неверный тип запроса");      
     }
-    $item = NewsModel::findOne(['_id'=>$uid]);
-    if(!$item){
-      echo json_encode(['error'=>'Запись не найдена']);
-      Yii::$app->end();
-      return;      
+    $model = new \app\models\admin\forms\AdminUserForm();
+    if(!$model->load(\yii::$app->request->post())){
+      throw new \yii\base\Exception("Ошибка данных");      
     }
-    /* @var $item NewsModel */
-    $item->setAttributes([
-      'header'  => $head,
-      'text'    => $text,
-      'icon'    => $icon,
-      'show'    => $show
-      ],false);    
-    if($item->save(false)){
-      echo json_encode(['ok'=>1]);
-    } else {
-      echo json_encode(['error'=>"Ошибка записи"]);      
+    \yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    return \yii\bootstrap\ActiveForm::validate($model);
+  }
+  
+  public function actionUserAjaxChange(){
+    $model = new \app\models\admin\forms\AdminUserForm();
+    if( !$model->load(\yii::$app->request->post()) || !$model->validate() ){
+      throw new \yii\base\Exception($model->getErrors());      
     }
-    Yii::$app->end();
+    $user = \app\models\MongoUser::findOne(['_id' => new \MongoId($model->_id)]);
+    if( !$user ){
+      throw new \yii\base\Exception("Пользователь не найден");      
+    }
+    $user->setAttributes($model->getAttributes());    
+    if( !$user->save() ){
+      throw new \yii\base\Exception("Ошибка в сохранении");      
+    }
+    return $this->redirect(['admin/users']);
+  }
+  
+  public function actionGetMd5(){
+    $key = \yii::$app->request->get("key",false);
+    if( !$key ){
+      echo "error";
+    }
+    echo md5($key);
     return;
   }
   
-  //============= Menu Actions ===============
-  protected function menuNews(){
-    $items = NewsModel::find()->orderBy(['date'=>SORT_DESC])->all();
-    return $this->renderAjax("news",['items'=>$items]);
+  public function actionUserAdd(){
+    $new_user = \app\models\MongoUser::createNew("NewUser", "new_user", "Новый пользователь");
+    if( $new_user ){
+      return $this->redirect(['admin/users']);
+    }
+    throw new \yii\web\BadRequestHttpException("Create error");
   }
   
-  protected function loadFromArray($needle,$array){
-    return isset($array[$needle])?$array[$needle]:"";
+  public function actionUserBasket(){
+    $id = \yii::$app->request->get('id',false);
+    
+    if( !$id ){
+      $users = \app\models\MongoUser::find()->all();
+      return $this->render("basket_list",['users'=>$users]);
+    }
+    /* @var $user \app\models\MongoUser */
+    $user = \app\models\MongoUser::findOne(['_id' => new \MongoId($id)]);
+    if( !$user ){
+      throw new \yii\web\BadRequestHttpException("Пользователь не найден");
+    }    
+    $basket = new \app\models\basket\BasketModel();
+    $basket->setList($user->getAttribute('basket'));
+    $list = new \app\models\BasketDataProvider([
+      'allModels'   => $basket->getRawList(),
+        'pagination'  => new \yii\data\Pagination([
+          'totalCount'  => count($basket->getList()),
+          'pageSize'        => 40,
+        ]),
+    ]);
+    return $this->render('basket',['list'=>$list,'user'=>$user]);    
   }
+
 }
