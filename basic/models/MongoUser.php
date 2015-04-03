@@ -49,10 +49,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
    * Возвращает отображаемое имя пользователя
    * @return string
    */
-  public function getUserName(){
-    if(Yii::$app->user->isGuest){
-      return "Гость";
-    }    
+  public function getUserName(){      
     return $this->getAttribute("first_name"). " " .$this->getAttribute("second_name");
   }
   /**
