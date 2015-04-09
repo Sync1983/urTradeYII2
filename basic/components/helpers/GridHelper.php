@@ -360,6 +360,16 @@ class GridHelper{
     'urlCreator'=>function($action, $model, $key, $index) { return Url::to(['order/pay-'.$action,"id"=>$key]); },    
     ];
   }
+  
+  public static function ColumnWaitTime(){
+    return [
+      'header' => 'Ожидается',      
+      'vAlign'=>'middle',
+      'value'=>function ($model, $key, $index, $widget) { 
+        return date("d-m-Y",$model->wait_time);
+      }
+    ];
+  }
   //============================= Protected ====================================
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================

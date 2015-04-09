@@ -56,7 +56,14 @@ $config = [
                     'except'  => ['application'],
                     'logVars' => [],
                     'logFile' => '@app/runtime/logs/balance.log',
-                    'enableRotation' => false,
+                ],
+                [ 
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['consloe'],
+                    'except'  => ['application'],
+                    'logVars' => [],
+                    'logFile' => '@app/runtime/logs/console.log',
                 ],
             ]
         ],

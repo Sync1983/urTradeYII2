@@ -10,7 +10,7 @@ use app\models\search\SearchProviderFile;
 class ProviderForum extends SearchProviderFile{
   const CLSID = 003;  
   const name = "Forum";
-  protected $skip_lines = 2;
+  protected $skip_lines = 1;
   protected $convert_string = true;
 
   public function __construct($default_params, $config) {
@@ -18,8 +18,8 @@ class ProviderForum extends SearchProviderFile{
   }
   
   protected function _csvLine(){
-    //Брэнд; Код производителя; Наименование; Модель; Цена; Валюта; Наличие; Кратность; Код;
-    return ["Maker","Articul","Name","model","Price","cur","Count","Quantity","code","null"];
+    //Брэнд; Код производителя; Наименование; /*Модель;*/ Цена; /*Валюта;*/ Наличие; Кратность; Код;
+    return ["Maker","Articul","Name",/*"model",*/"Price",/*"cur",*/"Count","Quantity","code"/*,"null"*/];
   }
   
   protected function _dataToStruct($data=[],$add_fields=[]){

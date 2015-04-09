@@ -31,9 +31,15 @@ class OrderRecord extends ActiveRecord{
   public function textStatus(){
     return isset($this->states[$this->status])?($this->states[$this->status]):$this->status;
   }
+  public function getStatuses(){
+    return $this->states;
+  }
   //============================= Protected ====================================
   protected function onUpdate($event){
-    $this->update_time = time();    
+    $this->update_time = time();
+    if( !$this->wait_time ){
+      $this->wait_time = $this->update_time + intval($this->shiping)*3600;
+    }
   }
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================
@@ -47,7 +53,7 @@ class OrderRecord extends ActiveRecord{
       "name","price","shiping","stock","info",
       "update_time","is_original","count","lot_quantity", 
       "for_user","price_change","sell_count","comment",
-      'status','pay','pay_request','pay_time','pay_value'];
+      'status','pay','pay_request','pay_time','pay_value','wait_time'];
   }
   public function rules(){
     return [
@@ -59,7 +65,7 @@ class OrderRecord extends ActiveRecord{
         "provider", "articul","producer","maker_id",
         "name","price","shiping","stock","info",
         "update_time","is_original","count","lot_quantity", 
-        "for_user","price_change","sell_count","comment"],'safe'],
+        "for_user","price_change","sell_count","comment",'wait_time'],'safe'],
     ];
   }
   public static function collectionName(){

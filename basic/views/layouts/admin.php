@@ -43,8 +43,8 @@ $user = Yii::$app->user;
           <li><?= Html::a("Общая информация",   Url::to(['admin/index']),['class'=>'menu-item']);?></li>
           <li><?= Html::a("Пользователи",       Url::to(['admin/users']),['class'=>'menu-item']);?></li>
           <li><?= Html::a("Корзины",            Url::to(['admin/user-basket']),['class'=>'menu-item']);?></li>
-          <li><?= Html::a("Заказы",             Url::to(['admin/index']),['class'=>'menu-item']);?></li>
-          <li><?= Html::a("Прайс-листы",        Url::to(['admin/index']),['class'=>'menu-item']);?></li>          
+          <li><?= Html::a("Заказы",             Url::to(['admin/user-order']),['class'=>'menu-item']);?></li>
+          <li><?= Html::a("Прайс-листы",        Url::to(['admin/prices']),['class'=>'menu-item']);?></li>          
         </ul>
       </div>
       <div class="content">

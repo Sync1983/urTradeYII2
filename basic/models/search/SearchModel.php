@@ -56,8 +56,7 @@ class SearchModel extends Model{
         ];
     }
     return $answer_data;
-  }
-  
+  }  
   /**
    * Возвращает класс поставщика по указанном CLSID
    * @param int $clsid

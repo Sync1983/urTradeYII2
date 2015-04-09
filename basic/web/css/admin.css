@@ -112,4 +112,25 @@ html, body {
 #admin-user-form .form-group {
   margin-bottom: 0px; }
 
+.provider-list .provider-record {
+  margin: 10px 10px;
+  padding: 10px 10px;
+  border: 1px solid black;
+  border-radius: 10px; }
+  .provider-list .provider-record:nth-child(odd) {
+    color: #DDD;
+    background-color: #777; }
+.provider-list span {
+  display: block; }
+
+.admin-order-info span {
+  font-weight: bold;
+  display: block; }
+  .admin-order-info span div.info {
+    font-weight: normal;
+    display: inline-block; }
+.admin-order-info .admin-order-info-main, .admin-order-info .admin-order-info-data, .admin-order-info .admin-order-info-price, .admin-order-info .admin-order-info-sum {
+  padding: 10px 10px;
+  display: block; }
+
 /*# sourceMappingURL=admin.css.map */

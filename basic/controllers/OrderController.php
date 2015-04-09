@@ -66,7 +66,8 @@ class OrderController extends Controller{
   //============================= Private ======================================
   private function columns(){
     return [
-      GridHelper::ColumnStatus(),      
+      GridHelper::ColumnStatus(),
+      GridHelper::ColumnWaitTime(),
       GridHelper::Column2(),      
       GridHelper::Column4(),
       GridHelper::Column5O(),
