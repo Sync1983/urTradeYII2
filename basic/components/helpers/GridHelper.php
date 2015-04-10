@@ -353,7 +353,7 @@ class GridHelper{
             "Вы хотите оплатить заказ деталей через <b>Yandex-деньги?</b><br>".            
             "В количестве <b>".$model->sell_count."</b> шт. <br>".
             "По цене: <b>".yii::$app->user->getUserPrice($model->price)."</b> руб. за шт.<br>".
-            "Общая сумма составит: ".(yii::$app->user->getUserPrice($model->price)*$model->sell_count)." руб.",
+            "Общая сумма составит: ".(yii::$app->user->getUserPrice($model->price)*$model->sell_count)." руб.",          
           ];
         return Html::a($label, $url,$options);
       }],    

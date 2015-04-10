@@ -1,9 +1,13 @@
 <?php
 
 use yii\widgets\Pjax;
-use kartik\grid\GridView;
+
 /* @var $this yii\web\View */
-$this->title = 'Заказы';
+$this->title = 'Оплата';
+$this->params['breadcrumbs'][] = [
+  'label' => 'Заказы',
+  'url' => ['order/index'],
+  ];
 $this->params['breadcrumbs'][] = $this->title;
 
 Pjax::begin(['id'=>'order-list']);        

@@ -32,8 +32,8 @@ if(!yii::$app->user->isGuest){
       Html::button(
         "<i class=\"glyphicon glyphicon-shopping-cart\"></i>".
         " Заказать",[
-          'class'=>'btn btn-primary', 
-          'data-confirm'=>"Заказать набор деталей?"
+          'class'=>'btn btn-primary',           
+          'onClick'     =>'toOrderItems()'
         ]). 
       Html::button(
         "<i class=\"glyphicon glyphicon-remove\"></i> Удалить",
@@ -47,7 +47,9 @@ if(!yii::$app->user->isGuest){
   ]);
   Pjax::end();
 }
-//var_dump($guest_columns);
+
+/* @var $guest_basket \app\models\BasketDataProvider */
+if( $guest_basket->count !== 0) :  
 Pjax::begin(['id'=>'guest-basket']);        
 echo GridView::widget([
     'id'            => 'guest-basket',
@@ -86,6 +88,7 @@ echo GridView::widget([
     'persistResize' => false,
   ]);
 Pjax::end();
+endif;
 
 ActiveForm::begin([
   "id"=>"delete",
@@ -100,6 +103,15 @@ ActiveForm::begin([
   "id"=>"guest-all",
   "method"=>"POST",
   "action" => Url::to(['basket/to-basket-list']),
+  "options" => [
+    "style" => "display: none"
+    ]
+]);
+ActiveForm::end();
+ActiveForm::begin([
+  "id"=>"user-all",
+  "method"=>"POST",
+  "action" => Url::to(['basket/to-order-list']),
   "options" => [
     "style" => "display: none"
     ]
@@ -155,7 +167,22 @@ ActiveForm::end();
         form.append('<input type="hidden" name="ids[]" value="'+keys[index]+'" />');
       }
       $(form).submit();      
+    }    
+  }
+  
+  function toOrderItems(){
+    var keys = $('#user-basket').yiiGridView('getSelectedRows');
+    if( keys.length === 0 ){
+      return;
     }
+    if(confirm("Поместить в корзину набор из "+keys.length+" деталей?")){      
+      var form = $("#user-all");
+      form.children("[name=\"ids[]\"]").remove();
+      for(var index in keys){
+        form.append('<input type="hidden" name="ids[]" value="'+keys[index]+'" />');
+      }
+      $(form).submit();      
+    }    
   }
 </script>
 

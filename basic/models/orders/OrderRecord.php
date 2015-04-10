@@ -36,11 +36,8 @@ class OrderRecord extends ActiveRecord{
   }
   //============================= Protected ====================================
   protected function onUpdate($event){
-    $this->update_time = time();
-    if( !$this->wait_time ){
-      $this->wait_time = $this->update_time + intval($this->shiping)*3600;
-    }
-  }
+    $this->update_time = time();    
+  }  
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================
   public function init(){
@@ -71,4 +68,11 @@ class OrderRecord extends ActiveRecord{
   public static function collectionName(){
     return 'orders';
   }
+  public function beforeSave($insert){
+    if( !$this->wait_time ){
+      $this->wait_time = $this->update_time + intval($this->shiping)*24*60*60;
+    }
+    return parent::beforeSave($insert);
+  }
+
 }

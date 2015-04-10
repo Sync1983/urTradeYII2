@@ -158,6 +158,25 @@ class BasketController extends Controller{
     return $this->redirect(Url::to(['basket/index']));      
   }
   
+  public function actionToOrderList(){
+    $ids = yii::$app->request->post("ids",[]);    
+    $user = yii::$app->user;
+    $order_event = new OrderEvent();    
+    foreach($ids as $id){
+      $item = $user->getBasketPart($id);
+      $order_event->items[$id] = $item->getAttributes();      
+    }
+    $this->trigger(OrderEvent::EVENT_ORDER_ADD,$order_event);
+    
+    foreach($ids as $id){
+      $basket_remove = new BasketEvent();
+      $basket_remove->type  = BasketEvent::USER_BASKET;
+      $basket_remove->key   = $id;
+      yii::$app->trigger(\app\models\basket\BasketModel::EVENT_REMOVE_FROM_BASKET,$basket_remove);
+    }
+    return $this->redirect(Url::to(['basket/index']));      
+  }
+
   public function actionItemOrder(){
     $key = yii::$app->request->get("id",false);
     if(!$key){

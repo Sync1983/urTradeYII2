@@ -23,7 +23,7 @@ class OrderController extends Controller{
     if(yii::$app->user->isGuest){
       $items = [];
     } else {
-      $items = OrderRecord::find(['for_user'=>  strval(yii::$app->user->getId()) ])->orderBy(['status']) ->all();
+      $items = OrderRecord::find(['for_user'=>  strval(yii::$app->user->getId()) ])->orderBy(['status'=>SORT_ASC]) ->all();
     }
     $order_list = new BasketDataProvider([
         'allModels'   => $items,
@@ -60,6 +60,24 @@ class OrderController extends Controller{
     $event->item = $order;    
     yii::$app->trigger(\app\models\events\BalanceEvent::EVENT_DEC_BALANCE,$event);
     return $this->redirect(yii\helpers\Url::to(['order/index']));
+  }
+  
+  public function ationPayByYandex(){
+    $id = yii::$app->request->get('id',false);
+    if( !$id ){
+      throw new yii\web\BadRequestHttpException("Деталь не определена");
+    }
+    $order = OrderRecord::findOne(['_id' => new \MongoId($id)]);
+    if( !$order ){
+      throw new yii\web\BadRequestHttpException("Деталь не найдена");
+    }
+    /* @var $balance \app\models\balance\BalanceModel */
+    $balance = yii::$app->user->getBalance();    
+    if( !$balance->isNotDublicate($order) ){
+      throw new yii\web\BadRequestHttpException("Деталь уже оплачена");
+    }
+    
+    return $this->render('yandex_pay',['order'=>$order]);    
   }
 
   //============================= Protected ====================================  
