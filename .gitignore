@@ -8,3 +8,4 @@ themes/classic/views/
 *.csv
 /basic/config/params.php
 log/*
+prices/*
