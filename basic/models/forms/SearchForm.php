@@ -27,11 +27,8 @@ class SearchForm extends Model{
     $makers = [];
     $search = SearchProviderBase::_clearStr($this->search_text);    
     foreach ($this->_providers as $provider){      
-      if(count($makers)==0){
-        $makers = $provider->getMakerList($search, $this->cross);        
-      } else {
-        $makers = \yii\helpers\ArrayHelper::merge($makers, $provider->getMakerList($search, $this->cross));
-      }
+	$provider_list = $provider->getMakerList($search, $this->cross);
+        $makers = \yii\helpers\ArrayHelper::merge($makers,$provider_list);
     }
     return $makers;
   }

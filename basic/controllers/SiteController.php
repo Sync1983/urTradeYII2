@@ -183,7 +183,6 @@ class SiteController extends Controller
       $model = new SearchModel();      
       $model->load($post,'');      
       $answer = $model->loadParts();
-      
       return json_encode(['id'=>$model->getCurrentCLSID(),'parts'=>$answer]);
     }
 

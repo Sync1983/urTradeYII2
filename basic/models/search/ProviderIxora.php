@@ -22,11 +22,11 @@ class ProviderIxora extends SearchProviderBase{
   
   public function getPartList($part_id="",$maker_id="",$cross=false){
     $xml = $this->onlineRequest($this->url."/FindDetailsXML", ['MakerID'=>$maker_id,'DetailNumber'=>$part_id]);
-    
     $answer = $this->xmlToArray($xml);
-    
     if(!isset($answer['row'])){return [];}    
-    
+    if(isset($answer['row']['detailnumber'])) {
+     $answer['row'] = [$answer['row']];
+    } 
     $uid = yii::$app->user->getId();
     PartRecord::deleteAll(['provider'=>$this->_CLSID,'search_articul'=>$part_id,'for_user'=>$uid]);
     foreach ($answer['row'] as $part){
@@ -62,6 +62,9 @@ class ProviderIxora extends SearchProviderBase{
     }
     $result = [];    
     $clsid = $this->getCLSID();    
+    if(isset($data['row']['id'])){        //Такое бывает когда запись одна - массив приходит не вложенный
+      $data['row'] = [$data['row']];
+    }
     foreach ($data['row'] as $value) {      
       $name     = (isset($value['name']))?$value['name']:"";      
       $id       = (isset($value['id']))?$value['id']:"";      

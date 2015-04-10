@@ -210,8 +210,8 @@ class AdminController extends Controller
     if( !isset(\yii::$app->params['providerUse']) ){
       return [];
     }
-    $param = yii::$app->params['providerUse'];
-    $default_data = yii::$app->params['providers'];
+    $param = \yii::$app->params['providerUse'];
+    $default_data = \yii::$app->params['providers'];
     if( !is_array($param) ){
       return [];
     }
