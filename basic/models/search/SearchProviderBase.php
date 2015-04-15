@@ -12,7 +12,12 @@ class SearchProviderBase extends Object {
   
   protected $_CLSID;
   protected $_default_params;
-  protected $_name;  
+  protected $_name;
+  protected $_maker_list_id;
+  protected $_maker_name;
+  protected $_maker_id;
+  protected $_part_list_id;
+  
 
   public function __construct($Name,$CLSID = null,$default_params=[],$config=[]) {
     if($CLSID){
@@ -33,7 +38,31 @@ class SearchProviderBase extends Object {
    * @throws \BadMethodCallException
    */
   public function getPartList($part_id="",$maker_id="",$cross=false){    
-    throw new \BadMethodCallException("Метод должен быть описан в каждом потомке");
+    $answer = $this->sendPartRequest($part_id,$maker_id,$cross);
+        
+    if(!isset($answer[ $this->_part_list_id ])){return [];}    
+    
+    if( !isset($answer[ $this->_part_list_id ][0]) ) {
+     $answer[ $this->_part_list_id ] = [ $answer[ $this->_part_list_id ] ];
+    } 
+    $uid = \yii::$app->user->getId();
+    PartRecord::deleteAll(['provider'=>$this->_CLSID,'search_articul'=>$part_id,'for_user'=>$uid]);
+    foreach ($answer[ $this->_part_list_id ] as $part){
+      $item = $this->_dataToStruct($part,['search_articul'=>$part_id,'maker_id'=>$maker_id]);      
+      $part_model = new PartRecord();
+      $part_model->setAttribute("for_user", $uid);
+      $part_model->setAttributes($item,false);
+      $part_model->save();
+    }
+    $and_params = [ "AND",
+                    ["provider"         => $this->_CLSID] ,
+                    ["search_articul"   => strval($part_id)]
+      ];
+    if( !$cross ){
+      $and_params[] = ['articul' => strval($part_id)];
+    }
+    $cond = PartRecord::getCollection()->buildCondition($and_params);    
+    return PartRecord::getPartsForOnlineProvider($cond);
   }
   /**
    * Возвращает список фирм-производителей для указанного артикула
@@ -43,7 +72,7 @@ class SearchProviderBase extends Object {
    * @throws \BadMethodCallException
    */
   public function getMakerList($part_id="",$cross=false){
-    throw new \BadMethodCallException("Метод должен быть описан в каждом потомке");
+    return $this->convertMakersAnswerToStandart($this->sendMakerRequest($part_id,$cross));
   }
   /**
    * Возвращает имя поставщика
@@ -58,7 +87,48 @@ class SearchProviderBase extends Object {
    */
   public function getCLSID(){
     return $this->_CLSID;
-  }  
+  }
+  /**
+   * Вызывает уникальный для каждого поставщика запрос к серверу и возвращает
+   * ответ в виде массива   
+   * @param array $param
+   * @param boolean $is_post
+   * @throws \BadMethodCallException
+   */
+  protected function sendPartRequest($part_id="",$maker_id="",$cross=false){
+    throw new \BadMethodCallException("Метод должен быть описан в каждом потомке");
+  }
+  /**
+   * Вызывает уникальный для каждого поставщика запрос к серверу и возвращает
+   * ответ в виде массива   
+   * @param array $param
+   * @param boolean $is_post
+   * @throws \BadMethodCallException
+   */
+  protected function sendMakerRequest($part_id="",$cross=false){
+    throw new \BadMethodCallException("Метод должен быть описан в каждом потомке");
+  }
+  /**
+   * Преобразовываем полученный массив данных в стандартный массив обмена
+   * @param mixed $data
+   * @return mixed
+   */
+  protected function convertMakersAnswerToStandart($data){    
+    if(!$data || !isset($data[ $this->_maker_list_id ])){
+      return [];
+    }
+    $result = [];    
+    $clsid = $this->getCLSID();
+    if( !isset($data[ $this->_maker_list_id ][0])){        //Такое бывает когда запись одна - массив приходит не вложенный
+      $data[ $this->_maker_list_id ] = [ $data[ $this->_maker_list_id ] ];
+    }
+    foreach ($data[ $this->_maker_list_id ] as $value) {      
+      $name     = (isset($value[ $this->_maker_name ]))?$value[ $this->_maker_name ]:"";      
+      $id       = (isset($value[ $this->_maker_id ]))?  $value[ $this->_maker_id ]:"";      
+      $result[$name] = [$clsid => $id];
+    }
+    return $result;    
+  }
   /**
    * Отправляет запрос по указаному URL с параметрами $param
    * POST или GET запрос определяется флагом is_post
@@ -68,22 +138,24 @@ class SearchProviderBase extends Object {
    * @return mixed
    */
   protected function onlineRequest($url="",$param=[],$is_post=true) {
-    if(!$is_post){
-      $url.="?".http_build_query(array_merge($param,$this->_default_params));
-    }    
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_POST, $is_post==1);
     curl_setopt($ch, CURLOPT_VERBOSE, false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    if($is_post){
-      curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array_merge($param,$this->_default_params)));
-    }    
+    curl_setopt($ch, CURLOPT_POST, $is_post==1);
+    
+    $params = http_build_query(array_merge($param,$this->_default_params));
+        
+    if( $is_post ) {
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+    } else  {
+      $url.="?".$params;
+    }     
+    
+    curl_setopt($ch, CURLOPT_URL, $url);
+    
     if( curl_errno($ch)!==0 ){
       $answer = "[]";
-      var_dump("12313423525243542");
-      //var_dump($answer);
     } else {
       $answer = curl_exec($ch);	  
     }

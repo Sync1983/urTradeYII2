@@ -14,66 +14,29 @@ class ProviderOnline extends SearchProviderBase{
   const CLSID = 001;
   const Name  = "Online";
   protected $url = "http://onlinezakaz.ru/xmlprice.php"; 
-
+  protected $_maker_list_id = 'detail';
+  protected $_maker_name    = 'producer';
+  protected $_maker_id      = 'ident';
+  protected $_part_list_id  = 'detail';
 
   public function __construct($default_params=[], $config=[]) {
     parent::__construct(self::Name, self::CLSID, $default_params, $config);
   }
-  
-  public function getPartList($part_id="",$maker_id="",$cross=false){    
+  /**
+   * @see SearchProviderBase 
+   */
+  protected function sendPartRequest($part_id="",$maker_id="",$cross=false){
     $xml = $this->onlineRequest($this->url, ['ident'=>$maker_id],false);
-    
-    $answer = $this->xmlToArray($xml);
-    
-    if(!isset($answer['detail'])){return [];}      
-    
-    if(isset($answer['detail']['uid'])){      //Такое бывает когда запись одна - массив приходит не вложенный
-      $answer['detail'] = [$answer['detail']];
-    }
-    $uid = yii::$app->user->getId();
-    PartRecord::deleteAll(['provider'=>$this->_CLSID,'search_articul'=>$part_id,'for_user'=>$uid]);
-    foreach ($answer['detail'] as $part){
-      $item = $this->_dataToStruct($part,['search_articul'=>$part_id,'maker_id'=>$maker_id,'lot_quantity'=>1]);      
-      $part_model = new PartRecord();
-      $part_model->setAttribute("for_user", $uid);
-      $part_model->setAttributes($item,false);
-      $part_model->save();
-    }    
-    $cond = PartRecord::getCollection()->buildCondition(["AND",
-              ["provider" => $this->_CLSID] ,
-              ["search_articul"  => strval($part_id)]              
-    ]);
-    return PartRecord::getPartsForOnlineProvider($cond);
+    $answer = $this->xmlToArray($xml);    
+    return $answer;
   }
   
-  public function getMakerList($part_id="",$cross=false){
+  protected function sendMakerRequest($part_id = "", $cross = false){
     $param = ['sm'=>'1','code'=>$part_id];
     $xml  = $this->onlineRequest($this->url, $param, false);
     $answer = $this->xmlToArray($xml);
-    return $this->convertMakersAnswerToStandart($answer);
-  }
-  
-  /**
-   * Преобразовываем полученный массив данных в стандартный массив обмена
-   * @param mixed $data
-   * @return mixed
-   */
-  protected function convertMakersAnswerToStandart($data){    
-    if(!$data || !isset($data['detail'])){
-      return [];
-    }
-    $result = [];    
-    $clsid = $this->getCLSID();
-    if(isset($data['detail']['ident'])){        //Такое бывает когда запись одна - массив приходит не вложенный
-      $data['detail'] = [$data['detail']];
-    }
-    foreach ($data['detail'] as $value) {      
-      $name     = (isset($value['producer']))?$value['producer']:"";      
-      $id       = (isset($value['ident']))?$value['ident']:"";      
-      $result[$name] = [$clsid => $id];
-    }
-    return $result;    
-  }
+    return $answer;
+  }  
   
   protected function _stdDataStruct(){
     return [
