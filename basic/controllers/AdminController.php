@@ -127,11 +127,12 @@ class AdminController extends Controller
   public function actionPriceUpload(){
     $clsid = \yii::$app->request->post('clsid',false);
     $file = \yii\web\UploadedFile::getInstanceByName('file');
+	
     if( !$clsid || !$file ){
       throw new \yii\web\NotFoundHttpException("Параметры загружаемого файла не указаны");
     }
     $ext = $file->getExtension();
-    if( !in_array($ext, ['zip','csv']) ){
+    if( !in_array($ext, ['zip','csv','rar']) ){
       throw new \yii\web\NotFoundHttpException("Неверное расширение файла: $ext");
     }
     $providers = $this->getFileProviders();

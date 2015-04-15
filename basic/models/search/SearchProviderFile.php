@@ -63,7 +63,8 @@ class SearchProviderFile extends SearchProviderBase{
       }
     }
     if(($file_path=="")||($max_file_time==0)){
-      throw new \BadMethodCallException("В указанной директории не обнаружено прайс-листов");
+      //throw new \BadMethodCallException("В указанной директории не обнаружено прайс-листов");
+	  return ['path'=>$dir,'time'=>0];
     }
     return ['path'=>$file_path,'time'=>$max_file_time];
   }
@@ -89,6 +90,7 @@ class SearchProviderFile extends SearchProviderBase{
    */
   public function loadFile($file){
     $new_file = $this->_unzipFile($file);
+    
     $fh = fopen($new_file, "r");
     if(!$fh){
       throw new \BadMethodCallException("Невозможно открыть файл");
@@ -167,7 +169,34 @@ class SearchProviderFile extends SearchProviderBase{
     $output = "";
     exec($command,$output,$result);
     if($result!==0){
-      throw new \BadMethodCallException("Ошибка разорхивации файла: $output");
+      throw new \BadMethodCallException("Ошибка разархивации файла: $output");
+    }
+    return $new_filename;
+  }
+  /**
+   * Проверяет не является ли файл архивом
+   * и возвращает либо исходное имя файла
+   * либо разархивирует файл и сохраняет его с расширением
+   * .csv и возвращает путь к новому файлу
+   * @param string $file
+   * @return string
+   * @throws \BadMethodCallException
+   */
+  protected function _unrarFile($file){
+    if(strpos($file,".rar")===false){
+      return $file;
+    }    
+	
+    $new_filename = str_replace(".rar", ".csv", $file);
+	
+    $command = "unrar e -y $file ".dirname($file);
+    echo "Unrar command: $command \r\n";
+	$output = "";
+	$result = 0;
+    exec($command,$output,$result);
+    
+    if($result!==0){
+      throw new \BadMethodCallException("Ошибка разархивации файла: ".json_encode($output));
     }
     return $new_filename;
   }

@@ -27,7 +27,9 @@
         "kartik-v/yii2-mpdf": "*",
         "bower-asset/bootbox": "*",
         "bower-asset/bootstrap-select":"*",
-        "yiisoft/jquery-pjax":"*"
+        "yiisoft/jquery": "dev-master",
+        "yiisoft/jquery-pjax":"*",
+        "phpoffice/phpexcel": "*"        
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

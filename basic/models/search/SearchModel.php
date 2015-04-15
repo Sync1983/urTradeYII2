@@ -38,7 +38,10 @@ class SearchModel extends Model{
     foreach ($parts as $key=>$part){      
         $data = $parts[$key];
         $data["price"] = yii::$app->user->getUserPrice($data["price"]);
-        if(is_array($data["info"])){
+		if( !isset($data["info"]) ){
+		  $data["info"] = "";
+		}
+        if( is_array($data["info"]) ){
           $data["info"] = "";
         }
         $answer_data[$key] = [
