@@ -33,6 +33,7 @@ class SearchForm extends Model{
         $makers = array_merge_recursive($makers, $provider->getMakerList($search, $this->cross));        
       }
     }
+    var_dump($makers);
     return $makers;
   }
   

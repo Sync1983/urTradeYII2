@@ -21,7 +21,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     }
     
     $user = new MongoUser();
-    $user->user_name      = $login;     //Логин
+    $user->user_name      = $login?$login:$name;     //Логин
     $user->user_pass      = md5($pass); //Пароль
     $user->role           = "user";     //Роль пользователя      
     $user->over_price     = 20;         //Наценка для пользователя
