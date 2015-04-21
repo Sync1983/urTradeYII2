@@ -30,8 +30,9 @@ class ProviderForum extends SearchProviderFile{
     ]);
     
     $result['maker_id'] = md5($result['producer']);
-    $result['price'] *= 1;       
+    $result['price'] *= 1.0;       
     $result['articul'] = self::_clearStr($result['articul']);
+	$result['search_articul'] = $result['articul'];
     if(isset($data['model'])){
       $result['name'] .= " ".$data['model'];
     }

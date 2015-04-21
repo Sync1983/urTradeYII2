@@ -30,6 +30,11 @@ class BasketPart extends BaseActiveRecord{
     if(!$this->hasAttribute($attribute)){
       return true;
     }
+	
+	if( !$this->lot_quantity ) {
+	  $this->lot_quantity = 1;
+	}
+		
     $mod = $this->sell_count % $this->lot_quantity;
     if($mod!==0){
       $this->addError($attribute, "Количество детаелй должно быть кратно ".$this->lot_quantity." шт.");
@@ -44,6 +49,15 @@ class BasketPart extends BaseActiveRecord{
       "name","price","shiping","stock","info",
       "update_time","is_original","count","lot_quantity", 
       "for_user","price_change","sell_count","comment"];
+  }
+  
+  public function beforeSave($insert) {
+	
+	if( !$this->lot_quantity ) {
+	  $this->lot_quantity = 1;
+	}
+	
+	return parent::beforeSave($insert);
   }
 
   public function insert($runValidation = true, $attributes = null) {

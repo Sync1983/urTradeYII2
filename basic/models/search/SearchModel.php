@@ -17,8 +17,7 @@ class SearchModel extends Model{
   public $provider;
   public $maker_id;
   
-  protected $_providers = [];
-  
+  protected $_providers = [];  
   
   /**
    * Возвращает список запчастей для конкретного поставщика
@@ -44,6 +43,7 @@ class SearchModel extends Model{
         if( is_array($data["info"]) ){
           $data["info"] = "";
         }
+	  
         $answer_data[$key] = [
           "id"          => strval($data["_id"]),
           "articul"     => $data["articul"],
@@ -55,7 +55,8 @@ class SearchModel extends Model{
           "update_time" => $data["update_time"],
           "is_original" => boolval($data["is_original"]),
           "count"       => $data["count"],
-          "lot_quantity"=> $data["lot_quantity"]
+          "lot_quantity"=> $data["lot_quantity"],
+		  "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
         ];
     }
     return $answer_data;

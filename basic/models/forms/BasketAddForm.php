@@ -56,16 +56,24 @@ class BasketAddForm extends Model
         $this->addError($attribute, 'Запись устарела! Пожалуйста, обновите страницу.');
         return false;
       }
+	  
+	  if( !$part->lot_quantity){
+		$part->lot_quantity = 1;
+	  }
+	  
       $mod = $this->count % $part->lot_quantity;
+	  
       if($mod!==0){
         $this->addError($attribute, 'Количество деталей должно быть кратно указанной величине.');
         return false;
       }      
+	  
       if(is_numeric($part->count)){
         $max_count = intval($part->count);
       } else {
         $max_count = 100;
       }
+	  
       if($this->count > $max_count){
         $this->addError($attribute, 'На данном складе нет достаточного количества деталей');
         return false;

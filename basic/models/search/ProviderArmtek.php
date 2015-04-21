@@ -30,8 +30,10 @@ class ProviderArmtek extends SearchProviderFile{
       'lot_quantity'  => 1,
       'stock'         => $this->getName()
     ]);
+	$result['articul'] = self::_clearStr($result['articul']);
+    $result['search_articul'] = $result['articul'];
     $result['maker_id'] = md5($result['producer']);
-    $result['price'] *= 1; 
+    $result['price'] *= 1.0; 
     return $result;
   }
 

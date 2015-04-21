@@ -47,6 +47,7 @@ class ProviderController extends Controller{
   }
   
   protected function _getLastFile(){
+	echo "Parse time: ".date( "d:m:Y H-i-s",time() )."\r\n";
     /** @var $provider SearchProviderFile */
     foreach ($this->_providers as $provider){      
       $file_info = $provider->getLastFileNameDate();

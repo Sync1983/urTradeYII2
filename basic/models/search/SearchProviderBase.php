@@ -123,9 +123,11 @@ class SearchProviderBase extends Object {
       $data[ $this->_maker_list_id ] = [ $data[ $this->_maker_list_id ] ];
     }
     foreach ($data[ $this->_maker_list_id ] as $value) {      
-      $name     = (isset($value[ $this->_maker_name ]))?$value[ $this->_maker_name ]:"";      
-      $id       = (isset($value[ $this->_maker_id ]))?  $value[ $this->_maker_id ]:"";      
-      $result[$name] = [$clsid => $id];
+      $name     = (isset($value[ $this->_maker_name ]))?$value[ $this->_maker_name ]  : false;      
+      $id       = (isset($value[ $this->_maker_id ]))?  $value[ $this->_maker_id ]	  : false;      
+	  if( $name && $id ) {
+		$result[$name] = [$clsid => $id];
+	  }
     }
     return $result;    
   }
@@ -198,7 +200,7 @@ class SearchProviderBase extends Object {
    * @return boolean
    */
   protected function _clearAll(){
-    if(!$this->_CLSID){
+    if( !$this->_CLSID ){
       return false;
     }
     return PartRecord::deleteAll(['provider'=>  $this->_CLSID]); 
@@ -225,6 +227,7 @@ class SearchProviderBase extends Object {
       $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);
     }catch(\yii\base\ErrorException $err){
       \yii::error($err->getMessage());      
+      \yii::error($xml);      
       $xml_string = false;
       return [];
     }    

@@ -150,7 +150,7 @@ class SiteController extends Controller
       $this->redirect(['site/setup']);
     }
 
-    public function actionSearch(){
+    public function actionSearch(){	  
       if($this->getSearchForm()->validate()){        
         SearchHistoryRecord::addQuery($this->getSearchForm()->search_text);
         return $this->render('search');
@@ -183,6 +183,7 @@ class SiteController extends Controller
       $model = new SearchModel();      
       $model->load($post,'');      
       $answer = $model->loadParts();
+	  
       return json_encode(['id'=>$model->getCurrentCLSID(),'parts'=>$answer]);
     }
 

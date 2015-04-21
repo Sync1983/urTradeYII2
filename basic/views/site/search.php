@@ -6,53 +6,41 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 use kartik\checkbox\CheckboxX;
 use app\models\forms\BasketAddForm;
+use app\assets\SearchTableAsset;
 
-$model = new BasketAddForm();
+SearchTableAsset::register($this);
 
 $this->title = 'Поиск';
 $this->params['breadcrumbs'][] = $this->title;
-/* @var  $search_model SearchModel */
-/* @var $this View */
-$this->registerCssFile("/css/dataTables.css");
-$this->registerJsFile("/js/jquery.dataTables.min.js", ['depends'=>'yii\web\JqueryAsset']);
 
-$maker = $this->params['search_model']->generateMakerList();
-ksort($maker,SORT_STRING);
+/* @var $search_model SearchModel */
+/* @var $this View */
+
+$model = new BasketAddForm();
+$makers = $this->params['search_model']->generateMakerList();
 
 $items = [];
-
-foreach ($maker as $key => $providers) {
-  $ids = [];
-  foreach ($providers as $id=>$maker_id){
-    if(($id=="")||($maker_id=="")){
-      continue;
-    }
-    $ids[] = "$id:'$maker_id'";
-  }
-  $ids_line = "{".implode(",", $ids)."}";
-  if(($key=="")||($ids_line=="{}")){
-    continue;
-  }
-  $html_table_key = md5($key);
+foreach ($makers as $maker => $json){  
   $items[] = [
-    'label' => $key."",
-    'content' => "Лучшие варианты деталей производителя $key<table id=\"out-data-$html_table_key\" class=\"out-data\"></table> <a href=\"#\">Показать полный список...</a>",
+    'label' => $maker."",
+    'content' => "<div class=\"best-var\">Лучшие варианты деталей производителя $maker</div>"
+	  . "<script type=\"text/json\">$json</script>"
+	  . "<table class=\"out-data\"></table> "
+	  . "<a href=\"#\">Показать полный список...</a>",
     'options' => [
-      'onclick'   => "main.loadPartList(this,$ids_line,'out-data-$html_table_key')",
-      'class'     => 'provider-header'
-    ]
-    ];
+	  //'data-makers'	=> $json,
+      //'onclick'   => "main.loadPartList(this,1,2)",      
+	]
+  ];  
 }
-/*if(count($items)==1){
-  $items[0]['contentOptions'] = ['class' => 'in'];
-}*/
+
 if(count($items)==0){
   echo "По Вашему запросу ничего не найдено!";
 } else {
   echo Collapse::widget(['items' => $items]);
 }
+SearchTableAsset::initCollapse();
 
-$this->registerJsFile("/js/search_tables_init.js", ['depends'=>'/js/jquery.dataTables.min.js']);
 $this->registerJs("".
  "$('body').on('beforeSubmit', 'form#basket-add-form', function() {
     var form = $(this);
@@ -67,7 +55,7 @@ $this->registerJs("".
     return false;
   });");
 ?>
-<div id="count-request" class="modal fade" tabindex="-1" role="dialog"aria-hidden="true">
+<div id="count-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -96,13 +84,11 @@ $this->registerJs("".
         
       <div><?= $form->field($model, "count")->input("number",['min'=>0,'style'=>'width:200px'])->error();?></div>
       
-      <div>        
-        <?= $form->field($model, "price_change")->widget(CheckboxX::classname(), [
+      <div><?= $form->field($model, "price_change")->widget(CheckboxX::classname(), [
                 'value' => false,
-                'pluginOptions'=>['threeState'=>false]]); ?> 
-        
-      </div>
-        <div class="basket-info">
+                'pluginOptions'=>['threeState'=>false]]); ?></div>
+	  
+      <div class="basket-info">
         <h4>Обратите внимание:</h4>
         <p id="add-info" class="basket-add-info text-warning">Информация</p>
       </div>

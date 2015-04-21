@@ -1,10 +1,12 @@
-var main_fucnt = function(){
+/* global main_funct */
+
+var main_function = function(){
   this.data_flow = [];  
 };
 
-main = new main_fucnt();
+main = new main_function();
 
-main_fucnt.prototype.searchKeyPress = function(e){
+main_function.prototype.searchKeyPress = function(e){
   var search_helper = $("#search-helper");
   var search_text = $("#search-string");
   var select = search_helper.children("select");
@@ -37,7 +39,7 @@ main_fucnt.prototype.searchKeyPress = function(e){
   main.ajax("index.php?r=site/ajax-search-data",{text:search_string},onSuccess);    
 };
   
-main_fucnt.prototype.init = function(guest){
+main_function.prototype.init = function(guest){
   var search_bar = $("#search-string");
   var search_helper = $("#search-helper");
   
@@ -65,7 +67,7 @@ main_fucnt.prototype.init = function(guest){
   });
   search_bar.click(function(){search_helper.removeClass("show");});  
   if(guest===0){
-    setInterval(function() {
+    /*setInterval(function() {
      function success(answer){
        var data = JSON.parse(answer);
        if(!data['messages']){
@@ -79,11 +81,11 @@ main_fucnt.prototype.init = function(guest){
        }
      };
      main.ajax("index.php?r=site/notify",{},success);
-    },10000);
+    },10000);*/
   }
 };
 
-main_fucnt.prototype.ajax = function(url,params,success,error){    
+main_function.prototype.ajax = function(url,params,success,error) {    
   jQuery.ajax({                
               url: url,
               type: "POST",
@@ -105,80 +107,84 @@ main_fucnt.prototype.ajax = function(url,params,success,error){
   });	
 };
 
-main_fucnt.prototype.loadPartList = function(item,params,table){
-  var collapse = $(item).children(".panel-collapse").attr("aria-expanded");
-  if(collapse==="true"){
-    return;
-  }    
-  
-  var data_flow = [];
-  var form_query = $("#search-form").serializeArray();    
-  var query = {};
-  
-  function onSuccess(data){      
-    var answer = false;
-    try{
-      answer = JSON.parse(data);
-    }catch(err){
-      console.log(err);
-    }
-    if((!answer)||(!answer.id))
-      return;      
-    
-    var parts = answer.parts;
-    data_flow = data_flow.concat(parts);
-    main.data_flow = data_flow;
-    
-    var table_class = $("#"+table).DataTable();
-    table_class.clear();
-    table_class.rows.add(data_flow).draw();      
-  }
-  
-  for (id in form_query){
-    var name = form_query[id].name;
-    var value = form_query[id].value;      
-    query[name] = value;
-  }    
-  
-  for (id in params){      
-    query['maker_id'] = params[id];
-    query['provider'] = id;
-    this.ajax("/index.php?r=site/ajax-load-parts",query,onSuccess);      
-  }
-};
-
-main_fucnt.prototype.getActiveOverPrice = function(){
+main_function.prototype.getActiveOverPrice = function(){
   return $('#over-price').val();
 };
   
-main_fucnt.prototype.changeOverPrice  = function(){
+main_function.prototype.changeOverPrice  = function(){
   var parent = $("div.panel-collapse.collapse.in");    
   var table = parent.find("table");    
   var table_class = $(table).dataTable();
   table_class.api().draw(false);
 };  
   
-main_fucnt.prototype.searchHelperHide = function(item){    
+main_function.prototype.searchHelperHide = function(item){    
   $("#search-helper").removeClass("show");
 };
   
-main_fucnt.prototype.insertSearch = function(item){
+main_function.prototype.insertSearch = function(item){
   var val = $(item).val();
   $('#search-string').val(val);
   $("#search-helper").removeClass("show");
 };
 
-main_fucnt.prototype.addToBasket = function(e){  
-  e.stopPropagation();
-  var data = {};
-  var id = e.data;
-  for(var i in main.data_flow){
-    if(main.data_flow[i].id===id){
-      data = main.data_flow[i];
-    }
+main_function.prototype.loadParts = function(source,head){
+  var textLine = $(head).find("div.best-var");  
+  var query = {};
+  var form_query = $("#search-form").serializeArray(); 
+  var table_class = $(head).find("table.out-data").DataTable();
+  
+  function onSuccess(data){
+    var dataEncode = JSON.parse(data);
+    var id = dataEncode.id;
+    var parts = dataEncode.parts;    
+    $(textLine).find("div#part-loader"+id).remove();    
+    table_class.rows.add(parts).draw();
+    $("body").find("a.ref-to-basket").unbind("click");    
+    $(head).find("a.ref-to-basket").click(main.onAddToBasket);
   };
+  
+  function onError(data){
+    console.log(data);
+  };
+  
+  table_class.clear();  
+  
+  for(var key in source){
+    var value = source[ key ];
+    var newLoader = $("<div></div>")
+          .addClass("part-loader")
+          .attr("id","part-loader"+key)
+          .text(" ");
+    textLine.append(newLoader);
+    query = form_query;
+    query.push({
+      name: "maker_id",
+      value: value
+    });
+    query.push({
+      name: "provider",
+      value: key      
+    });    
+    main.ajax("/index.php?r=site/ajax-load-parts",query,onSuccess,onError);    
+  }  
+};
+
+main_function.prototype.onAddToBasket = function (e){
+  var target = e.currentTarget;
+  var row = $(target).parent().parent();
+  var table = $(row).parent().parent();
+  var table_class = $(table).DataTable();
+  var data = table_class.rows(row).data()[0];
+  
+  e.stopPropagation();
+  
+  if( !data.lot_quantity ){
+    data.lot_quantity = 1;
+  }
+  
   var wndCount = $('#count-request');
-  wndCount.find("input#basketaddform-id").val(id);
+  wndCount.find("input#basketaddform-id").val(data.id);
   wndCount.find("#add-describe").html("<b>"+data.articul+"</b> "+data.name);
   wndCount.find("#add-step").html("<b>"+data.lot_quantity+"</b> шт.");  
   wndCount.find("input#basketaddform-count").attr('step',data.lot_quantity);
@@ -195,4 +201,6 @@ main_fucnt.prototype.addToBasket = function(e){
     $(this).find('.help-block').text('');
   });
   wndCount.modal();
+  
+  return false;
 };

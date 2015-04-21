@@ -363,3 +363,17 @@ table.over-price-panel{
 .basket-time{
   font-size: 8pt; 
 }
+
+.part-loader{
+  top: 3px;
+  width: 28px;
+  height: 16px;
+  margin-left: 10px;
+  background-image: url('/img/loading.gif');
+  display: inline-block;
+  position: relative;
+  
+  &:after{
+    content: "\00a0";
+  }
+}

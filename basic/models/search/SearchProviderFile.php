@@ -28,7 +28,7 @@ class SearchProviderFile extends SearchProviderBase{
   }
 
   public function getMakerList($part_id = "", $cross = false) {
-    $search = PartRecord::find()->where(['articul'=>$part_id,'provider'=>  $this->_CLSID])->all();
+    $search = PartRecord::find()->where(['articul' => $part_id,'provider' => $this->_CLSID])->all();
     $maker_list = [];
     foreach ($search as $part) {
       $maker_list[$part->getAttribute("producer")]=[$this->_CLSID => $part->getAttribute("maker_id")];
