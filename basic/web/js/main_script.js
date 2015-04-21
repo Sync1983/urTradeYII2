@@ -140,6 +140,7 @@ main_function.prototype.loadParts = function(source,head){
     var parts = dataEncode.parts;    
     $(textLine).find("div#part-loader"+id).remove();    
     table_class.rows.add(parts).draw();
+    table_class.rows().data().sort();
     $("body").find("a.ref-to-basket").unbind("click");    
     $(head).find("a.ref-to-basket").click(main.onAddToBasket);
   };

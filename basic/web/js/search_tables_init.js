@@ -33,10 +33,10 @@ $( ".out-data" ).DataTable( {
       width: '5%'
     },
     {data: 'name', title: 'Наименование', width: '50%'},
-    {data: 'price', title: 'Цена', width: '5%', type: 'string',
+    {data: 'price', title: 'Цена', width: '5%',
       render: function (data, type, row) {
         var op = data.price * 1 + main.getActiveOverPrice() * data.price / 100;
-        return op.toFixed( 2 );
+        return type === 'display'?op.toFixed( 2 ):data;
       }
     },
     {data: 'shiping', title: 'Срок', width: '5%'},
@@ -71,13 +71,10 @@ $( ".out-data" ).DataTable( {
 
     if ( data.shiping * 1 === 0 ) {
       $( row ).addClass( "text-success" );
-    } else
-    if ( data.shiping * 1 < 2 ) {
+    } 
+    else if ( data.shiping * 1 < 2 ) {
       $( row ).addClass( "text-info" );
     }
-
-    //elem.click(data.id,main.addToBasket);
-
   },
   rowCallback: function (row, data) {
     

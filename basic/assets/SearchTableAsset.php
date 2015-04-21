@@ -19,7 +19,7 @@ class SearchTableAsset extends AssetBundle{
         'css/dataTables.css',
   ];
   public $js = [
-        'js/jquery.dataTables.js',
+        'js/jquery.dataTables.min.js',
 		'js/search_tables_init.js'
   ];
   public $depends = [

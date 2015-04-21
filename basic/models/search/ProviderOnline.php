@@ -6,9 +6,8 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models\search;
-use yii;
+
 use app\models\search\SearchProviderBase;
-use app\models\PartRecord;
 
 class ProviderOnline extends SearchProviderBase{
   const CLSID = 001;

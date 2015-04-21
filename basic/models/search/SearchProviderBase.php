@@ -132,6 +132,13 @@ class SearchProviderBase extends Object {
     return $result;    
   }
   /**
+   * Формирует заголовки запроса
+   * @param resource $ch
+   */
+  protected function onlineRequestHeaders($ch){
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+  }
+  /**
    * Отправляет запрос по указаному URL с параметрами $param
    * POST или GET запрос определяется флагом is_post
    * @param string $url
@@ -141,7 +148,7 @@ class SearchProviderBase extends Object {
    */
   protected function onlineRequest($url="",$param=[],$is_post=true) {
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_HEADER, 0);
+    $this->onlineRequestHeaders($ch);
     curl_setopt($ch, CURLOPT_VERBOSE, false);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, $is_post==1);
