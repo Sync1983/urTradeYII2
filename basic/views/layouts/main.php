@@ -51,7 +51,7 @@ $balance = $this->params['balance'];
         <div class="head-buttons pull-right" role="group" aria-label="sign-up">          
 <?php if ($user->isGuest): ?>            
             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#loginModal">Войти</button>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#signupModal">Регистрация</button>
+            <a type="button" class="btn btn-info" href="<?= Url::to(['site/signup']) ?>">Регистрация</a>
 <?php else: ?>
             <div style="display:inline-block;">
               <p>Вы вошли как: <b><?= $user->getCaption(); ?></b><br>
@@ -252,22 +252,7 @@ ActiveForm::begin([
 			<h4 class="modal-title" id="myModalLabel">Регистрация</h4>
 		  </div>
 		  <div class="modal-body">
-<?php
-ActiveForm::begin([
-		'id'	 => 'signup-form',
-		'action' => ['site/signup']
-]);
-?>
-			<div>
-<?= Html::label("Ваш логин:", 'username', ['style' => 'width:100px']); ?>
-<?= Html::input("text", "username", "", ['id' => "user-name"]); ?>
-			</div>
-			<div>
-<?= Html::label("Пароль:", 'userpass', ['style' => 'width:100px']); ?>    
-<?= Html::input("password", "userpass", "", ['id' => "user-pass"]); ?>
-			</div>
-<?= Html::submitButton("Отправить", ['class' => 'btn btn-info']); ?>
-<?php ActiveForm::end() ?>      
+
 		  </div>
 		  <div class="modal-footer">
 			<ul class="socnet-list">          

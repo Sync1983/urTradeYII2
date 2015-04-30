@@ -26,12 +26,24 @@ return [
                 [ 
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['info'],
-                    'categories' => ['consloe'],
+                    'categories' => ['console'],
                     'except'  => ['application'],
                     'logVars' => [],
                     'logFile' => '@app/runtime/logs/console.log',
                 ],
             ],
+        ],
+		'mailer' => [
+            'class'		=> 'yii\swiftmailer\Mailer',
+            'transport' => [
+			  'class'		=> 'Swift_SmtpTransport',
+			  'host'		=> 'mail.atc58.ru',
+			  'username'	=> 'robot@atc58.ru',
+			  'password'	=> 'cFt32rT1',			  
+			  'port'		=> '465',
+			  'encryption'	=> 'tls',			  
+			],
+			//'useFileTransport'=>'false'
         ],
         'mongodb' => $db,
     ],

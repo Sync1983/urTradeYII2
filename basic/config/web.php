@@ -1,6 +1,4 @@
 <?php
-use app\models\events\BalanceEvent;
-use app\components\behaviors\BalanceBehavior;
 
 $params = require(__DIR__ . '/params.php');
 
@@ -12,9 +10,9 @@ $config = [
     'timeZone'  => 'Europe/Moscow',
     'name'      => 'АвтоТехСнаб',
     'modules'   => [
-      'gridview' =>[
+      'gridview' => [
           'class' => '\kartik\grid\Module'
-        ],
+       ],
     ],
     'components' => [        
         /*'assetManager' => [          
@@ -35,11 +33,15 @@ $config = [
             'errorAction' => 'site/error',
         ],        
         'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'class'		=> 'yii\swiftmailer\Mailer',
+            'transport' => [
+			  'class'		=> 'Swift_SmtpTransport',
+			  'host'		=> 'mail.atc58.ru',
+			  'username'	=> 'robot@atc58.ru',
+			  'password'	=> 'cFt32rT1',
+			  //'port'		=> '587',
+			  //'encryption'	=> 'tls',
+			],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -60,7 +62,7 @@ $config = [
                 [ 
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['info'],
-                    'categories' => ['consloe'],
+                    'categories' => ['console'],
                     'except'  => ['application'],
                     'logVars' => [],
                     'logFile' => '@app/runtime/logs/console.log',
@@ -75,7 +77,7 @@ $config = [
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = ['class'=>'yii\debug\Module','allowedIPs' => ['91.144.179.85','10.0.6.101','10.0.6.104', '127.0.0.1', '::1']];
+    $config['modules']['debug'] = ['class'=>'yii\debug\Module','allowedIPs' => ['91.144.179.85','10.0.6.*','10.0.6.104', '::1']];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = 'yii\gii\Module';

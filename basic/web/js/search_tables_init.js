@@ -66,7 +66,7 @@ $( ".out-data" ).DataTable( {
       previous: "Предыдущая"
     }
   },
-  order: [ [ 1, 'asc' ], [ 4, 'asc' ], [ 3, 'asc' ] ],
+  order: [ [ 1, 'asc' ], [ 3, 'asc' ], [ 4, 'asc' ] ],
   createdRow: function (row, data, dataIndex) {
 
     if ( data.shiping * 1 === 0 ) {

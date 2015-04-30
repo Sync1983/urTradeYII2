@@ -50,7 +50,10 @@ class SiteController extends Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
-            ]            
+            ],		
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+            ],        
         ];
     }
 
@@ -75,21 +78,50 @@ class SiteController extends Controller
     }
     
     public function actionSignup(){
-      if (!\Yii::$app->user->isGuest) {
+      if (!\yii::$app->user->isGuest) {
             return $this->goHome();
-        }
-
-        $login_model = new SignUpForm();        
-        if(!$login_model->load(Yii::$app->request->post(),"") || !$login_model->validate()){
-          return $this->render("error",['name'=>'Ошибка регистрации','message'=>'Даное имя занято']);
-        }
-        if(!$login_model->createUser() || !$login_model->login()){
-          return $this->render("error",['name'=>'Ошибка регистрации','message'=>'Неизвестная ошибка']);
-        }
-        return $this->goHome();
+      }
+	  
+	  $stage = \yii::$app->request->get('stage',false);
+	  $model = new SignUpForm();
+	  
+	  if( !$stage ){
+		$model->key = \app\models\RegRecord::generateKey();
+		return $this->render('signup/stage0',['model' => $model]);
+	  } else {
+		if( !$model->load(\yii::$app->request->post()) || !$model->key || !$model->email ){
+		  throw new \yii\web\BadRequestHttpException("Ошибка в формате запроса");
+		}
+		if( \app\models\RegRecord::checkKey($model->key) ){
+		  throw new \yii\web\BadRequestHttpException("Повторный запрос регистрации");
+		}
+		$reg_record = new \app\models\RegRecord();
+		$reg_record->key = $model->key;
+		$reg_record->login	= $model->username;
+		$reg_record->password = $model->userpass;
+		$reg_record->time = time();
+		$reg_record->was_send = false;
+		$reg_record->mail = $model->email;
+		if ( !$reg_record->save() ){
+		  throw new \yii\web\BadRequestHttpException("Ошибка добавления пользователя");
+		}
+		
+		return $this->render('signup/wait_mail',['email' => $model->email]);		
+	  }
+	  
+	  return $this->render('signup/stage0',['model'=>$model]);
     }
+	
+	public function actionSignupValidate() {
+	  $model = new SignUpForm();
+	  
+	  if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return \yii\bootstrap\ActiveForm::validate($model);
+	  }
+	}
 
-    public function actionLogout() {
+	public function actionLogout() {
         Yii::$app->user->logout();
         return $this->goHome();
     }

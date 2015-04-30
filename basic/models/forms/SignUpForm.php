@@ -14,6 +14,10 @@ class SignUpForm extends Model
 {
     public $username;
     public $userpass;    
+    public $passrepeat;    
+    public $email;
+	public $captcha;
+	public $key;
 
     private $_user = false;
 
@@ -22,40 +26,63 @@ class SignUpForm extends Model
      */
     public function rules()
     {
-        return [
-            // username and password are both required
-            [['username', 'userpass'], 'required'],            
-            // password is validated by validatePassword()
+        return [            
+            [['username', 'userpass', 'passrepeat', 'email', 'captcha'], 'required'],            
+            ['username', 'validateUser'],
             ['userpass', 'validatePassword'],
+            ['passrepeat', 'validateRepeat'],
+            ['email', 'email'],
+            ['key', 'string'],
+            ['captcha', 'captcha'],
         ];
     }
-
-    /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
-     */
-    public function validatePassword($attribute, $params)
-    {
+	/**
+	 * Метки атрибутов
+	 * @return mixed
+	 */
+	public function attributeLabels() {
+	  return [
+			  'username'	=> "Логин",
+			  'userpass'	=> "Пароль",
+			  'passrepeat'	=> "Повторите пароль",
+			  'email'		=> "Ваша почта (e-mail)",
+			  'captcha'		=> " ",
+	  ];
+	}
+	
+    public function validatePassword($attribute, $params) {
       
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            
-            if ($user) {
-                $this->addError($attribute, 'Данное имя пользователя уже используется.');
-                return false;
-            }
-        }
+	  if( !preg_match('/^[a-z0-9_-]{6,20}$/', $this->userpass) ){
+		$this->addError($attribute, 'Поле может содержать только латинские буквы, цифры, знаки подчеркивания. Длина поля от 6 до 20 символов');
+        return false;
+	  }
+	  return true;
     }
-
+	
+    public function validateRepeat($attribute, $params) {      
+	  if ($this->userpass !== $this->passrepeat ) {
+		  $this->addError($attribute, 'Поле не совпадает с паролем');
+          return false;
+      }
+      return true;
+    }
+	
+    public function validateUser($attribute, $params) {      
+	  if ( $this->getUser() ) {
+		  $this->addError($attribute, 'Пользователь с таким именем уже зарегестрирован');
+          return false;
+      }
+	  if( !preg_match('/^[a-z0-9_-]{5,16}$/', $this->username) ){
+		$this->addError($attribute, 'Поле может содержать только латинские буквы, цифры, знаки подчеркивания. Длина поля от 5 до 16 символов');
+        return false;
+	  }
+      return true;
+    }
     /**
      * Logs in a user using the provided username and password.
      * @return boolean whether the user is logged in successfully
      */
-    public function login()
-    {
+    public function login() {
       $user = $this->getUser();
       if(!$user){
         return false;
@@ -64,8 +91,7 @@ class SignUpForm extends Model
         return false;
       }
       return Yii::$app->user->login(new UserIdentity(), 3600*24*30);       
-    }
-    
+    }    
     /**
      * Create new User
      */
@@ -77,7 +103,6 @@ class SignUpForm extends Model
       $this->_user = $user;
       return true;
     }
-
     /**
      * Finds user by [[username]]
      *

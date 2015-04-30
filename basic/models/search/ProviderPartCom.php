@@ -23,9 +23,18 @@ class ProviderPartCom extends SearchProviderBase{
   
   protected function sendMakerRequest($part_id = "", $cross = false){
     $param = ['number'=>$part_id];
-    $xml  = $this->onlineRequest($this->url."search/brands", $param);
+    $xml  = $this->onlineRequest($this->url."search/brands", $param, false);
 	var_dump($xml);
     //$answer = $this->xmlToArray($xml);
     //return $answer;
+  }
+  
+  protected function onlineRequestHeaders($ch) {
+	$headers = [
+	  "Authorization: Basic ".  base64_encode($this->_default_params['Login']. ":" .$this->_default_params['Password']),			
+	  "Accept: application/json",
+	  "Content-type: application/json'"
+	];
+	curl_setopt($ch,CURLOPT_HTTPHEADER,$headers);
   }
 }
