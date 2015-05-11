@@ -6,10 +6,10 @@
  */
 namespace app\models;
 
-use Yii;
 use yii\web\IdentityInterface;
 use yii\mongodb\ActiveRecord;
 use MongoId;
+use yii\helpers\ArrayHelper;
 
 class MongoUser extends ActiveRecord implements IdentityInterface {    
   
@@ -24,7 +24,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $user->user_name      = $login?$login:$name;     //Логин
     $user->user_pass      = md5($pass); //Пароль
     $user->role           = "user";     //Роль пользователя      
-    $user->over_price     = 20;         //Наценка для пользователя
+    $user->over_price     = ArrayHelper::getValue(\yii::$app->params, 'guestOverPrice', 18.0);  //Наценка для пользователя
     $user->type           = "private";  //Тип 
     $user->first_name     = $name?$name:$login; //Имя
     $user->second_name    = "";        //Фамилия
@@ -35,10 +35,11 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     $user->addres         = "";        //Адрес доставки
     $user->phone          = "";        //Телефон для связи
     $user->email          = "";        //Почта для связи
-    $user->credit         = 0.0;        //Кредит пользователя
+    $user->credit         = 0.0;       //Кредит пользователя
     $user->over_price_list= [];        //Список наценок пользователя      
     $user->basket         = [];        //Записи корзины
-    $user->informer       = ["Списибо за регистрацию!"];        //Записи информера
+    $user->informer       = ["Спасибо за регистрацию!"];        //Записи информера
+    $user->is_init		  = false;     //Проведена ли начальная настройка
     if( $user->insert() ){      
       return $user;
     }
@@ -107,7 +108,8 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
       'over_price_list',  //Список наценок пользователя  
       'credit',           //Кредит пользователя
       'basket',           //Записи корзины
-      'informer'          //Записи сообщений
+      'informer',          //Записи сообщений
+      'is_init'           //Проведены ли начальные настройки
       ];
   }
   
@@ -115,7 +117,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     return[
       [
         ['user_name','user_pass','role','over_price','first_name','second_name',
-         'type','photo','name','inn','kpp','addres','phone','email','credit',],'safe'
+         'type','photo','name','inn','kpp','addres','phone','email','credit','is_init'],'safe'
       ],
     ];
   }

@@ -69,7 +69,7 @@ class SignUpForm extends Model
 	
     public function validateUser($attribute, $params) {      
 	  if ( $this->getUser() ) {
-		  $this->addError($attribute, 'Пользователь с таким именем уже зарегестрирован');
+		  $this->addError($attribute, 'Пользователь с таким именем уже зарегистрирован');
           return false;
       }
 	  if( !preg_match('/^[a-z0-9_-]{5,16}$/', $this->username) ){

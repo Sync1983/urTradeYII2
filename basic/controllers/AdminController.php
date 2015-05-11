@@ -191,7 +191,7 @@ class AdminController extends Controller
       throw new \yii\web\NotFoundHttpException("Ошибочный запрос");
     }
     $value = $data[$index][$type];
-    $new_value = $value;
+    
     if( $type=="wait_time" ){
       $data[$index][$type] = strtotime($value);      
     }

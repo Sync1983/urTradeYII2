@@ -10,7 +10,7 @@ use yii\base\Model;
 use app\models\MongoUser;
 
 class SetupModel extends Model {
-  public $_id = "ID";
+  public $id = "ID";
   public $type = 0;
   public $name = "Название";
   public $first_name = "Имя";
@@ -19,10 +19,8 @@ class SetupModel extends Model {
   public $kpp;
   public $addres = "Адрес доставки";
   public $phone  = "+7---------";
-  public $email  = "test@test.ru";
-  public $photo  = "/img/default_avatar.jpg";
+  public $email  = "test@test.ru";  
   public $company = false;
-
 
   public function __construct($config = array()) {
     parent::__construct($config);
@@ -37,6 +35,21 @@ class SetupModel extends Model {
             ['inn', 'validateInn'],
             ['name','string']
             ];
+  }
+  
+  public function attributeLabels() {
+	return [
+	  'id'			=> "ID в системе",
+	  'type'		=> "Тип пользователя",
+	  'name'		=> "Название компании",
+	  'first_name'	=> "Имя",
+	  'second_name' => "Фамилия",
+	  'inn'			=> "ИНН",
+	  'kpp'			=> "КПП",
+	  'addres'		=> "Адрес доставки",
+	  'phone'		=> "Телефон",
+	  'email'		=> "Адрес почты",
+	];
   }
     
   public function validateInn($attribute, $params){    
@@ -75,26 +88,5 @@ class SetupModel extends Model {
       }
     }    
   }
-  
-  public function loadParams($data=[]){       
-    foreach ($this->getAttributes() as $name=>$value){        
-      if(isset($data[$name])){
-        $this->$name = $data[$name];
-      }
-    }
-    return $this->validate();
-  }
 
-  public function save(){    
-    /* @var $user MongoUser */
-    $user = YII::$app->user->getIdentity();
-    foreach ($this->getAttributes() as $name=>$value){
-      $user->setAttribute($name, $value);
-    }
-    
-    if($user->update(true)){
-      return true;
-    }
-    return false;
-  }
 }

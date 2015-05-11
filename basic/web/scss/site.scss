@@ -9,6 +9,51 @@ $nav_height: 75px;
 $nav_bg_color: #FFFFBA;
 $menu_count: 3;
 $max_menu_height: 0;
+@mixin linear-gradient($angle, $color-stops...) {
+  $_angle-with-vendor-prefix: "";
+  $_angle: "";
+  @if $angle == "to top" or $angle == "bottom" {
+    $_angle-with-vendor-prefix: bottom;
+    $_angle: to top;
+  } @else if $angle == "to right" or $angle == "left" {
+    $_angle-with-vendor-prefix: left;
+    $_angle: to right;
+  } @else if $angle == "to bottom" or $angle == "top" {
+    $_angle-with-vendor-prefix: top;
+    $_angle: to bottom;
+  } @else if $angle == "to left" or $angle == "right" {
+    $_angle-with-vendor-prefix: right;
+    $_angle: to left;
+  } @else if $angle == "to top right" or $angle == "bottom left" {
+    $_angle-with-vendor-prefix: bottom left;
+    $_angle: to top right;
+  } @else if $angle == "to bottom right" or $angle == "top left" {
+    $_angle-with-vendor-prefix: top left;
+    $_angle: to bottom right;
+  } @else if $angle == "to bottom left" or $angle == "top right" {
+    $_angle-with-vendor-prefix: top right;
+    $_angle: to bottom left;
+  } @else if $angle == "to top left" or $angle == "bottom right" {
+    $_angle-with-vendor-prefix: bottom right;
+    $_angle: to top left;
+  } @else {
+    $_angle-with-vendor-prefix: $angle % 360;
+    $_angle: (90 - $angle) % 360;
+  }
+  background: -webkit-linear-gradient($_angle-with-vendor-prefix, $color-stops);
+  background: -moz-linear-gradient($_angle-with-vendor-prefix, $color-stops);
+  background: -o-linear-gradient($_angle-with-vendor-prefix, $color-stops);
+  background: linear-gradient($_angle, $color-stops);
+}
+
+@mixin text-shadow() {
+text-shadow:  0px  0px 1px rgba(0,0,0,0.5),
+              2px  2px 2px rgba(0,0,0,0.3),
+             -2px -2px 2px rgba(0,0,0,0.3),
+              4px  4px 4px rgba(0,0,50,0.1),
+             -4px -4px 4px rgba(0,0,50,0.1)
+             ;  
+}
 
 @for $i from 1 to ($menu_count+1){  
   @if ($i!=$menu_count){
@@ -160,35 +205,52 @@ ul.socnet-list{
   height: $soc_icon_size;
   
   li {
-    width: $soc_icon_size;
-    height: $soc_icon_size;
+    width: 180px;
+    height: 30px;
     background-repeat:none;
-    background-size: $soc_icon_size $soc_icon_size;
+    border-radius: 10px;
+    border: 1px solid #269ABC;
+    @include linear-gradient("to top",#269ABC 23%, rgba(1, 169, 215, 0.21) 70%, rgba(105, 226, 240, 0.47) 0%);
     display: inline-block;
-    
-    a{
-      text-align: center;
-      font-size: 1pt;
-      text-decoration: none;
-      display: block;
-      width: $soc_icon_size;
-      height: $soc_icon_size;
+    &:hover {
+      @include linear-gradient("to top",#2CC9F2 23%, rgba(102, 222, 255, 0.03) 70%, rgba(105, 240, 226, 0.16) 0%);
     }
-    
-    &.fb-icon{background-image: url('/img/fb_icon.png');}
-    &.tw-icon{background-image: url('/img/tw_icon.png');}
-    &.od-icon{background-image: url('/img/od_icon.png');}
-    &.vk-icon{background-image: url('/img/vk_icon.png');}
-    &.mm-icon{background-image: url('/img/mm_icon.png');}    
+    a{      
+      top: -$soc_icon_size;
+      color: white;
+      font-size: 8pt;
+      text-align: center;
+      text-decoration: none;
+      padding-left: $soc_icon_size+10;      
+      font-weight: bold;
+      vertical-align: baseline;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: inline-block;
+      @include text-shadow();
+    }
+    span.icon {
+      padding: 0;
+      margin: 0;
+      width: $soc_icon_size*1.5;
+      height: 100%;
+      display: block;
+      border-right: 2px solid #1084A8;
+      &:after{
+        width: $soc_icon_size;
+        top: 2px;        
+        padding-left: 6px;
+        display: block;
+        position: relative;
+      }
+      &.fb-icon:after{content: url('/img/fb_icon.png');}
+      &.vk-icon:after{content: url('/img/vk_icon.png');}
+      &.tw-icon:after{content: url('/img/tw_icon.png');}
+      &.od-icon:after{content: url('/img/od_icon.png');}
+      &.mm-icon:after{content: url('/img/mm_icon.png');}
+    }
   }
-}
-@mixin text-shadow() {
-text-shadow:  0px  0px 1px rgba(0,0,0,0.5),
-              2px  2px 2px rgba(0,0,0,0.3),
-             -2px -2px 2px rgba(0,0,0,0.3),
-              4px  4px 4px rgba(0,0,50,0.1),
-             -4px -4px 4px rgba(0,0,50,0.1)
-             ;  
 }
 
 .user-badge{

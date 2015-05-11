@@ -193,6 +193,7 @@ Breadcrumbs::widget([
 		'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 ])
 ?>
+		
 <?= $content ?>
       </div>      
     </div>
@@ -202,7 +203,7 @@ Breadcrumbs::widget([
       <p class="pull-right"><?= Yii::powered() ?></p>
     </footer>
 
-			  <?php $this->endBody() ?>
+<?php $this->endBody() ?>
 	<!-- Special Area -->
 	<div class="preloader">&nbsp;</div>
 	<!-- Login form -->
@@ -232,41 +233,17 @@ ActiveForm::begin([
 <?php ActiveForm::end() ?>      
 		  </div>
 		  <div class="modal-footer">
-			<ul class="socnet-list">
-			  <li class="fb-icon"><?= Html::a("fb", Url::to(["soclogin/login", "net" => "fb"])); ?></li>
-			  <li class="tw-icon hidden"><?= Html::a("tw", Url::to(["soclogin/login", "net" => "tw"])); ?></li>
-			  <li class="od-icon hidden"><?= Html::a("od", Url::to(["soclogin/login", "net" => "od"])); ?></li>
-			  <li class="mm-icon hidden"><?= Html::a("mm", Url::to(["soclogin/login", "net" => "mm"])); ?></li>
-			  <li class="vk-icon">       <?= Html::a("vk", Url::to(["soclogin/login", "net" => "vk"])); ?></li>          
+			<ul class="socnet-list">			  
+			  <li><span class="icon fb-icon"></span>
+				<?= Html::a("Войти через Facebook", Url::to(["soclogin/login", "net" => "fb"])); ?></li>
+			  <li>
+				<span class="icon vk-icon"></span>
+				<?= Html::a("Войти через VKontakte", Url::to(["soclogin/login", "net" => "vk"])); ?></li>          
 			</ul>      
 		  </div>
 		</div>
 	  </div> 
 	</div>
-	<!-- SignUp form -->
-	<div id="signupModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Регисрация" aria-hidden="true">>
-	  <div class="modal-dialog">
-		<div class="modal-content">
-		  <div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h4 class="modal-title" id="myModalLabel">Регистрация</h4>
-		  </div>
-		  <div class="modal-body">
-
-		  </div>
-		  <div class="modal-footer">
-			<ul class="socnet-list">          
-			  <li class="fb-icon"><?= Html::a("fb", Url::to(["soclogin/register", "net" => "fb"])); ?></li>
-			  <li class="tw-icon hidden"><?= Html::a("tw", Url::to(["soclogin/register", "net" => "tw"])); ?></li>
-			  <li class="od-icon hidden"><?= Html::a("od", Url::to(["soclogin/register", "net" => "od"])); ?></li>
-			  <li class="mm-icon hidden"><?= Html::a("mm", Url::to(["soclogin/register", "net" => "mm"])); ?></li>
-			  <li class="vk-icon">       <?= Html::a("vk", Url::to(["soclogin/register", "net" => "vk"])); ?></li>          
-			</ul>      
-		  </div>
-		</div>
-	  </div> 
-	</div>
-
 
 	<div class='notifications bottom-right'></div> 
   </body>

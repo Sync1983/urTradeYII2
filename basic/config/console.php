@@ -14,6 +14,10 @@ return [
         'gii' => 'yii\gii\Module',
     ],
     'components' => [
+		'urlManager' => [
+		  'baseUrl' => 'https://www.atc58.ru/',
+		  'scriptUrl' => 'https://www.atc58.ru/index.php'
+		],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

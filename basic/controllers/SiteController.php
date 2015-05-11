@@ -7,12 +7,14 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\forms\LoginForm;
-use app\models\forms\SignUpForm;
 use app\models\forms\SetupModel;
 use app\models\PartRecord;
 use app\models\SearchHistoryRecord;
 use app\models\search\SearchProviderBase;
 use app\models\search\SearchModel;
+use app\controllers\actions\site\DefaultAction;
+use app\controllers\actions\site\SignUpAction;
+use app\controllers\actions\site\ProfileAction;
 
 class SiteController extends Controller
 {
@@ -53,12 +55,48 @@ class SiteController extends Controller
             ],		
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
-            ],        
+            ],
+			'index'	=> [
+				'class' => DefaultAction::className(),
+			],
+			'contact' => [
+			  'class' => DefaultAction::className(),
+			],
+			'consumers'	=> [
+			  'class' => DefaultAction::className(),
+			],
+			'signup'	=> [
+			  'class' => SignUpAction::className(),
+			  'stage' => SignUpAction::STAGE_INITIAL
+			],
+			'signup-wait-mail'	=> [
+			  'class' => SignUpAction::className(),
+			  'stage' => SignUpAction::STAGE_WAIT_MAIL
+			],
+			'signup-validate'	=> [
+			  'class' => SignUpAction::className(),
+			  'stage' => SignUpAction::STAGE_VALIDATE_FORM
+			],
+			'signup-mail-answer'=> [
+			  'class' => SignUpAction::className(),
+			  'stage' => SignUpAction::STAGE_MAIL_ANSWER
+			],
+			'new-user'	=> [
+			  'class' => ProfileAction::className(),
+			],
+			'new-user-last-step'=> [
+			  'class' => ProfileAction::className(),
+			],
+			'profile-discard'=> [
+			  'class' => ProfileAction::className(),
+			],
+			'profile-save'=> [
+			  'class' => ProfileAction::className(),
+			],
+			'profile-validate'=> [
+			  'class' => ProfileAction::className(),
+			],
         ];
-    }
-
-    public function actionIndex() {      
-      return $this->render('index');
     }
 
     public function actionLogin() {
@@ -76,62 +114,10 @@ class SiteController extends Controller
         }
         return $this->goHome();
     }
-    
-    public function actionSignup(){
-      if (!\yii::$app->user->isGuest) {
-            return $this->goHome();
-      }
-	  
-	  $stage = \yii::$app->request->get('stage',false);
-	  $model = new SignUpForm();
-	  
-	  if( !$stage ){
-		$model->key = \app\models\RegRecord::generateKey();
-		return $this->render('signup/stage0',['model' => $model]);
-	  } else {
-		if( !$model->load(\yii::$app->request->post()) || !$model->key || !$model->email ){
-		  throw new \yii\web\BadRequestHttpException("Ошибка в формате запроса");
-		}
-		if( \app\models\RegRecord::checkKey($model->key) ){
-		  throw new \yii\web\BadRequestHttpException("Повторный запрос регистрации");
-		}
-		$reg_record = new \app\models\RegRecord();
-		$reg_record->key = $model->key;
-		$reg_record->login	= $model->username;
-		$reg_record->password = $model->userpass;
-		$reg_record->time = time();
-		$reg_record->was_send = false;
-		$reg_record->mail = $model->email;
-		if ( !$reg_record->save() ){
-		  throw new \yii\web\BadRequestHttpException("Ошибка добавления пользователя");
-		}
-		
-		return $this->render('signup/wait_mail',['email' => $model->email]);		
-	  }
-	  
-	  return $this->render('signup/stage0',['model'=>$model]);
-    }
-	
-	public function actionSignupValidate() {
-	  $model = new SignUpForm();
-	  
-	  if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return \yii\bootstrap\ActiveForm::validate($model);
-	  }
-	}
 
 	public function actionLogout() {
         Yii::$app->user->logout();
         return $this->goHome();
-    }
-
-    public function actionContact() {
-       return $this->render('contact');        
-    }
-    
-    public function actionConsumers() {
-       return $this->render('consumers');        
     }
     
     public function actionNotify(){
@@ -159,11 +145,13 @@ class SiteController extends Controller
       $prices = $user->getOverPiceList();
       
       $s_model = new SetupModel();
-      $s_model->loadParams($user->getAttributes());            
-      if ($s_model->load($post) && $s_model->validate()) {        
-          $s_model->save();
+      $s_model->setAttributes($user->getAttributes());
+	  $s_model->id = $user->getId();
+      if ($s_model->load($post) && $s_model->validate()) {
+		$user->setAttributes($s_model->getAttributes());
+        $user->save();
       }
-      $this->view->registerJsFile("/js/setup.js",['depends' => [\yii\web\JqueryAsset::className()]]);
+      
       return $this->render('setup',['model'=>$s_model,'prices'=>$prices]);      
     }
     
@@ -218,5 +206,17 @@ class SiteController extends Controller
 	  
       return json_encode(['id'=>$model->getCurrentCLSID(),'parts'=>$answer]);
     }
+	
+	public function beforeAction($action) {
+	  if( \yii::$app->user->isGuest || \yii::$app->session->get('ProfileRequestDiscard',false) ){
+		return parent::beforeAction($action);
+	  }	  
+	  
+	  if( !\yii::$app->user->identity->getAttribute('is_init') && ($action->id === 'index') ) {
+		return $this->redirect(\yii\helpers\Url::to(['site/new-user']));
+	  }
+	  
+	  return parent::beforeAction($action);
+	}
 
 }

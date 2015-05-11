@@ -4,24 +4,17 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\models\socnet\SocNetInterface;
+
 use app\models\SocAuth;
 use yii\helpers\ArrayHelper;
 use app\models\events\NotifyEvent;
+use app\components\helpers\SocNetHelper;
 
 class SocloginController extends Controller
 {
-  const state     = "atc_auth";
+  const state     = "atc_auth";  
+  protected $_net = null;
   public $layout  = "initial";
-  protected static $_net_by_name = [
-    'vk'      => '\app\models\socnet\VkApi',
-    'fb'      => '\app\models\socnet\FbApi',
-  ];
-  private $_user  = null;
-
-  public function behaviors(){
-      return [];
-  }
 
   public function actions(){
     return [
@@ -30,168 +23,100 @@ class SocloginController extends Controller
       ]            
     ];
   }
-  
-  public static function getClassByNet($soc_net){ 
-    if(!$soc_net){
-      return false;
-    }
-    return ArrayHelper::getValue(self::$_net_by_name, $soc_net, false);
-  }
-  
-  public static function getAvaibleNets(){
-    return array_keys(self::$_net_by_name);
-  }
-  
-  public static function getActiveNets(){
-    if(Yii::$app->user->isGuest){
-      return [];
-    }
-    $items = SocAuth::find()->where(['user_id'=>Yii::$app->user->identity->getObjectId()])->all();
-    $answer = [];
-    foreach ($items as $value) {
-      $answer[] = $value['net'];
-    }
-    return $answer;
-  }
 
-  public function actionLogin() {     
-    $net_name = self::getClassByNet(Yii::$app->request->get("net",false));    
-    if( (!$net_name) ){
-      return $this->render('error',['name'=>'Ошибка авторизации','message'=>"Неизвестная соц. сеть"]);
-    }
-    /* @var $net SocNetInterface */
-    $net = new $net_name();
-    return $this->redirect($net->auth_request(['soclogin/answer']));
-  }
-  
-  public function actionAnswer(){    
-    $net_name = self::getClassByNet(Yii::$app->request->get("state",false));
-    if( (!$net_name) ){
-      return $this->render('error',['name'=>'Ошибка авторизации','message'=>"Неизвестная соц. сеть"]);
-    }
-    /* @var $net SocNetInterface */
-    $net = new $net_name();
-    $this->_user = $net->auth_answer(['soclogin/answer']);
-    if(!$this->_user){
-      return $this->render('error',['name'=>'Ошибка авторизации','message'=>$net->error()]);      
-    }
-    return $this->login();
-  }
-  
-  public function actionUpdateInfo(){
-    $net_name = self::getClassByNet(Yii::$app->request->get("net",false));
-    if( (!$net_name) ){
-      return $this->render('error',['name'=>'Ошибка в запросе','message'=>"Неизвестная соц. сеть"]);
-    }
-    /* @var $net SocNetInterface */
-    $net = new $net_name();
-    $soc_id = $this->getSocIdByUser($net->getSocNetName());
-    
-    if(!$soc_id){
-      return $this->render('error',['name'=>'Ошибка в запросе','message'=>"Пользователь не найден"]);
-    }
-    return $this->redirect($net->auth_request(['soclogin/answer-data']));    
-  }
-  
-  public function actionAnswerData(){
-    $net_name = self::getClassByNet(Yii::$app->request->get("state",false));
-    $code     = Yii::$app->request->get("code",false);
-    
-    if( (!$net_name) ){
-      return $this->render('error',['name'=>'Ошибка в запросе','message'=>"Неизвестная соц. сеть"]);
-    }
-    /* @var $net SocNetInterface */
-    $net = new $net_name();
-    $soc_id = $this->getSocIdByUser($net->getSocNetName());
-    
-    if(!$soc_id){
-      return $this->render('error',['name'=>'Ошибка в запросе','message'=>"Пользователь не найден"]);
-    }
-    $data = $net->getData($code,['soclogin/answer-data']);    
-    if(!$data){
-      return $this->render('error',['name'=>'Ошибка в ответе','message'=>$net->error()]);
-    }
-    $user = Yii::$app->user->getIdentity();
-    $user->first_name   = $data['first_name'];
-    $user->second_name  = $data['second_name'];
-    $user->photo        = $data['photo'];
-    $user->email        = $data['email'];
-    $user->save();
-    return $this->redirect(['site/setup']);        
+  public function actionLogin() {    
+    return $this->redirect($this->auth_request(['soclogin/login-answer']));
   }
   
   public function actionRegister(){    
-    $net_name = self::getClassByNet(Yii::$app->request->get("net",false));
-    if( (!$net_name) ){
-      return $this->render('error',['name'=>'Ошибка в запросе','message'=>"Неизвестная соц. сеть"]);
-    }
-    /* @var $net SocNetInterface */
-    $net = new $net_name();
-    return $this->redirect($net->auth_request(['soclogin/register-answer']));
+    return $this->redirect($this->auth_request(['soclogin/register-answer']));
   }
   
-  public function actionRegisterAnswer(){
-    $net_name = self::getClassByNet(Yii::$app->request->get("state",false));
-    $code     = Yii::$app->request->get("code",false);
-    
-    if( (!$net_name) ){
-      return $this->render('error',['name'=>'Ошибка в запросе','message'=>"Неизвестная соц. сеть"]);
+  public function actionLoginAnswer(){    
+    $user	  =  $this->auth_answer(['soclogin/login-answer']);
+    if( !$user ){
+      return $this->render('error',['name'=>'Ошибка авторизации','message'=>$this->error()]);      
     }
-    /* @var $net SocNetInterface */
-    $net = new $net_name();
-    $data = $net->getData($code,['soclogin/register-answer']);
-    //var_dump($data);
-    if(!isset($data["id"])){
-      return $this->render('error',['name'=>'Ошибка в ответе','message'=>"ID пользователя не найден ".$net->error()]);      
-    }
-    $user = Yii::$app->user;
-    if(!$user->isGuest){
-      SocAuth::createRecord($net->getSocNetName(), $user->getId(), $data["id"]);
-      return $this->redirect(['site/setup']);
-    } else {
-      $sn = SocAuth::findBySocNetID($net->getSocNetName(),$data['id']."");      
-      if($sn){
-        $uid = $sn->getUserId();
-        $load_user = \app\models\MongoUser::findOne(['_id'=> new \MongoId($uid)]);
-        $user->login($load_user,30*24*3600);
-        return $this->redirect(['site/index']);
-      } else {      
-        $mongo_user = \app\models\MongoUser::createNew("", "", $data['first_name']);
-        if(!$mongo_user){
-          return false;
-        }
-        $mongo_user->second_name = $data['second_name'];
-        $mongo_user->photo       = $data['photo'];
-        $mongo_user->email       = $data['email'];
-        $mongo_user->save();
-        SocAuth::createRecord($net->getSocNetName(), $mongo_user->getId(), $data["id"]);        
-        $user->login($mongo_user,30*24*3600);
-        return $this->redirect(['site/index']);
-      }
-    }
-  }
-
-  
-  //===================================== Protected ===========================
-  protected function login(){
-    $login = Yii::$app->user->login($this->_user, 3600*24*30);
-    if(!$login){
+	
+	$login = Yii::$app->user->login($user, 3600*24*30);
+    if( !$login ){
       return $this->render('error',['name'=>'Ошибка авторизации','message'=>"Пользователь не найден"]);      
     }
+	
     Yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,new NotifyEvent(['text'=>"Добро пожаловать"]));
-    return $this->goHome();
+    return $this->goHome();    
   }
   
-  protected function getSocIdByUser($net_name){
-    if(Yii::$app->user->isGuest){
-      return false;
+  public function actionRegisterAnswer(){    
+    $code     = Yii::$app->request->get("code",false);
+    $data	  = $this->get_data($code,['soclogin/register-answer']);
+    $id		  = ArrayHelper::getValue($data, 'id', false);
+    $user	  = \yii::$app->user;
+	
+	if( !$id ){
+      return $this->render('error',['name'=>'Ошибка в ответе','message'=>"ID пользователя не найден ".$this->error()]);	  
+	}
+    //Если пользователь авторизирован, то просто добавляем запись для новой соц.сети
+    if( !$user->isGuest ){
+      SocAuth::createRecord($net->getSocNetName(), $user->getId(), $id);
+	  //И уходим на страничку профиля
+      return $this->redirect(['site/setup']);
     }
-    $id = Yii::$app->user->identity->getObjectId();
-    $answer = SocAuth::findOne(["net"=>$net_name,"user_id"=>$id]);
-    if(!$answer){
-      return false;
+	//Если пользователь не авторизирован, то ищем запись регистрации в базе, для указанной соц.сети
+	// и id пользователя в ней
+	$sn = SocAuth::findBySocNetID($this->_net,$data['id']."");      
+	//Если такая запись найдена
+	if($sn){
+	  $uid = $sn->getUserId(); //Получим id пользователя в нашей системе
+      $load_user = \app\models\MongoUser::findOne(['_id'=> new \MongoId($uid)]);  //Находим пользователя
+      $user->login($load_user,30*24*3600);	//авторизируем
+	  // И уходим на главную страницу
+      return $this->redirect(['site/index']);
     }
-    return $answer->soc_id;
+	//Сюда попадаем, если пользователь не авторизован, и не имеет записей в базе
+	// для указанной соц.сети. Регистрируем нового пользователя
+	$mongo_user = \app\models\MongoUser::createNew("", "", $data['first_name']);  //Добавляем запись с именем пользователя
+    if(!$mongo_user){
+	  //По каким-то причинам мы не смогли создать пользователя
+      return $this->render('error',['name'=>'Ошибка создания пользователя','message'=>"Пользователь не может быть создан"]);	  
+    }
+    //Добавим основные данные из соц.сети
+	$mongo_user->second_name = $data['second_name'];
+    $mongo_user->photo       = $data['photo'];
+    $mongo_user->email       = $data['email'];
+    $mongo_user->save();  //Сохраним изменения
+	//Добавим запись в таблицу соц.сетей, чтобы связать id  в нашей системе и в соц.сети
+    SocAuth::createRecord($this->_net, $mongo_user->getId(), $id);        
+	//Авторизуемся
+    $user->login($mongo_user,30*24*3600);
+	\yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,new NotifyEvent(['text'=>"Добро пожаловать"]));
+	//И переходим на главную страницу	
+    return $this->redirect(['site/index']);
+  }
+  
+  //===================================== Protected ===========================
+  public function beforeAction($action) {
+	$net = \yii::$app->request->get("net",false);
+	$state = \yii::$app->request->get("state",false);
+	
+	if( $net ){
+	  $class = SocNetHelper::getClassByNet($net);
+	  if( !$class ){
+		throw new \yii\web\BadRequestHttpException('Ошибка в передаче параметров социальной сети');
+	  }	  
+	  $this->_net = $net;
+	  $this->attachBehavior("socBehavior", $class);
+	} elseif ( $state ){
+	  $class = SocNetHelper::getClassByNet($state);
+	  if( !$class ){
+		throw new \yii\web\BadRequestHttpException('Ошибка в передаче параметров социальной сети');
+	  }	  
+	  $this->_net = $state;
+	  $this->attachBehavior("socBehavior", $class);	
+	} else {
+		throw new \yii\web\BadRequestHttpException('Ошибка в передаче параметров социальной сети');	  
+	}
+	return parent::beforeAction($action);
   }
   //===================================== Private =============================
     

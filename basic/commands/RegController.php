@@ -31,12 +31,14 @@ class RegController extends Controller{
 	
     foreach ($items as $item) {
 	  echo "Send mail to login [ $item->login ] from date ".date("d-m-Y H:i:s",$item->time)." mail [ $item->mail ] key [ $item->key ] ";
-	  if( \yii::$app->mailer->compose('site/contact',[ 'key' => $item->key] )
+	  if( \yii::$app->mailer->compose('site/wait_mail',[ 'key' => $item->key] )
 		  ->setFrom(['robot@atc58.ru' => 'АвтоТехСнаб Робот'])
 		  ->setTo($item->mail)
 		  ->setSubject('АвтоТехСнаб активация учетной записи')
 		  ->send() ) {
 		echo "[OK] \r\n";
+		$item->was_send = true;
+		$item->save();
 	  } else {
 		echo "[FAIL] \r\n";
 	  }		  
