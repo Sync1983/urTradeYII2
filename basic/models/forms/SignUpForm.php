@@ -52,7 +52,7 @@ class SignUpForm extends Model
 	
     public function validatePassword($attribute, $params) {
       
-	  if( !preg_match('/^[a-z0-9_-]{6,20}$/', $this->userpass) ){
+	  if( !preg_match('/^[A-z0-9_-]{6,20}$/', $this->userpass) ){
 		$this->addError($attribute, 'Поле может содержать только латинские буквы, цифры, знаки подчеркивания. Длина поля от 6 до 20 символов');
         return false;
 	  }
@@ -72,7 +72,7 @@ class SignUpForm extends Model
 		  $this->addError($attribute, 'Пользователь с таким именем уже зарегистрирован');
           return false;
       }
-	  if( !preg_match('/^[a-z0-9_-]{5,16}$/', $this->username) ){
+	  if( !preg_match('/^[A-z0-9_-]{5,16}$/', $this->username) ){
 		$this->addError($attribute, 'Поле может содержать только латинские буквы, цифры, знаки подчеркивания. Длина поля от 5 до 16 символов');
         return false;
 	  }
