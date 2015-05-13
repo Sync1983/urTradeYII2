@@ -19,13 +19,13 @@ class SearchTableAsset extends AssetBundle{
         'css/dataTables.css',
   ];
   public $js = [
-        'js/jquery.dataTables.min.js',
+        'js/jquery.dataTables.js',
 		'js/search_tables_init.js'
   ];
   public $depends = [
+		'yii\web\JqueryAsset',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
-		'yii\web\JqueryAsset'
     ];
   //protected vars
   //private vars  

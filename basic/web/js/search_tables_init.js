@@ -23,6 +23,9 @@ $( ".out-data" ).addClass( "cell-border compact hover nowrap order-column" );
 $( ".out-data" ).DataTable( {
   autoWidth: false,
   data: [ ],
+  search: {
+    smart: false  
+  },
   columns: [
     {data: 'producer', title: 'Производитель', width: '8%'},
     {data: {

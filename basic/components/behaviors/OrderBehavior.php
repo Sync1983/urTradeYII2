@@ -37,21 +37,20 @@ class OrderBehavior extends Behavior{
       $order_item->setAttribute("pay_request", false);
       $order_item->setAttribute("pay_time", 0);
       $order_item->setAttribute("pay_value", 0.0);
-      if( $order_item->validate() ){
+      if( $order_item->validate() ){		
         $order_item->insert();
 		$mail_text[] = [
-		  'id'	  => $item->getAttribute('id'),
-		  'user'  => $item->getAttribute('for_user'),
-		  'stock' => $item->getAttribute('stock'),
-		  'prov'  => $item->getAttribute('provider'),
-		  'art'	  => $item->getAttribute('articul'),
-		  'name'  => $item->getAttribute('name'),
-		  'price' => $item->getAttribute('price'),
-		  'time'  => $item->getAttribute('shiping'),
-		  'orig'  => $item->getAttribute('is_original'),
-		  'cnt'	  => $item->getAttribute('sell_count'),
-		  'lot'	  => $item->getAttribute('lot_quantity'),
-		  'comm'  => $item->getAttribute('comment'),
+		  'id'	  => $item['_id'],		  
+		  'stock' => $item['stock'],
+		  'prov'  => $item['provider'],
+		  'art'	  => $item['articul'],
+		  'name'  => $item['name'],
+		  'price' => $item['price'],
+		  'time'  => $item['shiping'],
+		  'orig'  => $item['is_original'],
+		  'cnt'	  => $item['sell_count'],
+		  'lot'	  => $item['lot_quantity'],
+		  'comm'  => $item['comment'],
 		];
       }
     }

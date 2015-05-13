@@ -178,7 +178,7 @@ main_function.prototype.onAddToBasket = function (e){
   var table_class = $(table).DataTable();
   var data = table_class.rows(row).data()[0];
   
-  e.stopPropagation();
+  e.stopPropagation();  
   
   if( !data.lot_quantity ){
     data.lot_quantity = 1;

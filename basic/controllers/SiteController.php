@@ -171,7 +171,7 @@ class SiteController extends Controller
     }
 
     public function actionSearch(){	  
-      if($this->getSearchForm()->validate()){        
+      if( $this->getSearchForm()->validate() ){        
         SearchHistoryRecord::addQuery($this->getSearchForm()->search_text);
         return $this->render('search');
       }

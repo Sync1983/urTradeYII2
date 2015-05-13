@@ -38,10 +38,11 @@ $config = [
 			  'class'		=> 'Swift_SmtpTransport',
 			  'host'		=> 'mail.atc58.ru',
 			  'username'	=> 'robot@atc58.ru',
-			  'password'	=> 'cFt32rT1',
-			  //'port'		=> '587',
-			  //'encryption'	=> 'tls',
+			  'password'	=> 'cFt32rT1',			  
+			  'port'		=> '465',
+			  'encryption'	=> 'tls',			  
 			],
+			//'useFileTransport'=>'false'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

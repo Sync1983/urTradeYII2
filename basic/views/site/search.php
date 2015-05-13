@@ -26,11 +26,7 @@ foreach ($makers as $maker => $json){
     'content' => "<div class=\"best-var\">Лучшие варианты деталей производителя $maker</div>"
 	  . "<script type=\"text/json\">$json</script>"
 	  . "<table class=\"out-data\"></table> "
-	  . "<a href=\"#\">Показать полный список...</a>",
-    'options' => [
-	  //'data-makers'	=> $json,
-      //'onclick'   => "main.loadPartList(this,1,2)",      
-	]
+	  . "<a href=\"#\">Показать полный список...</a>",    
   ];  
 }
 
