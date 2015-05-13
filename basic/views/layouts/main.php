@@ -221,19 +221,21 @@ ActiveForm::begin([
 		'action' => ['site/login']
 ]);
 ?>
-			<div>
-<?= Html::label("Ваш логин:", 'username', ['style' => 'width:100px']); ?>
-<?= Html::input("text", "username", "", ['id' => "user-name"]); ?>
+			<div class = "row">
+<?= Html::label("Ваш логин:", 'username', ['style' => 'width:110px', 'class'=>'col-md-offset-2 col-md-1']); ?>
+<?= Html::input("text", "username", "", ['id' => "user-name", 'class'=>'col-md-offset-1 col-md-4']); ?>
 			</div>
-			<div>
-<?= Html::label("Пароль:", 'userpass', ['style' => 'width:100px']); ?>    
-<?= Html::input("password", "userpass", "", ['id' => "user-pass"]); ?>
+			<div class="row">
+<?= Html::label("Пароль:", 'userpass', ['style' => 'width:110px', 'class'=>'col-md-offset-2 col-md-1']); ?>    
+<?= Html::input("password", "userpass", "", ['id' => "user-pass", 'class'=>'col-md-offset-1 col-md-4']); ?>
 			</div>
-<?= Html::submitButton("Войти", ['class' => 'btn btn-info']); ?>
+			<div class="row" style="margin-top:10px;">
+<?= Html::submitButton("Войти", ['class' => 'btn btn-info col-md-offset-7 col-md-2']); ?>
 <?php ActiveForm::end() ?>      
+			</div>
 		  </div>
 		  <div class="modal-footer">
-			<ul class="socnet-list">			  
+			<ul class="socnet-list col-md-offset-4 col-md-4">			  
 			  <li><span class="icon fb-icon"></span>
 				<?= Html::a("Войти через Facebook", Url::to(["soclogin/login", "net" => "fb"])); ?></li>
 			  <li>

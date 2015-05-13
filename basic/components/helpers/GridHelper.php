@@ -277,7 +277,7 @@ class GridHelper{
   public static function ColumnPayValue(){
     return [      
       'header' => 'Сумма оплаты',
-      'format'        =>['decimal', 2],
+      'format'   =>['decimal', 2],
       'attribute'=>'pay_value', 
       'vAlign'=>'middle'
     ];

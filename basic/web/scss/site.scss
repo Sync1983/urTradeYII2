@@ -202,16 +202,17 @@ $soc_icon_size: 26px;
 
 ul.socnet-list{
   list-style: none;
-  height: $soc_icon_size;
+  //height: $soc_icon_size;
   
   li {
     width: 180px;
     height: 30px;
+    margin: 5px 0px;
     background-repeat:none;
     border-radius: 10px;
     border: 1px solid #269ABC;
     @include linear-gradient("to top",#269ABC 23%, rgba(1, 169, 215, 0.21) 70%, rgba(105, 226, 240, 0.47) 0%);
-    display: inline-block;
+    display: block;
     &:hover {
       @include linear-gradient("to top",#2CC9F2 23%, rgba(102, 222, 255, 0.03) 70%, rgba(105, 240, 226, 0.16) 0%);
     }

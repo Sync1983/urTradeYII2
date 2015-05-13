@@ -160,11 +160,11 @@ select.over-price {
     height: 100%; }
 
 ul.socnet-list {
-  list-style: none;
-  height: 26px; }
+  list-style: none; }
   ul.socnet-list li {
     width: 180px;
     height: 30px;
+    margin: 5px 0px;
     background-repeat: none;
     border-radius: 10px;
     border: 1px solid #269ABC;
@@ -172,7 +172,7 @@ ul.socnet-list {
     background: -moz-linear-gradient(bottom, #269ABC 23%, rgba(1, 169, 215, 0.21) 70%, rgba(105, 226, 240, 0.47) 0%);
     background: -o-linear-gradient(bottom, #269ABC 23%, rgba(1, 169, 215, 0.21) 70%, rgba(105, 226, 240, 0.47) 0%);
     background: linear-gradient(to top, #269ABC 23%, rgba(1, 169, 215, 0.21) 70%, rgba(105, 226, 240, 0.47) 0%);
-    display: inline-block; }
+    display: block; }
     ul.socnet-list li:hover {
       background: -webkit-linear-gradient(bottom, #2CC9F2 23%, rgba(102, 222, 255, 0.03) 70%, rgba(105, 240, 226, 0.16) 0%);
       background: -moz-linear-gradient(bottom, #2CC9F2 23%, rgba(102, 222, 255, 0.03) 70%, rgba(105, 240, 226, 0.16) 0%);

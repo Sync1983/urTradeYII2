@@ -26,19 +26,40 @@ class OrderBehavior extends Behavior{
   public function onAdd(OrderEvent $event){
     if( empty($event->items) ){
       return;
-    }    
+    }
+	$mail_text = [];
+	/* @var $item \app\models\basket\BasketPart */
     foreach( $event->items as $item ){
-      $order_item = new OrderRecord();
-      $order_item->setAttributes($item);      
+      $order_item = new OrderRecord();	  
+      $order_item->setAttributes($item);
       $order_item->setAttribute("status", OrderRecord::STATE_WAIT_PAY);
       $order_item->setAttribute("pay", false);
       $order_item->setAttribute("pay_request", false);
       $order_item->setAttribute("pay_time", 0);
       $order_item->setAttribute("pay_value", 0.0);
-      if($order_item->validate()){
+      if( $order_item->validate() ){
         $order_item->insert();
+		$mail_text[] = [
+		  'id'	  => $item->getAttribute('id'),
+		  'user'  => $item->getAttribute('for_user'),
+		  'stock' => $item->getAttribute('stock'),
+		  'prov'  => $item->getAttribute('provider'),
+		  'art'	  => $item->getAttribute('articul'),
+		  'name'  => $item->getAttribute('name'),
+		  'price' => $item->getAttribute('price'),
+		  'time'  => $item->getAttribute('shiping'),
+		  'orig'  => $item->getAttribute('is_original'),
+		  'cnt'	  => $item->getAttribute('sell_count'),
+		  'lot'	  => $item->getAttribute('lot_quantity'),
+		  'comm'  => $item->getAttribute('comment'),
+		];
       }
-    }    
+    }
+	\yii::$app->mailer->compose('site/new_order',[ 'items' => $mail_text ])
+		  ->setFrom(['robot@atc58.ru' => 'АвтоТехСнаб'])
+		  ->setTo('sales@atc58.ru')
+		  ->setSubject('Тест АвтоТехСнаб Новый Заказ')
+		  ->send();
   }
   
   public function onChangeBalance(BalanceEvent $event){

@@ -62,7 +62,7 @@ class OrderController extends Controller{
     return $this->redirect(yii\helpers\Url::to(['order/index']));
   }
   
-  public function ationPayByYandex(){
+  public function actionPayByYandex(){
     $id = yii::$app->request->get('id',false);
     if( !$id ){
       throw new yii\web\BadRequestHttpException("Деталь не определена");
@@ -76,7 +76,8 @@ class OrderController extends Controller{
     if( !$balance->isNotDublicate($order) ){
       throw new yii\web\BadRequestHttpException("Деталь уже оплачена");
     }
-    
+    $form = new \app\models\forms\YandexPayForm();
+	$form->order = $order;
     return $this->render('yandex_pay',['order'=>$order]);    
   }
 
