@@ -254,95 +254,6 @@ ul.socnet-list{
   }
 }
 
-.user-badge{
-  margin: 0 auto;
-  width: 600px;
-  height: 350px;
-  background-image: url('/img/badge_background.png');  
-  border-radius: 20px;
-  & .photo img{
-    margin-left: 30px;
-    width: 150px;
-    height: 200px;
-    border-radius: 10px;    
-    box-shadow:  0px  0px 1px rgba(0,0,0,0.5),
-              2px  2px 2px rgba(0,0,0,0.3),
-             -2px -2px 2px rgba(0,0,0,0.3),
-              4px  4px 4px rgba(0,0,50,0.1),
-             -4px -4px 4px rgba(0,0,50,0.1)
-             ;  
-    position: absolute;
-  }
-  & .id{
-    text-align: center;
-    top: 10px;
-    height: 60px;
-    width: 100%;    
-    margin-bottom: 20px;
-    position: relative;
-    p{      
-      line-height: 60px;      
-      text-transform: uppercase;
-      font-size: 24pt;
-      font-weight: bold;            
-	    background-clip: text;
-      background-image: radial-gradient(rgba(49,176,217,0.5), rgba(49,176,217,0.1));	   
-      color: rgba(255,255,200,0.8);
-      @include text-shadow();
-    }
-  }
-  .text{ 
-    float:right;
-    width: 350px;
-    font-size: 16pt;
-    line-height:20px;     
-    color: rgba(255,255,200,0.8);
-    font-family: courier, monospace;
-    font-weight: bold;
-    
-    label{
-      width: 100px;      
-      display: inline-block;
-      position: relative;
-      @include text-shadow();      
-    }
-    
-    p.viewer{
-      width: 200px; 
-      display: inline;
-      position: relative;
-      
-      span{        
-        cursor: pointer;
-        @include text-shadow(); 
-      }
-      
-      input{        
-        color: black; 
-        width: 200px;      
-        background-color: rgba(255,255,255,0.3);
-        border: none;      
-        display: none;
-        &:focus{
-          display: inline-block;
-        }
-      }
-    }    
-  }  
-  
-  & a.btn{
-    margin-top: 220px;
-    margin-left: 250px;
-    position: absolute;        
-  }
-  
-  & button[type='submit']{
-    margin-top: 220px;
-    margin-left: 450px;
-    position: absolute;    
-  }
-}
-
 .socnet-info{
   width: 600px;
   margin: 10px auto;
@@ -425,6 +336,16 @@ table.over-price-panel{
 
 .basket-time{
   font-size: 8pt; 
+}
+
+.payment-select{
+  display: inline;
+  .radio {
+    display: inline-block;
+    input[type="radio"] {
+      margin: 8px 0 0 -20px;
+    }
+  }
 }
 
 .part-loader{

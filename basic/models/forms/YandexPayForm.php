@@ -40,6 +40,9 @@ class YandexPayForm extends Model{
   //public $shopSuccessURL; // xs:string, до 250 символов, необязательный	URL, на который нужно отправить плательщика в случае успеха перевода. Используется при выборе соответствующей опции подключения Контрагента (см. раздел 6.1 «Параметры подключения Контрагента»).
   //public $shopFailURL;	  // xs:string, до 250 символов, необязательный	URL, на который нужно отправить плательщика в случае ошибки оплаты. Используется при выборе соответствующей опции подключения Контрагента.
   
+  public $test_payment = true;
+  public $test_result = "success";
+  
   public function init() {
 	if( \yii::$app->user->isGuest ){
 	  return parent::init();	  
@@ -52,7 +55,7 @@ class YandexPayForm extends Model{
 	$this->cps_phone  =	$user->getAttribute('phone',false);
 	$this->custAddr	  =	$user->getAttribute('addres',false);
 	$this->customerNumber =	$user->getId();
-	$this->paymentType= 'AC';
+	$this->paymentType= 'PC';
 	$this->scid		  = \yii\helpers\ArrayHelper::getValue(\yii::$app->params, 'ya_scid', 0);
 	$this->shopId	  = \yii\helpers\ArrayHelper::getValue(\yii::$app->params, 'ya_shopid', 0);
 	$this->sum		  = 0.0;
@@ -66,6 +69,8 @@ class YandexPayForm extends Model{
 	$this->order = $order;
 	$this->orderNumber = (string) $order->getAttribute("_id");
 	$this->sum = \yii::$app->user->getUserPrice($order->price)*$order->sell_count - $order->pay_value;
+	$this->sum *= 1.0309;
+	$this->sum = round($this->sum, 2);
 	return true;
   }
 
@@ -81,7 +86,9 @@ class YandexPayForm extends Model{
             ['custEMail', 'string', 'max'=>100],
             ['cps_email', 'email'],
             ['custEMail', 'email'],
-            ['paymentType', 'in','strict'=>['AC','PC']],
+            ['paymentType', 'in','strict'=>TRUE, 'range' =>['AC','PC','WM','AB']],
+			['sum', 'match', 'pattern' => '/\d{1,12}\.\d{0,2}$/i','message'=>"Значение должно соответствовать формату xxx.xx"],
+			['sum', 'double', 'max' => $this->sum]
     ];
   }
   

@@ -222,12 +222,16 @@ ActiveForm::begin([
 ]);
 ?>
 			<div class = "row">
-<?= Html::label("Ваш логин:", 'username', ['style' => 'width:110px', 'class'=>'col-md-offset-2 col-md-1']); ?>
-<?= Html::input("text", "username", "", ['id' => "user-name", 'class'=>'col-md-offset-1 col-md-4']); ?>
+<?= Html::label("Ваш логин:", 'username', ['class'=>'col-md-offset-2 col-md-3']); ?>
+<?= Html::input("text", "username", "", ['id' => "user-name", 'class'=>'col-md-4']); ?>
 			</div>
 			<div class="row">
-<?= Html::label("Пароль:", 'userpass', ['style' => 'width:110px', 'class'=>'col-md-offset-2 col-md-1']); ?>    
-<?= Html::input("password", "userpass", "", ['id' => "user-pass", 'class'=>'col-md-offset-1 col-md-4']); ?>
+<?= Html::label("Пароль:", 'userpass', ['class'=>'col-md-offset-2 col-md-3']); ?>    
+<?= Html::input("password", "userpass", "", ['id' => "user-pass", 'class'=>'col-md-4']); ?>
+			</div>
+			<div class="row">
+<?= Html::label("Запомнить:", 'rememberMe', ['class'=>'col-md-offset-2 col-md-3']); ?>
+<?= Html::checkbox("rememberMe"); ?>
 			</div>
 			<div class="row" style="margin-top:10px;">
 <?= Html::submitButton("Войти", ['class' => 'btn btn-info col-md-offset-7 col-md-2']); ?>

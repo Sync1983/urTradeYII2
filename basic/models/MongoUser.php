@@ -136,7 +136,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   
   // =================== Interface ====================
   public function getAuthKey() {
-    return $this->getAttribute("sailt");
+    return md5($this->getId().$this->getUserName().$this->getAttribute("role"));
   }
 
   public function getId() {
@@ -148,8 +148,8 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
     return $this->getAttribute("_id");    
   }
 
-  public function validateAuthKey($authKey) {    
-    echo "valid AK ($authKey)";
+  public function validateAuthKey($authKey) {
+	return md5($this->getId().$this->getUserName().$this->getAttribute("role")) === $authKey;
   }
 
   public static function findIdentity($id) {
@@ -158,6 +158,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
   }
 
   public static function findIdentityByAccessToken($token, $type = null) {
+	\yii::trace("Id by token");
     echo "find id by AT";
   }
 }

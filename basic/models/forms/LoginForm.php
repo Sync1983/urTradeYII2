@@ -12,7 +12,8 @@ use app\models\MongoUser;
 class LoginForm extends Model
 {
     public $username;
-    public $userpass;    
+    public $userpass;
+    public $rememberMe;
 
     private $_user = false;
 
@@ -26,6 +27,7 @@ class LoginForm extends Model
             [['username', 'userpass'], 'required'],            
             // password is validated by validatePassword()
             ['userpass', 'validatePassword'],
+            ['rememberMe', 'safe'],
         ];
     }
 
@@ -54,7 +56,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {          
-            return Yii::$app->user->login($this->getUser(), 3600*24*30);
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe?(3600*24*30):0);
         } else {          
             return false;
         }

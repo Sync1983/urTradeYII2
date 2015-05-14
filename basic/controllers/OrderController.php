@@ -77,8 +77,8 @@ class OrderController extends Controller{
       throw new yii\web\BadRequestHttpException("Деталь уже оплачена");
     }
     $form = new \app\models\forms\YandexPayForm();
-	$form->order = $order;
-    return $this->render('yandex_pay',['order'=>$order]);    
+	$form->initOrder($order);
+    return $this->render('yandex_pay',['model'=>$form]);    
   }
 
   //============================= Protected ====================================  
