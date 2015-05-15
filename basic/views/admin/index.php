@@ -6,5 +6,8 @@ $this->title = "Общая информация";
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-sad
+<div class="row">
+
+  res
   
+</div>

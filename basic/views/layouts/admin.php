@@ -33,40 +33,75 @@ $user = Yii::$app->user;
 <body>
 
 <?php $this->beginBody() ?>  
-  <div class="wrap">    
-    <nav class="navbar-1">
-      <a class="navbar-header" href="<?= Url::home();?>">&nbsp;</a>
-    </nav>
-    <div class="container">
-      <div class="left-menu"> 
-        <ul> 
-          <li><?= Html::a("Общая информация",   Url::to(['admin/index']),['class'=>'menu-item']);?></li>
-          <li><?= Html::a("Пользователи",       Url::to(['admin/users']),['class'=>'menu-item']);?></li>
-          <li><?= Html::a("Корзины",            Url::to(['admin/user-basket']),['class'=>'menu-item']);?></li>
-          <li><?= Html::a("Заказы",             Url::to(['admin/user-order']),['class'=>'menu-item']);?></li>
-          <li><?= Html::a("Прайс-листы",        Url::to(['admin/prices']),['class'=>'menu-item']);?></li>          
-        </ul>
+  <div id="wrapper">    
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	  <div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+		  <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+		<a class="navbar-brand" href="<?=Url::home()?>">АвтоТехСнаб</a>
+	  </div>
+	  <div class="collapse navbar-collapse navbar-ex1-collapse">
+		<ul class="nav navbar-nav side-nav">
+      <li class="dropdown">
+        <a href="javascript:;" data-toggle="collapse" data-target="#summary"><i class="fa fa-fw fa-arrows-v"></i> Общая информация</a>
+        <ul id="summary" class="collapse">
+          <li><?= Html::a("База данных",   Url::to(['admin/database-info']));?></li>
+          <li><?= Html::a("Пользователи",   Url::to(['admin/user-info']));?></li>
+          <li><a href="#">Dropdown Item</a></li>
+          <li><a href="#">Dropdown Item</a></li>
+        </ul>                    
+      </li>          
+      
+		  <li><?= Html::a("Пользователи",       Url::to(['admin/users']));?></li>
+		  <li><?= Html::a("Корзины",            Url::to(['admin/user-basket']),['class'=>'menu-item']);?></li>
+      <li><?= Html::a("Заказы",             Url::to(['admin/user-order']),['class'=>'menu-item']);?></li>
+      <li><?= Html::a("Прайс-листы",        Url::to(['admin/prices']),['class'=>'menu-item']);?></li>          
+		  
+    </ul>
       </div>
-      <div class="content">
-        <?= yii\widgets\Breadcrumbs::widget([
+	</nav>
+	
+    <div id="page-wrapper">
+
+	  <div class="container-fluid">
+
+		<!-- Page Heading -->
+        <div class="row">
+		  <div class="col-lg-12">			
+			<?= yii\widgets\Breadcrumbs::widget([
               'links' => $this->params['breadcrumbs'],
               'homeLink' => [
                 'label' => "Главная",
                 'url' => Url::base()],
             ]); ?>
+          </div>
+        </div>
+		<?php $n_list = \yii\helpers\ArrayHelper::getValue($this->params, 'notify', []);		
+			  if( !empty($n_list) ):?>
+		<div class="row">
+		<?php foreach ($n_list as $message):?>
+		  <div class="col-lg-12">
+			<div class="alert alert-info alert-dismissable">
+			  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+              <i class="fa fa-info-circle"></i><?= $message; ?>
+            </div>
+          </div>		  
+		<?php endforeach; ?>
+        </div>
+		<?php endif;?>
+		
         <?= $content ?>        
-      </div>
-    </div>
+		
+	  </div>
+	  
+	</div>    
   </div>
-  
-  <footer class="footer">
-    <div class="container">
-      <p class="pull-left">&copy; AвтоТехСнаб <?= date('Y') ?></p>
-      <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-  </footer>
 
-<?php $this->endBody() ?>
+<?php $this->endBody(); ?>
 </body>
 </html>
 <?php $this->endPage() ?>

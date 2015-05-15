@@ -7,10 +7,11 @@ use yii\web\Controller;
 class AdminController extends Controller
 {
   public $layout = 'admin';
+  public $notify = ['admin'];
   
   public function behaviors(){
       return [
-      \app\components\behaviors\AdminBehavior::className(),
+        \app\components\behaviors\AdminBehavior::className(),
       ];
   }
 
@@ -18,11 +19,19 @@ class AdminController extends Controller
     return [
       'error' => [
         'class' => 'yii\web\ErrorAction',
+      ],
+      'database-info' => [
+        'class' => actions\admin\DatabaseInfoAction::className(),
+      ],
+      'user-info' => [
+        'class' => actions\admin\UserInfoAction::className(),
       ]
     ];
   }
 
   public function actionIndex() {     
+	$this->addNotification("blabla-bla");
+	$this->addNotification("blabla-bla2");
     return $this->render('index');
   }
   
@@ -252,6 +261,10 @@ class AdminController extends Controller
       $answer[$class->getCLSID()] = $class;      
     }
     return $answer;
+  }
+  
+  protected function addNotification($message){
+	$this->view->params['notify'][] = $message;
   }
 
 }

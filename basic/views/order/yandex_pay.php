@@ -60,8 +60,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= \yii\helpers\Html::hiddenInput('scid',	  $model->scid); ?>
 <?= \yii\helpers\Html::hiddenInput('customerNumber', $model->customerNumber); ?>
 <?= \yii\helpers\Html::hiddenInput('cps_email',	$model->cps_email); ?>
-<?= \yii\helpers\Html::hiddenInput('test_payment', $model->test_payment); ?>
-<?= \yii\helpers\Html::hiddenInput('test_result', $model->test_result); ?>
 <div class="row" style="padding-bottom: 20px;">
 <?= \yii\helpers\Html::submitButton("Оплатить",['class'=>'btn btn-info col-md-offset-6']); ?>
 </div>

@@ -78,7 +78,19 @@ $config = [
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = ['class'=>'yii\debug\Module','allowedIPs' => ['91.144.179.85','10.0.6.*','10.0.6.104', '::1']];
+    $config['modules']['debug'] = [
+	  'class'=>'yii\debug\Module',
+	  'allowedIPs' => [
+		'91.144.179.85',
+		'10.0.6.*',
+		'10.0.6.104'
+	  ],
+	  'panels' => [
+		'mongodb' => [
+		  'class' => 'yii\\mongodb\\debug\\MongoDbPanel',
+         ],
+      ],
+	];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = 'yii\gii\Module';
