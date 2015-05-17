@@ -110,7 +110,7 @@ class YaPayOrderModel extends Model{
     ];
   }*/
   
-  protected function validateAction($attribute,$params) {
+  public function validateAction($attribute,$params) {
     if( $this->attribute !== 'checkOrder') {
       $this->addError($attribute, "Ошибочное значение");
       return false;
@@ -118,7 +118,7 @@ class YaPayOrderModel extends Model{
     return true;
   }
   
-  protected function validateMD5($attribute,$params) {
+  public function validateMD5($attribute,$params) {
     $hash = md5('');
     if( $hash !== $this->$attribute ){
       $this->_hash_error = true;
@@ -128,7 +128,7 @@ class YaPayOrderModel extends Model{
     return true;
   }
   
-  protected function validateShopId($attribute,$params) {
+  public function validateShopId($attribute,$params) {
     $shopId = \yii\helpers\ArrayHelper::getValue(\yii::$app->params, 'ya_shopid', 0);
     if( $this->$attribute != $shopId ){
       $this->addError($attribute, "Ошибочное значение");
@@ -137,7 +137,7 @@ class YaPayOrderModel extends Model{
     return true;
   }
   
-  protected function validateOrderNumber($attribute, $params) {
+  public function validateOrderNumber($attribute, $params) {
     $id = $this->$attribute;
     $record = OrderRecord::findOne(['_id' => new \MongoId($id)]);
     if( !$record || $record->pay ) {
@@ -147,7 +147,7 @@ class YaPayOrderModel extends Model{
     return true;
   }
   
-  protected function validateCustomerNumber($attribute, $params) {
+  public function validateCustomerNumber($attribute, $params) {
     $uid = $this->$attribute;
     $user = MongoUser::findOne(['_id' => new \MongoId($uid)]);
     if( !$user ) {
@@ -157,7 +157,7 @@ class YaPayOrderModel extends Model{
     return true;
   }
   
-  protected function validateSumAmount($attribute, $params) {
+  public function validateSumAmount($attribute, $params) {
     $user   = MongoUser::findOne(['_id' => new \MongoId($this->customerNumber)]);
     $record = OrderRecord::findOne(['_id' => new \MongoId($this->orderNumber)]);
     $price = $user->getUserPrice($record->price * $record->sell_count);    
