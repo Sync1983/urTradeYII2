@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <?php
 /* @var $model app\models\pays\YaPayOrderModel */
 ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <checkOrderResponse
   performedDatetime = "<?= date(DateTime::RFC3339);?>"
   code = "<?= $code;?>"
