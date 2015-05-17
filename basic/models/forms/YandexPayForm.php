@@ -42,6 +42,7 @@ class YandexPayForm extends Model{
   
   public $test_payment = true;
   public $test_result = "success";
+  public $real_sum    = 0.0;
   
   public function init() {
 	if( \yii::$app->user->isGuest ){
@@ -68,9 +69,8 @@ class YandexPayForm extends Model{
 	}
 	$this->order = $order;
 	$this->orderNumber = (string) $order->getAttribute("_id");
-	$this->sum = \yii::$app->user->getUserPrice($order->price)*$order->sell_count - $order->pay_value;
-	$this->sum /= 0.97;//*1.0309;
-	$this->sum = round($this->sum, 2);
+	$this->real_sum = \yii::$app->user->getUserPrice($order->price)*$order->sell_count - $order->pay_value;
+  $this->sum = \app\components\helpers\YaMHelper::addPercent($this->paymentType, $this->real_sum);
 	return true;
   }
 
@@ -87,8 +87,8 @@ class YandexPayForm extends Model{
             ['cps_email', 'email'],
             ['custEMail', 'email'],
             ['paymentType', 'in','strict'=>TRUE, 'range' =>['AC','PC','WM','AB','GP','MA']],
-			['sum', 'match', 'pattern' => '/\d{1,12}\.\d{0,2}$/i','message'=>"Значение должно соответствовать формату xxx.xx"],
-			['sum', 'double', 'max' => $this->sum]
+            ['sum', 'match', 'pattern' => '/\d{1,12}\.\d{0,2}$/i','message'=>"Значение должно соответствовать формату xxx.xx"],
+            ['sum', 'double', 'max' => $this->sum]
     ];
   }
   

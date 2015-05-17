@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?= $form->field($model, 'orderNumber')->input('text', ['name'=>'orderNumber','readonly'=>true])->label();?>
-<?= $form->field($model, 'sum')->input('text', ['name'=>'sum'])->label()->hint("Комиссия платежа: <b>3%</b>");?>
+<?= $form->field($model, 'sum')->input('text', ['name'=>'sum'])->label()->hint("Комиссия платежа: <b>".app\components\helpers\YaMHelper::getPercent("PC")."%</b>");?>
 
 <?= $form->field($model, 'custName')->input('text', ['name'=>'custName','readonly'=>true])->label();?>
 <?= $form->field($model, 'custAddr')->input('text', ['name'=>'custAddr','readonly'=>true])->label();?>
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			  'WM'	=> \yii\helpers\Html::img('/img/pay_icon/webmoney-white.png', ['alt'=>'WebMoney', 'title' => 'WebMoney']),
 			  'AB'	=> \yii\helpers\Html::img('/img/pay_icon/alfabank-white.png', ['alt'=>'Альфа-Клик', 'title' => 'Альфа-Клик']),
 			  'GP'	=> \yii\helpers\Html::img('/img/pay_icon/cash_rub.png', ['alt'=>'Кассы и терминалы', 'title'=>'Кассы и терминалы']),
-			  'МА'	=> \yii\helpers\Html::img('/img/pay_icon/masterpass.png', ['alt'=>'MasterPass', 'title'=>'MasterPass']),
+			  'MA'	=> \yii\helpers\Html::img('/img/pay_icon/masterpass.png', ['alt'=>'MasterPass', 'title'=>'MasterPass']),
 			  //'MC'	=> \yii\helpers\Html::img($src, ['alt'=>'Платеж со счета мобильного телефона.']),
 			  //'SB'	=> \yii\helpers\Html::img($src, ['alt'=>'Оплата через Сбербанк: оплата по SMS или Сбербанк Онлайн.']),
 			  //'MP'	=> \yii\helpers\Html::img($src, ['alt'=>'Оплата через мобильный терминал (mPOS).']),
@@ -65,4 +65,21 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?php ActiveForm::end(); ?>
 
+<?php
+$values = app\components\helpers\YaMHelper::getJSObject();
+$JS = <<< JS_END
+  $('input[name="paymentType"]').change(function(){
+    var values = $values;
+    var type = $(this).val();
+    var percent = values[type];
+    var sum = $model->real_sum;
+    console.log(values);
+    console.log(type);
+    console.log(percent);
+    console.log(sum);
+    $("#yandexpayform-sum").val( (sum/(1-percent)).toFixed(2) );
+    $(".field-yandexpayform-sum").children(".help-block").children("b").text( (percent*100).toFixed(2) + "%");
+  });
+JS_END;
+$this->registerJs($JS);?>
 
