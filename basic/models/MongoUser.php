@@ -79,7 +79,7 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
       throw new \yii\base\InvalidValueException("Ошибка в формате цены");
     }
     
-    $over_price = \yii\helpers\ArrayHelper::getValue(yii::$app->params, 'guestOverPrice', 18.0);
+    $over_price = \yii\helpers\ArrayHelper::getValue(\yii::$app->params, 'guestOverPrice', 18.0);
     
     if ( $this->hasAttribute("over_price")) {
       $over_price = $this->getAttribute("over_price") * 1.0;      
