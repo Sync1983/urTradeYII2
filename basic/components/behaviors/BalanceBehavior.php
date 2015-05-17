@@ -93,7 +93,7 @@ class BalanceBehavior extends Behavior{
     $pay_value = $order->getAttribute("pay_value") * 1.0;
     $pay_value += $value * 1.0;
     
-    $need_pay = yii::$app->user->getUserPrice($order->getAttribute("price")) * 1.0;
+    $need_pay = yii::$app->user->getUserPrice($order->getAttribute("price")*$order->getAttribute("sell_count")) * 1.0;
     
     $order->setAttribute("pay_value", $pay_value);
     $order->setAttribute("pay_time", time());

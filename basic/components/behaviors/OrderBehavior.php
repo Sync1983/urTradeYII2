@@ -27,8 +27,8 @@ class OrderBehavior extends Behavior{
     if( empty($event->items) ){
       return;
     }
-	$mail_text = [];
-	/* @var $item \app\models\basket\BasketPart */
+    $mail_text = [];
+    /* @var $item \app\models\basket\BasketPart */
     foreach( $event->items as $item ){
       $order_item = new OrderRecord();	  
       $order_item->setAttributes($item);
@@ -39,22 +39,22 @@ class OrderBehavior extends Behavior{
       $order_item->setAttribute("pay_value", 0.0);
       if( $order_item->validate() ){		
         $order_item->insert();
-		$mail_text[] = [
-		  'id'	  => $item['_id'],		  
-		  'stock' => $item['stock'],
-		  'prov'  => $item['provider'],
-		  'art'	  => $item['articul'],
-		  'name'  => $item['name'],
-		  'price' => $item['price'],
-		  'time'  => $item['shiping'],
-		  'orig'  => $item['is_original'],
-		  'cnt'	  => $item['sell_count'],
-		  'lot'	  => $item['lot_quantity'],
-		  'comm'  => $item['comment'],
-		];
+        $mail_text[] = [
+          'id'	  => $item['_id'],		  
+          'stock' => $item['stock'],
+          'prov'  => $item['provider'],
+          'art'	  => $item['articul'],
+          'name'  => $item['name'],
+          'price' => $item['price'],
+          'time'  => $item['shiping'],
+          'orig'  => $item['is_original'],
+          'cnt'	  => $item['sell_count'],
+          'lot'	  => $item['lot_quantity'],
+          'comm'  => $item['comment'],
+        ];
       }
     }
-	\yii::$app->mailer->compose('site/new_order',[ 'items' => $mail_text ])
+    \yii::$app->mailer->compose('site/new_order',[ 'items' => $mail_text ])
 		  ->setFrom(['robot@atc58.ru' => 'АвтоТехСнаб'])
 		  ->setTo('sales@atc58.ru')
 		  ->setSubject('Тест АвтоТехСнаб Новый Заказ')
