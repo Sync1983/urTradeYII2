@@ -181,8 +181,8 @@ class YaPayOrderModel extends Model{
       return false;
     }
     $price = $user->getUserPrice($record->price) * $record->sell_count * 1.0;
-    $new_price = ($record->pay_value + $this->$attribute) * 0.97;
-    \yii::info("YA CheckOrder Price [$price] incomming [$new_price] (-3%) ", 'balance');
+    $new_price = ($record->pay_value + $this->$attribute) * 1.0;
+    \yii::info("YA CheckOrder Price [$price] incomming [$new_price]", 'balance');
     if ( ($new_price - $price) > 1.0 ){
       $this->addError($attribute, "Переплата");
       return false;
