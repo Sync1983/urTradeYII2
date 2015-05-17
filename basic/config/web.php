@@ -58,7 +58,7 @@ $config = [
                     'categories' => ['balance'],
                     'except'  => ['application'],
                     'logVars' => [],
-                    'logFile' => '@app/runtime/logs/balance.log',
+                    'logFile' => '@runtime/logs/balance.log',
                 ],
                 [ 
                     'class' => 'yii\log\FileTarget',
@@ -66,7 +66,7 @@ $config = [
                     'categories' => ['console'],
                     'except'  => ['application'],
                     'logVars' => [],
-                    'logFile' => '@app/runtime/logs/console.log',
+                    'logFile' => '@runtime/logs/console.log',
                 ],
             ]
         ],
