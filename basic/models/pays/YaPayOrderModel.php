@@ -46,13 +46,13 @@ class YaPayOrderModel extends Model{
   public $paymentType;            //	xs:normalizedString
   //Способ оплаты заказа. Список значений приведен в таблице 6.6.1.
 
-  public function isHashError(){
+  public function isHashError(){    
     return $this->_hash_error;
   }
 
   public function rules() {
     return [
-      [['requestDatetime','orderCreatedDatetime',],'date','format'=>'php::YYYY-MM-DDThh:mm:ss.fZZZZZ' ],
+      [['requestDatetime','orderCreatedDatetime',],'date','format'=>'php::'.\DateTime::ISO8601 ],
       ['action','validateAction'],
       ['md5','validateMD5'],
       ['shopId','validateShopId'],
@@ -119,7 +119,16 @@ class YaPayOrderModel extends Model{
   }
   
   public function validateMD5($attribute,$params) {
-    $hash = md5('');
+    $hash = md5(
+      $this->action                   . ";" .
+      $this->orderSumAmount           . ";" .
+      $this->orderSumCurrencyPaycash  . ";" .
+      $this->orderSumBankPaycash      . ";" .
+      $this->shopId                   . ";" .
+      $this->invoiceId                . ";" .
+      $this->customerNumber           . ";" .
+      \yii\helpers\ArrayHelper::getValue(\yii::$app->params, 'ya_shop_password','')
+    );
     if( $hash !== $this->$attribute ){
       $this->_hash_error = true;
       $this->addError($attribute, "Ошибочное значение");
@@ -161,8 +170,9 @@ class YaPayOrderModel extends Model{
     $user   = MongoUser::findOne(['_id' => new \MongoId($this->customerNumber)]);
     $record = OrderRecord::findOne(['_id' => new \MongoId($this->orderNumber)]);
     $price = $user->getUserPrice($record->price * $record->sell_count) * 1.0;
-    if ( !$record || ($user->getUserPrice($record->pay_value+$this->$attribute)*1.0 > $price) ){
-      $this->addError($attribute, "Переплата");      
+    $new_price = $user->getUserPrice($record->pay_value+$this->$attribute)*1.0;
+    if ( !$record || ( $new_price > $price) ){
+      $this->addError($attribute, "Переплата: ".($new_price - $price));
       return false;
     }
     return true;
