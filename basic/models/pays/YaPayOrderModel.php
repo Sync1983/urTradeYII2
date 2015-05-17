@@ -111,7 +111,7 @@ class YaPayOrderModel extends Model{
   }*/
   
   public function validateAction($attribute,$params) {
-    if( $this->attribute !== 'checkOrder') {
+    if( $this->$attribute!== 'checkOrder') {
       $this->addError($attribute, "Ошибочное значение");
       return false;
     }
