@@ -9,6 +9,8 @@ use yii\web\Controller;
 
 class PayController extends Controller{
   
+  public $enableCsrfValidation = false;
+
   public function actions() {
     return [
       'check'  => [
