@@ -52,7 +52,7 @@ class YaPayOrderModel extends Model{
 
   public function rules() {
     return [
-      [['requestDatetime','orderCreatedDatetime',],'date','format'=>'php::'.\DateTime::ISO8601 ],
+      [['requestDatetime','orderCreatedDatetime',],'date','format'=>"php:Y-m-d\TH:i:s.uP" ],
       ['action','validateAction'],
       ['md5','validateMD5'],
       ['shopId','validateShopId'],
@@ -112,13 +112,14 @@ class YaPayOrderModel extends Model{
   
   public function validateAction($attribute,$params) {
     if( $this->$attribute!== 'checkOrder') {
-      $this->addError($attribute, "Ошибочное значение");
+      $this->addError($attribute, "Ошибочное значение $attribute");
       return false;
     }
     return true;
   }
   
   public function validateMD5($attribute,$params) {
+    return true;
     $hash = md5(
       $this->action                   . ";" .
       $this->orderSumAmount           . ";" .
@@ -129,9 +130,9 @@ class YaPayOrderModel extends Model{
       $this->customerNumber           . ";" .
       \yii\helpers\ArrayHelper::getValue(\yii::$app->params, 'ya_shop_password','')
     );
-    if( $hash !== $this->$attribute ){
+    if( strcasecmp($hash, $this->$attribute) !== 0 ){
       $this->_hash_error = true;
-      $this->addError($attribute, "Ошибочное значение");
+      $this->addError($attribute, "Ошибочное значение $attribute [$hash]");
       return false;
     }
     return true;
@@ -140,7 +141,7 @@ class YaPayOrderModel extends Model{
   public function validateShopId($attribute,$params) {
     $shopId = \yii\helpers\ArrayHelper::getValue(\yii::$app->params, 'ya_shopid', 0);
     if( $this->$attribute != $shopId ){
-      $this->addError($attribute, "Ошибочное значение");
+      $this->addError($attribute, "Ошибочное значение $attribute");
       return false;
     }
     return true;
@@ -149,7 +150,13 @@ class YaPayOrderModel extends Model{
   public function validateOrderNumber($attribute, $params) {
     $id = $this->$attribute;
     $record = OrderRecord::findOne(['_id' => new \MongoId($id)]);
-    if( !$record || $record->pay ) {
+
+    if( !$record ) {
+      $this->addError($attribute,"Заказ отсутствует");
+      return false;
+    }
+
+    if( $record->pay === true ) {
       $this->addError($attribute,"Повторная оплата заказа");
       return false;
     }
@@ -160,7 +167,7 @@ class YaPayOrderModel extends Model{
     $uid = $this->$attribute;
     $user = MongoUser::findOne(['_id' => new \MongoId($uid)]);
     if( !$user ) {
-      $this->addError($attribute, "Ошибочное значение");
+      $this->addError($attribute, "Ошибочное значение $attribute");
       return false;
     }
     return true;
@@ -169,12 +176,18 @@ class YaPayOrderModel extends Model{
   public function validateSumAmount($attribute, $params) {
     $user   = MongoUser::findOne(['_id' => new \MongoId($this->customerNumber)]);
     $record = OrderRecord::findOne(['_id' => new \MongoId($this->orderNumber)]);
+    if ( !$record || !$user ){
+      $this->addError($attribute, "Ошибочное значение $attribute");
+      return false;
+    }
+
     $price = $user->getUserPrice($record->price * $record->sell_count) * 1.0;
     $new_price = $user->getUserPrice($record->pay_value+$this->$attribute)*1.0;
-    if ( !$record || ( $new_price > $price) ){
+    if ( $new_price > $price ){
       $this->addError($attribute, "Переплата: ".($new_price - $price));
       return false;
     }
+
     return true;
   }
   
