@@ -52,7 +52,7 @@ class YaPayOrderModel extends Model{
 
   public function rules() {
     return [
-      [['requestDatetime','orderCreatedDatetime',],'date','format'=>'YYYY-MM-DDThh:mm:ss.fZZZZZ' ],
+      [['requestDatetime','orderCreatedDatetime',],'date','format'=>'php::YYYY-MM-DDThh:mm:ss.fZZZZZ' ],
       ['action','validateAction'],
       ['md5','validateMD5'],
       ['shopId','validateShopId'],
@@ -160,8 +160,8 @@ class YaPayOrderModel extends Model{
   public function validateSumAmount($attribute, $params) {
     $user   = MongoUser::findOne(['_id' => new \MongoId($this->customerNumber)]);
     $record = OrderRecord::findOne(['_id' => new \MongoId($this->orderNumber)]);
-    $price = $user->getUserPrice($record->price * $record->sell_count);    
-    if ( !$record || ($user->getUserPrice($record->pay_value+$this->$attribute) > $price) ){
+    $price = $user->getUserPrice($record->price * $record->sell_count) * 1.0;
+    if ( !$record || ($user->getUserPrice($record->pay_value+$this->$attribute)*1.0 > $price) ){
       $this->addError($attribute, "Переплата");      
       return false;
     }
