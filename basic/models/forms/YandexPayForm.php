@@ -69,7 +69,7 @@ class YandexPayForm extends Model{
 	$this->order = $order;
 	$this->orderNumber = (string) $order->getAttribute("_id");
 	$this->sum = \yii::$app->user->getUserPrice($order->price)*$order->sell_count - $order->pay_value;
-	$this->sum *= 1.0309;
+	$this->sum /= 0.97;//*1.0309;
 	$this->sum = round($this->sum, 2);
 	return true;
   }
@@ -86,7 +86,7 @@ class YandexPayForm extends Model{
             ['custEMail', 'string', 'max'=>100],
             ['cps_email', 'email'],
             ['custEMail', 'email'],
-            ['paymentType', 'in','strict'=>TRUE, 'range' =>['AC','PC','WM','AB']],
+            ['paymentType', 'in','strict'=>TRUE, 'range' =>['AC','PC','WM','AB','GP','MA']],
 			['sum', 'match', 'pattern' => '/\d{1,12}\.\d{0,2}$/i','message'=>"Значение должно соответствовать формату xxx.xx"],
 			['sum', 'double', 'max' => $this->sum]
     ];

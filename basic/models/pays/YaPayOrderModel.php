@@ -118,8 +118,7 @@ class YaPayOrderModel extends Model{
     return true;
   }
   
-  public function validateMD5($attribute,$params) {
-    return true;
+  public function validateMD5($attribute,$params) {    
     $hash = md5(
       $this->action                   . ";" .
       $this->orderSumAmount           . ";" .
@@ -176,15 +175,16 @@ class YaPayOrderModel extends Model{
   public function validateSumAmount($attribute, $params) {
     $user   = MongoUser::findOne(['_id' => new \MongoId($this->customerNumber)]);
     $record = OrderRecord::findOne(['_id' => new \MongoId($this->orderNumber)]);
+
     if ( !$record || !$user ){
       $this->addError($attribute, "Ошибочное значение $attribute");
       return false;
     }
 
     $price = $user->getUserPrice($record->price * $record->sell_count) * 1.0;
-    $new_price = $user->getUserPrice($record->pay_value+$this->$attribute)*1.0;
-    if ( $new_price > $price ){
-      $this->addError($attribute, "Переплата: ".($new_price - $price));
+    $new_price = $user->getUserPrice($record->pay_value + $this->$attribute) * 1.0;
+    if ( ($new_price - $price) > 1.0 ){
+      $this->addError($attribute, "Переплата");
       return false;
     }
 
