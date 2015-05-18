@@ -128,6 +128,7 @@ class BasketModel extends Model{
       $basket_part->setAttributes($part->getAttributes());
       $basket_part->setAttribute("price_change", $event->params["price_change"]);
       $basket_part->setAttribute("sell_count", $event->params["sell_count"]);
+      $basket_part->setAttribute("for_user", \yii::$app->user->getId());
     } else {
       $basket_part = $event->params;
     }    

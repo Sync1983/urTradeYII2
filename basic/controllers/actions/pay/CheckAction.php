@@ -21,7 +21,9 @@ class CheckAction extends Action{
       $record->setAttribute('code', 0);
       $record->save();
       \yii::info("YA CheckOrder OK!", 'balance');
-      return $this->sendAnswer(0, $model);
+      $answer = $this->sendAnswer(0, $model);
+      \yii::info("YA CheckOrder Answer: [$answer]", 'balance');
+      return $answer;
     }
     if( $model->isHashError() ){
       $record->setAttribute('code', 1);
