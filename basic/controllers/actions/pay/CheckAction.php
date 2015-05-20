@@ -22,7 +22,7 @@ class CheckAction extends Action{
       $record->save();
       \yii::info("YA CheckOrder OK!", 'balance');
       $answer = $this->sendAnswer(0, $model);
-      \yii::info("YA CheckOrder Answer: [$answer]", 'balance');
+      \yii::info("YA CheckOrder Answer: [". json_encode($answer) ."]", 'balance');
       return $answer;
     }
     if( $model->isHashError() ){
