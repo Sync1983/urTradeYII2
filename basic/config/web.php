@@ -21,6 +21,11 @@ $config = [
         'request' => [            
             'cookieValidationKey' => 'nGL57l_yqQrai_FQAYuDEwZoYnfrJZdg',
         ],
+        'response' => [
+          'formatters' => [
+            'xml_std' => 'app\components\XMLResponse',
+          ]
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

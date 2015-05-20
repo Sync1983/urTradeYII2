@@ -43,8 +43,20 @@ class CheckAction extends Action{
   }
 
   protected function sendAnswer($code, YaPayOrderModel $model, $error_text ="" ){
-    \yii::$app->response->format = \yii\web\Response::FORMAT_XML;
-    return $this->controller->renderPartial('check-order', ['code' => $code, 'error' => $error_text, 'model' => $model]);
+    \yii::$app->response->format = 'xml_std';
+    $answer = [
+      'checkOrderResponse' => [
+        'performedDatetime'   => date("Y-m-d\TH:i:s.uP"),
+        'code'                => $code,
+        'shopId'              => $model->shopId,
+        'invoiceId'           => $model->invoiceId,
+        'orderSumAmount'      => $model->orderSumAmount,
+      ]
+    ];
+    if( $error_text ){
+      $answer['checkOrderResponse']['message'] = $error_text;
+    }
+    return $answer;    
   }
   
 }
