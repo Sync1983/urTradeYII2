@@ -322,7 +322,7 @@ class GridHelper{
         return Html::a($label, $url,$options);
       },
       'by-balance' => function($url,$model){
-        if( (bool)$model->pay || !yii::$app->user->isCompany() || ($model->status!==\app\models\orders\OrderRecord::STATE_REJECTED) ){
+        if( (bool)$model->pay || !yii::$app->user->isCompany() || ($model->status == \app\models\orders\OrderRecord::STATE_REJECTED) ){
           return "";
         }
         if( yii::$app->user->getUserPrice($model->price) > yii::$app->user->getBalance()->getFullBalance() ){
@@ -342,7 +342,7 @@ class GridHelper{
         return Html::a($label, $url,$options);
       },
       'by-yandex' => function($url,$model){
-        if( (bool)$model->pay || ($model->status!==\app\models\orders\OrderRecord::STATE_REJECTED) ){
+        if( (bool)$model->pay || ($model->status == \app\models\orders\OrderRecord::STATE_REJECTED) ){
           return "";
         }
         $label = '<i> <img src="img/yandex-money.png" alt="Оплатить через Yandex-деньги" style="width:30px;heoght:20px;margin-top:-5px;"/></i>';
