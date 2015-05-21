@@ -21,7 +21,7 @@ class XMLResponse implements ResponseFormatterInterface{
     $content_type = "application/xml; charset=".$response->charset;
     $response->getHeaders()->set('Content-Type', $content_type);
 
-    $head  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+    $head  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
     $response->content = $head.$this->build($response->data);    
   }
 
