@@ -136,7 +136,7 @@ class SearchProviderBase extends Object {
    * @param resource $ch
    */
   protected function onlineRequestHeaders($ch){
-	curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
   }
   /**
    * Отправляет запрос по указаному URL с параметрами $param

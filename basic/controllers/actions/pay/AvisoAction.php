@@ -31,6 +31,7 @@ class AvisoAction extends Action{
       //Проверяем запрос
       //Если он повторный - нужно просто ответить кодом 0
       if( $this->checkInvoice($model->invoiceId) ){
+        \yii::info("YA AvisoOrder invoiceId Double: [". $model->invoiceId ."]", 'balance');
         return $answer;
       }
       //Иначе - это первый запрос. Необходимо провести оплату
@@ -70,8 +71,8 @@ class AvisoAction extends Action{
   }
 
   protected function checkInvoice($invoiceId) {
-    $record = \app\models\pays\YaPayOrderRecord::findOne(['invoiceId' => $invoiceId]);
-    return (bool) $record;
+    $record = \app\models\pays\YaPayOrderRecord::find()->where(['invoiceId' => $invoiceId])->count();
+    return $record==0;
   }
 
   protected function buyPart(YaPayAvisoModel $model){
