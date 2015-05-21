@@ -78,7 +78,7 @@ class AvisoAction extends Action{
     //Добавляем сумму на баланс
     $add_money = new \app\models\events\BalanceEvent();
     $add_money->value     = $model->shopSumAmount;
-    $add_money->comment   = "Платеж Yandex-Деньги. Invoice: " . $model->invoiceId;
+    $add_money->comment   = "Платеж Yandex-Деньги. Invoice: " . $model->invoiceId. "Тип платежа: ".\app\components\helpers\YaMHelper::getNameByType($model->paymentType);
     $add_money->initiator = new \app\models\pays\YaPayType(['invoiceId' => $model->invoiceId]);
     $add_money->reciver   = $model->getUser();
     $add_money->item      = $model->getOrder();

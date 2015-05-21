@@ -18,6 +18,22 @@ class YaMHelper {
     'MA'  => 0.035
   ];
 
+  protected static $_name_by_type = [
+    'PC'  => 'Кошелек Yandex-деньги',
+    'AC'  => 'Банковской картой',
+    'WM'  => 'Кошелек WebMoney',
+    'AB'  => 'Альфа-клик',
+    'GP'  => 'Кассы и терминалы',
+    'MA'  => 'MasterPass'
+  ];
+  /**
+   * Возвращает текстовое имя типа платежа
+   * @param type $type
+   * @return type
+   */
+  public static function getNameByType($type){
+    return ArrayHelper::getValue(self::$_name_by_type, $type, "Неизвестно");
+  }
   /**
    * Возвращает возможные типы платежей
    * @return array

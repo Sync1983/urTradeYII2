@@ -78,9 +78,10 @@ class YaPayAvisoModel extends Model{
       [['requestDatetime','orderCreatedDatetime',
         'action','md5','shopId','customerNumber','orderNumber',
         'shopSumAmount','shopSumCurrencyPaycash','paymentType',
-        'shopArticleId','invoiceId','orderSumAmount','orderSumCurrencyPaycash',
+        'invoiceId','orderSumAmount','orderSumCurrencyPaycash',
         'orderSumBankPaycash','shopSumBankPaycash','paymentPayerCode','paymentDatetime',
         'cps_user_country_code'],'required'],
+      [['shopArticleId'],'safe'],
     ];
   }
   
