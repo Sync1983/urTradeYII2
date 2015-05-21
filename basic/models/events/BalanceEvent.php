@@ -24,6 +24,7 @@ class BalanceEvent extends Event{
   public $item;
   public $status;
   public $value;
+  public $comment = "";
   //protected vars
   //private vars  
   //============================= Public =======================================

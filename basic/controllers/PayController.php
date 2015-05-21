@@ -15,6 +15,9 @@ class PayController extends Controller{
     return [
       'check'  => [
         'class' => actions\pay\CheckAction::className()      
+      ],
+      'aviso'  => [
+        'class' => actions\pay\AvisoAction::className()
       ]
     ];
   }
