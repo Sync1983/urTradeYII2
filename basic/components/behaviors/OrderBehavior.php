@@ -28,6 +28,7 @@ class OrderBehavior extends Behavior{
       return;
     }
     $mail_text = [];
+    $search_model = new \app\models\search\SearchModel();
     /* @var $item \app\models\basket\BasketPart */
     foreach( $event->items as $item ){
       $order_item = new OrderRecord();	  
@@ -39,11 +40,13 @@ class OrderBehavior extends Behavior{
       $order_item->setAttribute("pay_value", 0.0);
       if( $order_item->validate() ){		
         $order_item->insert();
+        $provider = $search_model->getProviderByCLSID($item['provider']);
         $mail_text[] = [
           'id'	  => $item['_id'],		  
           'stock' => $item['stock'],
-          'prov'  => $item['provider'],
+          'prov'  => $provider->getName(),
           'art'	  => $item['articul'],
+          'prod'  => $item['producer'],
           'name'  => $item['name'],
           'price' => $item['price'],
           'time'  => $item['shiping'],

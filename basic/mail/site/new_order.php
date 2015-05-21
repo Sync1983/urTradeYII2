@@ -23,7 +23,7 @@
 	  <?php $user = \yii::$app->user->identity; ?>
 	  <td style="border: 1px solid black;"><?=$user->first_name." ".$user->second_name."<br>".$user->name ?></td>
 	  <td style="border: 1px solid black;"><?= $item['prov']."<br>".$item['stock']?></td>
-	  <td style="border: 1px solid black;"><?= $item['art']."<br>".$item['prov']."<br>".$item['name']?></td>
+	  <td style="border: 1px solid black;"><?= $item['art']."<br>".$item['prod']."<br>".$item['name']?></td>
 	  <td style="border: 1px solid black;"><?= $item['price']?></td>
 	  <td style="border: 1px solid black;"><?= $item['time']?></td>
 	  <td style="border: 1px solid black;"><?= $item['orig']?"Да":"Нет"?></td>
