@@ -28,8 +28,10 @@ class BalanceBehavior extends Behavior{
     if($event->initiator instanceof \app\models\MongoUser){
       $record->setAttribute("init_type", BalanceRecord::IT_USER);
       $record->setAttribute("init_id", strval($event->initiator->getId()) );
-    } 
-    /** @todo Добавить определение платежа из Yandex, для этого добавить класс платежа */
+    } else if( $event->initiator instanceof \app\models\pays\YaPayType){
+      $record->setAttribute("init_type", BalanceRecord::IT_PAY_SYSTEM);
+      $record->setAttribute("init_id", strval($event->initiator->invoiceId));
+    }    
     
     return ;
   }
@@ -68,7 +70,7 @@ class BalanceBehavior extends Behavior{
     $record = new BalanceRecord();
     $record->setAttribute("operation", BalanceRecord::OP_ADD);
     $record->setAttribute("value", $event->value);
-    $record->setAttribute("comment", "");
+    $record->setAttribute("comment", $event->comment);
     
     $this->parseInitiator($record, $event);
     $this->parseReciver($record, $event);
@@ -89,11 +91,10 @@ class BalanceBehavior extends Behavior{
     return true;
   }
   
-  public function bayPart(\app\models\orders\OrderRecord $order, $value){
+  public function bayPart(\app\models\orders\OrderRecord $order, $value, $user = null){
     $pay_value = $order->getAttribute("pay_value") * 1.0;
     $pay_value += $value * 1.0;
     
-    $need_pay = yii::$app->user->getUserPrice($order->getAttribute("price")*$order->getAttribute("sell_count")) * 1.0;
     
     $order->setAttribute("pay_value", $pay_value);
     $order->setAttribute("pay_time", time());
@@ -102,7 +103,12 @@ class BalanceBehavior extends Behavior{
     if($order->getAttribute("status") == \app\models\orders\OrderRecord::STATE_WAIT_PAY){
       $order->setAttribute("status", \app\models\orders\OrderRecord::STATE_WAIT_PLACEMENT);
     }
-    
+    if( !$user ){
+      $user = \yii::$app->user;
+    }
+
+    $need_pay = $user->getUserPrice($order->getAttribute("price")) * $order->getAttribute("sell_count") * 1.0;
+
     if( $pay_value >= $need_pay ){
       $order->setAttribute("pay", true);
     } else {
@@ -121,7 +127,7 @@ class BalanceBehavior extends Behavior{
     $record = new BalanceRecord();
     $record->setAttribute("operation", BalanceRecord::OP_DEC);
     $record->setAttribute("value", $event->value);
-    $record->setAttribute("comment", "");
+    $record->setAttribute("comment", $event->comment);
     
     $this->parseInitiator($record, $event);
     $this->parseReciver($record, $event);
@@ -134,8 +140,12 @@ class BalanceBehavior extends Behavior{
       return false;
     }
     
-    if($event->item instanceof \app\models\orders\OrderRecord){      
-      $this->bayPart($event->item,$event->value);
+    if($event->item instanceof \app\models\orders\OrderRecord){
+      if( $event->reciver instanceof \app\models\MongoUser){
+        $this->bayPart($event->item,$event->value, $event->reciver);
+      } else {
+        $this->bayPart($event->item,$event->value);
+      }
     }
     
     \yii::$app->user->trigger(NotifyEvent::USER_NOTIFY_EVENT,new NotifyEvent([
