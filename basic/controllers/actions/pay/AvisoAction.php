@@ -22,7 +22,6 @@ class AvisoAction extends Action{
     if( $model->validate() ){
 
       $record->setAttribute('code', 0);
-      $record->save();
 
       \yii::info("YA AvisoOrder OK!", 'balance');
 
@@ -32,10 +31,13 @@ class AvisoAction extends Action{
       //Проверяем запрос
       //Если он повторный - нужно просто ответить кодом 0
       if( $this->checkInvoice($model->invoiceId) ){
+        $record->save();
         \yii::info("YA AvisoOrder invoiceId Double: [". $model->invoiceId ."]", 'balance');
         return $answer;
       }
+      
       //Иначе - это первый запрос. Необходимо провести оплату
+      $record->save();
       $this->buyPart($model);
       
       return $answer;
