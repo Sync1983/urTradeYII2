@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'method'				  => 'POST',
 		'action'				  => 'https://demomoney.yandex.ru/eshop.xml',//'https://money.yandex.ru/eshop.xml',
 		'layout'				  => 'horizontal',
-		'enableClientValidation'  => true,
+		'enableClientValidation'  => false,
 		'enableAjaxValidation'	  => false,
 		'validateOnSubmit'		  => false,
 		'validateOnBlur'		  => false,
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?= $form->field($model, 'orderNumber')->input('text', ['name'=>'orderNumber','readonly'=>true])->label();?>
-<?= $form->field($model, 'sum')->input('text', ['name'=>'sum'])->label()->hint("Комиссия платежа: <b>".app\components\helpers\YaMHelper::getPercent("PC")."%</b>");?>
+<?= $form->field($model, 'sum')->input('text', ['name'=>'sum', 'readonly'=>true])->label()->hint("Комиссия платежа: <b>".app\components\helpers\YaMHelper::getPercent("PC")."%</b>");?>
 
 <?= $form->field($model, 'custName')->input('text', ['name'=>'custName','readonly'=>true])->label();?>
 <?= $form->field($model, 'custAddr')->input('text', ['name'=>'custAddr','readonly'=>true])->label();?>
