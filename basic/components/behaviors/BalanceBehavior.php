@@ -64,7 +64,7 @@ class BalanceBehavior extends Behavior{
    * Слушатель события пополнения баланса
    * @param BalanceEvent $event
    */
-  protected function onAddBalance(BalanceEvent $event){    
+  public function onAddBalance(BalanceEvent $event){
     \yii::info("Try ADD to balance for event: [".$event->serialize()."]", 'balance');    
     
     $record = new BalanceRecord();
