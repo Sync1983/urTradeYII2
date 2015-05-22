@@ -65,7 +65,7 @@ class BalanceBehavior extends Behavior{
    * @param BalanceEvent $event
    */
   public function onAddBalance(BalanceEvent $event){
-    \yii::info("Try ADD to balance for event: [".$event->serialize()."]", 'balance');    
+    \yii::info("Try ADD to balance for event: [".json_encode($event)."]", 'balance');
     
     $record = new BalanceRecord();
     $record->setAttribute("operation", BalanceRecord::OP_ADD);
