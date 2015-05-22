@@ -72,6 +72,9 @@ class OrderRecord extends ActiveRecord{
     if( !$this->wait_time ){
       $this->wait_time = $this->update_time + intval($this->shiping)*24*60*60;
     }
+    if( is_int($this->shiping) ){
+      $this->shiping *= 1;
+    }
     return parent::beforeSave($insert);
   }
 

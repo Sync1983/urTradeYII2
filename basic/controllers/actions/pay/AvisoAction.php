@@ -28,6 +28,7 @@ class AvisoAction extends Action{
 
       $answer = $this->sendAnswer(0, $model);
       \yii::info("YA AvisoOrder Answer: [". json_encode($answer) ."]", 'balance');
+      
       //Проверяем запрос
       //Если он повторный - нужно просто ответить кодом 0
       if( $this->checkInvoice($model->invoiceId) ){
@@ -72,7 +73,7 @@ class AvisoAction extends Action{
 
   protected function checkInvoice($invoiceId) {
     $record = \app\models\pays\YaPayOrderRecord::find()->where(['invoiceId' => $invoiceId])->count();
-    return $record==0;
+    return $record>0;
   }
 
   protected function buyPart(YaPayAvisoModel $model){

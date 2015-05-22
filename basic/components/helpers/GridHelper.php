@@ -23,7 +23,7 @@ class GridHelper{
   }
   
   public static function Column2(){
-    return ['headerOptions'=>['class'=>'kartik-sheet-style'],'header'=>'Деталь','format' => 'raw','hAlign'=>'center','value'=>function ($model, $key, $index, $widget) {return "<span>[ ".$model->articul." ] ".$model->producer."<br><b>".$model->name."</b></span>";},'vAlign'=>'middle',];
+    return ['headerOptions'=>['class'=>'kartik-sheet-style'],'label'=>'Деталь','attribute'=>'part_attr','format' => 'raw','hAlign'=>'center','value'=>function ($model, $key, $index, $widget) {return "<span>[ ".$model->articul." ] ".$model->producer."<br><b>".$model->name."</b></span>";},'vAlign'=>'middle',];
   }
   
   public static function Column3(){
@@ -42,13 +42,13 @@ class GridHelper{
   }
   
   public static function Column4(){
-    return ['attribute'=>'shiping','header'=>'Срок','headerOptions'=>['class'=>'kartik-sheet-style'],'width'=>'50px','vAlign'=>'middle',];
+    return ['attribute'=>'shiping','label'=>'Срок','headerOptions'=>['class'=>'kartik-sheet-style'],'width'=>'50px','vAlign'=>'middle',];
   }
   
   public static function Column5(){
     return [
         'attribute'=>'sell_count',    
-        'header'=>'Кол-во',
+        'label'=>'Кол-во',
         'headerOptions'=>['class'=>'kartik-sheet-style'],
         'pageSummary'=>true,    
         'width'=>'50px',
@@ -83,7 +83,7 @@ class GridHelper{
   public static function Column5O(){
     return [
         'attribute'=>'sell_count',    
-        'header'=>'Кол-во',
+        'label'=>'Кол-во',
         'headerOptions'=>['class'=>'kartik-sheet-style'],
         'width'=>'50px',
         'vAlign'=>'middle',
@@ -112,12 +112,13 @@ class GridHelper{
   
   public static function Column6O(){
     return [
-        'class'         =>'kartik\grid\FormulaColumn',
-        'header'        =>'Cумма',
-        'headerOptions' =>['class'=>'kartik-sheet-style'],
-        'format'        =>['decimal', 2],
-        'width'         =>'100px',
-        'vAlign'=>'middle',
+        'class'         => 'kartik\grid\FormulaColumn',
+        'label'         => 'Cумма',
+        'attribute'     => 'sum_attr',
+        'headerOptions' => ['class'=>'kartik-sheet-style'],
+        'format'        => ['decimal', 2],
+        'width'         => '100px',
+        'vAlign'        => 'middle',
         'value'         => function ($model, $key, $index, $widget) {             
             $price = yii::$app->user->getUserPrice($model->price)*$model->sell_count;
             return $price;
@@ -268,7 +269,7 @@ class GridHelper{
   public static function ColumnPay(){
     return [
       'class'=>'kartik\grid\BooleanColumn',
-      'header' => 'Оплачено',
+      'label' => 'Оплачено',
       'attribute'=>'pay', 
       'vAlign'=>'middle'
     ];
@@ -276,7 +277,7 @@ class GridHelper{
   
   public static function ColumnPayValue(){
     return [      
-      'header' => 'Сумма оплаты',
+      'label' => 'Сумма оплаты',
       'format'   =>['decimal', 2],
       'attribute'=>'pay_value', 
       'vAlign'=>'middle'
@@ -285,7 +286,7 @@ class GridHelper{
   
   public static function ColumnStatus(){
     return [      
-      'header' => 'Статус',      
+      'label' => 'Статус',
       'attribute'=>'status', 
       'vAlign'=>'middle',
       'value'=>function ($model, $key, $index, $widget) { 
@@ -325,21 +326,23 @@ class GridHelper{
         if( (bool)$model->pay || !yii::$app->user->isCompany() || ($model->status == \app\models\orders\OrderRecord::STATE_REJECTED) ){
           return "";
         }
-        if( yii::$app->user->getUserPrice($model->price) > yii::$app->user->getBalance()->getFullBalance() ){
-          return "";
-        }
         $label = '<i class="glyphicon glyphicon glyphicon-rub"></i>';
         $options = [
           'title' => 'Оплатить из денег на балансе',
-          'disabled'=> 'disabled',
           'data-toggle'=>'tooltip',
+          'class' => 'btn btn-link',
+          'style' => 'padding: 0; margin: -4px 0 0 0',
           'data-confirm' => 
             "Вы хотите оплатить заказ деталей из Ваших денег <b>на балансе?</b><br>".
             "В количестве <b>".$model->sell_count."</b> шт. <br>".
             "По цене: <b>".yii::$app->user->getUserPrice($model->price)."</b> руб. за шт.<br>".
             "Общая сумма составит: ".(yii::$app->user->getUserPrice($model->price)*$model->sell_count)." руб.",
         ];
-        return Html::a($label, $url,$options);
+
+        if( yii::$app->user->getUserPrice($model->price) > yii::$app->user->getBalance()->getFullBalance() ){
+          $options['disabled'] = 'true';
+        }
+        return Html::a($label, $url, $options);
       },
       'by-yandex' => function($url,$model){
         if( (bool)$model->pay || ($model->status == \app\models\orders\OrderRecord::STATE_REJECTED) ){
@@ -347,7 +350,7 @@ class GridHelper{
         }
         $label = '<i> <img src="img/yandex-money.png" alt="Оплатить через Yandex-деньги" style="width:30px;heoght:20px;margin-top:-5px;"/></i>';
         $options = [
-          'title' => 'Оплатить из через Yandex-деньги',
+          'title' => 'Оплатить через Yandex-деньги',
           'data-toggle'=>'tooltip',
           'data-confirm' => 
             "Вы хотите оплатить заказ деталей через <b>Yandex-деньги?</b><br>".            
@@ -363,8 +366,9 @@ class GridHelper{
   
   public static function ColumnWaitTime(){
     return [
-      'header' => 'Ожидается',      
-      'vAlign'=>'middle',
+      'label'  => 'Ожидается',
+      'vAlign'  => 'middle',
+      'attribute' => 'wait_time',
       'value'=>function ($model, $key, $index, $widget) { 
         return date("d-m-Y",$model->wait_time);
       }
