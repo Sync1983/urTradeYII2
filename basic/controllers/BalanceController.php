@@ -29,7 +29,7 @@ class BalanceController extends Controller{
           'init_id'  => strval(yii::$app->user->getId()),
           'init_type'=> BalanceRecord::IT_USER,          
         ])
-        ->orderBy(['time'])
+        ->orderBy(['time'=>SORT_DESC])
         ->all();
     }
     $order_list = new BasketDataProvider([
@@ -86,7 +86,7 @@ class BalanceController extends Controller{
             $user = \app\models\MongoUser::findOne(['_id' => new \MongoId($model->init_id)]);
             return "<span>Пользователь " . ($user?"<br>".$user->getUserName():"") . "</span>";
           } elseif( $model->init_type == BalanceRecord::IT_PAY_SYSTEM ) {
-            return "<span>Платежная система</span>".$model->init_id;
+            return "<span>Платежная система <br> ID: " . $model->init_id . " </span>";
           }
           return "<span>Неизвестно [" . $model->init_type . "]</span>";
         },
