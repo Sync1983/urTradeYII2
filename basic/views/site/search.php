@@ -26,7 +26,7 @@ foreach ($makers as $maker => $json){
     'content' => "<div class=\"best-var\">Лучшие варианты деталей производителя $maker</div>"
 	  . "<script type=\"text/json\">$json</script>"
 	  . "<table class=\"out-data\"></table> "
-	  . "<a href=\"#\">Показать полный список...</a>",    
+	  . "<a class=\"show-full\" href=\"#\">Показать полный список...</a>",
   ];  
 }
 
@@ -97,4 +97,18 @@ $this->registerJs("".
       </div>      
     </div>
   </div> 
+</div>
+
+<div id="full-list" class="modal" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Полный список деталей</h4>
+      </div>
+      <div class="modal-body">
+        <table class="out-data"></table>
+      </div>
+    </div>
+  </div>
 </div>

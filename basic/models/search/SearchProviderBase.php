@@ -37,10 +37,10 @@ class SearchProviderBase extends Object {
    * @return ['price'=>$min_price,'time'=>$min_time];
    * @throws \BadMethodCallException
    */
-  public function getPartList($part_id="",$maker_id="",$cross=false){    
+  public function getPartList($part_id="",$maker_id="",$cross=false,$full=false){
     $answer = $this->sendPartRequest($part_id,$maker_id,$cross);
         
-    if(!isset($answer[ $this->_part_list_id ])){return [];}    
+    if( !isset($answer[ $this->_part_list_id ]) ){return [];}
     
     if( !isset($answer[ $this->_part_list_id ][0]) ) {
      $answer[ $this->_part_list_id ] = [ $answer[ $this->_part_list_id ] ];
@@ -61,8 +61,11 @@ class SearchProviderBase extends Object {
     if( !$cross ){
       $and_params[] = ['articul' => strval($part_id)];
     }
-    $cond = PartRecord::getCollection()->buildCondition($and_params);    
-    return PartRecord::getPartsForOnlineProvider($cond);
+    $cond = PartRecord::getCollection()->buildCondition($and_params);
+    if( !$full ){
+      return PartRecord::getPartsForOnlineProvider($cond);
+    }
+    return PartRecord::getAllPartsForOnlineProvider($cond);
   }
   /**
    * Возвращает список фирм-производителей для указанного артикула

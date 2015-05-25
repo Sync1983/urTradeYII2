@@ -28,6 +28,18 @@ class PartRecord extends ActiveRecord {
         all();
   }
   /**
+   * Возвращает все запчасти для указанных условий
+   * @param array $cond Условия поиска
+   * @return array
+   */
+  public static function getAllPartsForOnlineProvider($cond=[]){
+    return self::find()->
+        where($cond)->
+        orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])->        
+        asArray()->
+        all();
+  }
+  /**
    * Возвращает первые 50 позиций начинающихся с текста part_id
    * для формирования помошника поиска
    * Производитель не учитывается

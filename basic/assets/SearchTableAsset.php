@@ -7,7 +7,6 @@
 
 namespace app\assets;
 
-use Yii;
 use yii\web\AssetBundle;
 
 class SearchTableAsset extends AssetBundle{
@@ -20,10 +19,10 @@ class SearchTableAsset extends AssetBundle{
   ];
   public $js = [
         'js/jquery.dataTables.js',
-		'js/search_tables_init.js'
+        'js/search_tables_init.js'
   ];
   public $depends = [
-		'yii\web\JqueryAsset',
+        'yii\web\JqueryAsset',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];
@@ -31,7 +30,24 @@ class SearchTableAsset extends AssetBundle{
   //private vars  
   //============================= Public =======================================
   public static function initCollapse() {
-	Yii::$app->view->registerJs("window.initCollapse();");
+    $js_text = <<<JS
+      $("body").find("a.collapse-toggle").each(
+        function( index, item ){
+          $(item).click(
+            function( event ){
+              if ( $(this).attr("aria-expanded") === "true" ) {
+                return;
+              }
+              var head = $(this).parent().parent().parent();
+              var dataSource = head.find('script[type="text/json"]').text();
+              var dataObject = JSON.parse(dataSource);
+              main.loadParts(dataObject,head);
+            }
+          );
+        }
+      );
+JS;
+    \yii::$app->view->registerJs($js_text);
   }
   //============================= Protected ====================================
   //============================= Private ======================================
