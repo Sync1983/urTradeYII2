@@ -55,6 +55,7 @@ class BalanceRecord extends ActiveRecord{
     foreach($this->attributes() as $attribute){
       $attr[$attribute] = \yii\helpers\Html::decode(json_encode($this->$attribute));
     }
+    $this->value *= 1.0;
     \yii::info("Balance event: ".json_encode($attr), 'balance');
     return parent::beforeSave($insert);
   }
