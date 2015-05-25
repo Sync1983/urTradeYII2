@@ -135,6 +135,13 @@ class BalanceController extends Controller{
         'headerOptions' => ['class'=>'kartik-sheet-style'],        
         'vAlign'    => 'middle'
       ],
+      [
+        'attribute' => 'comment',
+        'class'     => \kartik\grid\DataColumn::className(),
+        'header'    => 'Комментарий',
+        'headerOptions' => ['class'=>'kartik-sheet-style'],
+        'vAlign'    => 'middle'
+      ],
     ];
   }
   //============================= Constructor - Destructor =====================  
