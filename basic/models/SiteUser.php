@@ -195,7 +195,6 @@ class SiteUser extends User{
   
   public function afterLogin($identity, $cookieBased, $duration) {    
     parent::afterLogin($identity, $cookieBased, $duration);    
-    $this->_user_basket->setList($identity->basket);
-    \yii::$app->trigger(events\BalanceEvent::EVENT_BALANCE_CHANGE);
+    $this->_user_basket->setList($identity->basket);    
   }
 }
