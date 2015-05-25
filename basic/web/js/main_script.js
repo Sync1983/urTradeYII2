@@ -18,12 +18,7 @@ main_function.prototype.searchKeyPress = function(e){
   }
   
   function onSuccess(answer){
-    var data = [];    
-    try{
-      data = JSON.parse(answer);
-    } catch (e){
-      data = [];
-    }      
+    var data = answer;
     
     $(select).children().remove();
     for(var key in data)
@@ -134,13 +129,15 @@ main_function.prototype.loadParts = function(source,head){
   var form_query = $("#search-form").serializeArray(); 
   var table_class = $(head).find("table.out-data").DataTable();
   
-  function onSuccess(data){
-    var dataEncode = JSON.parse(data);
-    var id = dataEncode.id;
-    var parts = dataEncode.parts;    
-    $(textLine).find("div#part-loader"+id).remove();    
+  function onSuccess(data){    
+    var id = data.id;
+    var parts = data.parts;    
+    
+    $(textLine).find("div#part-loader"+id).remove();
+    
     table_class.rows.add(parts).draw();
     table_class.rows().data().sort();
+    
     $("body").find("a.ref-to-basket").unbind("click");    
     $(head).find("a.ref-to-basket").click(main.onAddToBasket);
   };

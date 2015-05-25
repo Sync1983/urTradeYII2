@@ -1,22 +1,57 @@
 /* global main */
-
-window.initCollapse = function (){  
-  $("body").find("a.collapse-toggle").each(
-    function( index, item ){      
-      $(item).click(
-        function( event ){
-          if ( $(this).attr("aria-expanded") === "true" ) {
-            return;
-          }
-          var head = $(this).parent().parent().parent();
-          var dataSource = head.find('script[type="text/json"]').text();          
-          var dataObject = JSON.parse(dataSource);
-          main.loadParts(dataObject,head);
-        } 
-      );
-    } 
-  );
-};
+$(".show-full").each(function (index, item){
+  $(item).click(function(event){
+    var item      = this;
+    var parent    = $(item).parent();
+    var dataJSON  = $(parent).find('script[type="text/json"]').text();
+    var data      = JSON.parse(dataJSON);
+    var header    = $("#full-list").find("div.modal-header");
+    var table_class= $("#full-list").find(".out-data").DataTable();
+    var query = {};
+    var form_query = $("#search-form").serializeArray();
+  
+    $(header).remove(".part-loader");
+    table_class.clear();
+    
+    function onError(data){
+      console.log(data);
+    }
+    
+    function onSuccess(data){
+      var id = data.id;
+      var parts = data.parts;
+      
+      $(header).find("div#part-loader"+id).remove();
+      
+      table_class.rows.add(parts).draw();
+      table_class.rows().data().sort();    
+      
+      $("#full-list").find("a.ref-to-basket").click(main.onAddToBasket);
+    }
+    
+    for (var id in data){
+      var value = data[ id ];
+      var newLoader = $("<div></div>")
+          .addClass("part-loader")
+          .attr("id","part-loader"+id)
+          .text(" ");
+      $(header).append(newLoader);
+      query = form_query;
+      query.push({
+        name: "maker_id",
+        value: value
+      });
+      query.push({
+        name: "provider",
+        value: id
+      });
+      main.ajax("/index.php?r=site/ajax-full-load",query,onSuccess,onError);      
+    }
+    
+    $("#full-list").modal('show');  
+    
+  });
+});
 
 $( ".out-data" ).addClass( "cell-border compact hover nowrap order-column" );
 

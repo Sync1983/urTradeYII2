@@ -16,15 +16,22 @@ class SearchProviderFile extends SearchProviderBase{
   private $_field_array;
   private $_data_array;
   
-  public function getPartList($part_id = "", $maker_id = "", $cross = false) {
+  public function getPartList($part_id = "", $maker_id = "", $cross = false, $full = false) {
     $collection = PartRecord::getCollection();    
     $cond = $collection->buildCondition(["AND",
               ["provider" => $this->_CLSID] ,
               ["articul"  => strval($part_id)],
               ["maker_id" => strval($maker_id)]
     ]);    
-    $answer = PartRecord::find()->where($cond)->orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])->limit(20)->asArray()->all();    
-    return $answer;
+    $answer = PartRecord::find()
+                ->where($cond)
+                ->orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC]);
+    
+    if( !$full ){
+      $answer = $answer->limit(20);
+    }
+    
+    return $answer->asArray()->all();
   }
 
   public function getMakerList($part_id = "", $cross = false) {

@@ -26,21 +26,19 @@ class SearchModel extends Model{
    * строки поиска артикула детали
    * @return array
    */
-  public function loadParts(){    
-    if(!$class = $this->getProviderByCLSID($this->provider)){
+  public function loadAllParts(){
+    if( !$class = $this->getProviderByCLSID($this->provider) ){
       return [];
     }
+
     $search = SearchProviderBase::_clearStr($this->search_text);    
-    $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);    
+    $parts = $class->getPartList($search,  $this->maker_id,  $this->cross, true);
     
     $answer_data = [];    
     foreach ($parts as $key=>$part){      
         $data = $parts[$key];
         $data["price"] = yii::$app->user->getUserPrice($data["price"]);
-		if( !isset($data["info"]) ){
-		  $data["info"] = "";
-		}
-        if( is_array($data["info"]) ){
+        if( !isset($data["info"]) || is_array($data["info"]) ){
           $data["info"] = "";
         }
 	  
@@ -56,11 +54,50 @@ class SearchModel extends Model{
           "is_original" => boolval($data["is_original"]),
           "count"       => $data["count"],
           "lot_quantity"=> $data["lot_quantity"],
-		  "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
+          "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
         ];
     }
     return $answer_data;
   }  
+  /**
+   * Возвращает список запчастей для конкретного поставщика
+   * Данные provider и maker_id должны быть переданы модели
+   * как и указания на правила кросс-номеров, наценки и
+   * строки поиска артикула детали
+   * @return array
+   */
+  public function loadParts(){
+    if(!$class = $this->getProviderByCLSID($this->provider)){
+      return [];
+    }
+    $search = SearchProviderBase::_clearStr($this->search_text);
+    $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);
+
+    $answer_data = [];
+    foreach ($parts as $key=>$part){
+        $data = $parts[$key];
+        $data["price"] = yii::$app->user->getUserPrice($data["price"]);
+        if( !isset($data["info"]) || is_array($data["info"]) ){
+          $data["info"] = "";
+        }
+
+        $answer_data[$key] = [
+          "id"          => strval($data["_id"]),
+          "articul"     => $data["articul"],
+          "producer"    => $data["producer"],
+          "name"        => $data["name"],
+          "price"       => $data["price"],
+          "shiping"     => $data["shiping"],
+          "info"        => strval($data["info"]),
+          "update_time" => $data["update_time"],
+          "is_original" => boolval($data["is_original"]),
+          "count"       => $data["count"],
+          "lot_quantity"=> $data["lot_quantity"],
+          "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
+        ];
+    }
+    return $answer_data;
+  }
   /**
    * Возвращает класс поставщика по указанном CLSID
    * @param int $clsid

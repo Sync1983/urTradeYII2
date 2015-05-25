@@ -290,4 +290,10 @@ table.over-price-panel {
   .part-loader:after {
     content: "\00a0"; }
 
+#full-list {
+  top: 10%; }
+
+#count-request {
+  z-index: 2000; }
+
 /*# sourceMappingURL=site.css.map */
