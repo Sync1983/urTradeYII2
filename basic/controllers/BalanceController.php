@@ -22,6 +22,8 @@ class BalanceController extends Controller{
     if(yii::$app->user->isGuest){
       $items = [];
     } else {
+      \yii::$app->trigger(\app\models\events\BalanceEvent::EVENT_BALANCE_CHANGE, new \app\models\events\BalanceEvent());
+      
       $items = BalanceRecord::find()->where([
           'reciver_id'  => strval(yii::$app->user->getId()),
           'reciver_type'=> BalanceRecord::IT_USER,
