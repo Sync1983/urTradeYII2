@@ -89,7 +89,7 @@ class BalanceModel extends Component {
   //============================= Private ======================================
   //============================= Constructor - Destructor =====================
   public function init(){
-    \yii::$app->on(BalanceEvent::EVENT_BALANCE_CHANGE,[  $this,'onBalanceChange']);
+    \yii::$app->on(BalanceEvent::EVENT_BALANCE_CHANGE,[  $this,'onBalanceChange']);    
   }
 
 }
