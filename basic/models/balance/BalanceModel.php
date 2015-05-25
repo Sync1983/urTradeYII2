@@ -61,18 +61,18 @@ class BalanceModel extends Component {
       return;
     }
     $in = BalanceRecord::find()
-            ->where([
-                'operation'   => BalanceRecord::OP_ADD,
-                'reciver_type' => BalanceRecord::IT_USER,
-                'reciver_id' => strval(\yii::$app->user->getId()),])
+            ->where(['operation'   => BalanceRecord::OP_ADD])
+            ->andWhere(['reciver_type' => BalanceRecord::IT_USER])
+            ->andWhere(['reciver_id' => strval(\yii::$app->user->getId())])
             ->sum("value");
         
     $out = BalanceRecord::find()
-            ->where([
-              'operation'   => BalanceRecord::OP_DEC,
-              'reciver_type' => BalanceRecord::IT_USER,
-              'reciver_id' => strval(\yii::$app->user->getId()),])
+            ->where(['operation'   => BalanceRecord::OP_DEC])
+            ->andWhere(['reciver_type' => BalanceRecord::IT_USER])
+            ->andWhere(['reciver_id' => strval(\yii::$app->user->getId())])
             ->sum("value");
+    \yii::info("Add sum: $in");
+    \yii::info("Dec sum: $out");
     $this->pay_add = $in;
     $this->pay_dec = $out;
     $this->pay_credit = floatval(\yii::$app->user->getIdentity()->credit);    
