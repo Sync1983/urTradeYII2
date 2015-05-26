@@ -23,7 +23,7 @@ class NotifyEvent extends Event{
   //============================= Constructor - Destructor =====================
   public function init(){
     parent::init();
-    if( yii::$app->user ){
+    if( yii::$app->user && yii::$app->user->getIdentity() ){
       $this->reciver = yii::$app->user->getIdentity()->getId();
     }
   }
