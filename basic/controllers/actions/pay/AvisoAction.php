@@ -81,7 +81,7 @@ class AvisoAction extends Action{
     //Добавляем сумму на баланс
     $add_money = new \app\models\events\BalanceEvent();
     $add_money->value     = $model->shopSumAmount;
-    $add_money->comment   = "Платеж Yandex-Деньги. Invoice: " . $model->invoiceId. "Тип платежа: ".\app\components\helpers\YaMHelper::getNameByType($model->paymentType);
+    $add_money->comment   = "Платеж Yandex-Деньги. Invoice: " . $model->invoiceId. " Тип платежа: ".\app\components\helpers\YaMHelper::getNameByType($model->paymentType);
     $add_money->initiator = new \app\models\pays\YaPayType(['invoiceId' => $model->invoiceId]);
     $add_money->reciver   = $model->getUser();
     $add_money->item      = $model->getOrder();
@@ -93,7 +93,7 @@ class AvisoAction extends Action{
     $dec_money->initiator = $model->getUser();
     $dec_money->reciver   = $model->getUser();
     $dec_money->item      = $model->getOrder();
-    \yii::$app->trigger(\app\models\events\BalanceEvent::EVENT_DEC_BALANCE, $add_money);
+    \yii::$app->trigger(\app\models\events\BalanceEvent::EVENT_DEC_BALANCE, $dec_money);
   }
   
 }
