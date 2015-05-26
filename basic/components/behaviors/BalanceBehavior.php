@@ -109,13 +109,13 @@ class BalanceBehavior extends Behavior{
 
     $need_pay = $user->getUserPrice($order->getAttribute("price")) * $order->getAttribute("sell_count") * 1.0;
 
-    if( $pay_value >= $need_pay ){
+    if( ($pay_value * 1.0)  >= $need_pay ){
       $order->setAttribute("pay", true);
     } else {
       $order->setAttribute("pay", false);      
     }
     
-    if(!$order->save(true)){
+    if( !$order->save(true) ){
       \yii::info("Order validate Error: ".json_encode($order->getErrors()), 'balance');
       throw new yii\web\BadRequestHttpException("Ошибка изменения записи: [".strval($order->getAttribute("_id"))."]<br> Свяжитесь с администрацией для предотвращения потери средств");
     }
