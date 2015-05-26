@@ -28,7 +28,7 @@ class BalanceBehavior extends Behavior{
     if($event->initiator instanceof \app\models\MongoUser){
       $record->setAttribute("init_type", BalanceRecord::IT_USER);
       $record->setAttribute("init_id", strval($event->initiator->getId()) );
-    } else if( $event->initiator instanceof \app\models\pays\YaPayType){
+    } elseif( $event->initiator instanceof \app\models\pays\YaPayType){
       $record->setAttribute("init_type", BalanceRecord::IT_PAY_SYSTEM);
       $record->setAttribute("init_id", strval($event->initiator->invoiceId));
     }    
