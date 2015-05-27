@@ -1,0 +1,122 @@
+/* 
+    Created on : 27.05.2015, 3:02:45
+    Author     : Sync
+*/
+.carousel-atc.wrapper {
+  width: 100%;
+  min-height: 200px;
+  height: 200px;
+  position: relative; }
+.carousel-atc .img-part {
+  width: 50%;
+  height: 100%;
+  display: inline-block;
+  overflow: hidden;
+  list-style: none;
+  box-shadow: 0px 0px 10px #777; }
+  .carousel-atc .img-part div.img-wrapper {
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    overflow: hidden;
+    position: relative;
+    display: block; }
+  .carousel-atc .img-part .item {
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    display: none; }
+  .carousel-atc .img-part .active {
+    display: block;
+    opacity: 1; }
+  .carousel-atc .img-part .pre-show {
+    display: block;
+    opacity: 0; }
+.carousel-atc .indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 25%;
+  z-index: 15;
+  width: 60%;
+  padding-left: 0px;
+  margin-left: -30%;
+  text-align: center;
+  list-style: outside none none; }
+  .carousel-atc .indicators li {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 1px;
+    text-indent: -999px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid #000;
+    border-radius: 10px; }
+  .carousel-atc .indicators li.active {
+    width: 12px;
+    height: 12px;
+    margin: 0px;
+    background-color: #FFF; }
+.carousel-atc .text-part {
+  width: 50%;
+  height: 100%;
+  display: inline-block;
+  position: absolute; }
+  .carousel-atc .text-part .item {
+    display: none; }
+    .carousel-atc .text-part .item .header {
+      padding: 10px 10px;
+      max-height: 24%;
+      overflow-y: hidden;
+      text-align: center;
+      font-size: 14pt;
+      font-weight: bold;
+      line-height: 14pt;
+      text-shadow: 0px 0px 1px rgba(35, 101, 113, 0.8);
+      position: absolute;
+      top: 0px; }
+    .carousel-atc .text-part .item .text {
+      top: 25%;
+      bottom: 0px;
+      height: 80%;
+      padding: 25px 25px;
+      position: absolute; }
+      .carousel-atc .text-part .item .text.active {
+        display: block; }
+    .carousel-atc .text-part .item.active {
+      display: block; }
+  .carousel-atc .text-part .pre-show {
+    display: block;
+    opacity: 0; }
+.carousel-atc .arrow {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 8%;
+  height: 100%;
+  color: #FFF;
+  text-align: center;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6);
+  opacity: 0.5;
+  font-size: 30px;
+  line-height: 100%;
+  vertical-align: middle; }
+  .carousel-atc .arrow span {
+    position: absolute;
+    top: 50%;
+    z-index: 5;
+    display: inline-block;
+    margin-top: -15px; }
+.carousel-atc .left {
+  background-image: linear-gradient(to right, #269ABC 0%, transparent 100%); }
+.carousel-atc .right {
+  background-image: linear-gradient(to right, transparent 0%, #269ABC 100%);
+  right: 50%;
+  left: auto; }
+
+/*# sourceMappingURL=carousel.css.map */
