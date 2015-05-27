@@ -14,7 +14,12 @@ class NewsWidget extends Widget {
 
   public function init(){
     parent::init();    
-    $this->data = NewsModel::find()->where(['show'=>true])->orderBy(['date'=>SORT_DESC])->limit(50)->all();
+    $this->data = NewsModel::find()
+            ->where(['show'=>true])
+            ->orderBy(['date'=>SORT_DESC])
+            ->limit(50)
+            ->all();
+    \app\assets\NewsWidgetAsset::register($this->view);
   }
   
   public function run(){    

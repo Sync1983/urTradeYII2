@@ -26,7 +26,7 @@ class SearchFormBehavior extends Behavior{
   public function initSearch($event){    
     $this->search =  new SearchForm();
     $request = yii::$app->request->get();
-    $request['over_price'] = (int) Yii::$app->request->get('over-price',0);         
+    $request['over_price'] = (int) Yii::$app->request->get('over_price',0);
     $this->search->load($request,'');    
     \yii::$app->trigger(\app\models\events\BalanceEvent::EVENT_BALANCE_CHANGE,new \app\models\events\BalanceEvent());
     $event->action->controller->getView()->params['search_model'] = $this->search;
