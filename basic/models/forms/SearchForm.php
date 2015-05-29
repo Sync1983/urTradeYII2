@@ -23,7 +23,7 @@ class SearchForm extends Model{
    * Возвращает список производителей запрашиваемого артикула
    * @return array
    */
-  public function generateMakerList(){
+  public function generateMakerList(){    
     $makers = [];
     $search = SearchProviderBase::_clearStr($this->search_text);    
     foreach ($this->_providers as $provider){      
