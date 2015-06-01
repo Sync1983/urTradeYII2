@@ -201,6 +201,24 @@ Breadcrumbs::widget([
     <footer class="footer">        
       <p class="pull-left">&copy; AвтоТехСнаб <?= date('Y') ?></p>
       <p class="pull-right"><?= Yii::powered() ?></p>
+      <div class="locator">
+        <ul>
+          <li><a href="<?=  Url::home() ?>">Главная</a></li>
+          <li>
+            <ul>
+              <li><a href="<?=  Url::to(['basket/index']); ?>">Корзина</a></li>
+              <li><a href="<?=  Url::to(['order/index']) ?>">Заказы</a></li>
+            </ul>
+          </li>
+          <li><a href="<?=  Url::to(['balance/index']) ?>">Баланс</a></li>
+          <li>
+            <ul>
+              <li><a href="<?=  Url::to(['site/consumers']) ?>">Клиентам</a></li>
+              <li><a href="<?=  Url::to(['site/contact']) ?>">Контакты</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </footer>
 
 <?php $this->endBody() ?>

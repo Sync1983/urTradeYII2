@@ -55,11 +55,33 @@ html, body {
 .footer {
   width: 60%;
   margin: -20px auto;
-  height: 60px;
+  height: 80px;
   background-color: #f5f5f5;
   border-top: 1px solid #ddd;
   padding: 20px 10px 0;
   position: relative; }
+  .footer .locator {
+    width: 100%;
+    position: relative; }
+    .footer .locator > ul {
+      width: 50%;
+      margin: 0 auto;
+      padding: 0;
+      text-align: justify;
+      list-style: none;
+      vertical-align: top; }
+      .footer .locator > ul > li {
+        padding: 0;
+        margin: 0;
+        width: 20%;
+        vertical-align: top;
+        text-align: left;
+        display: inline-block; }
+        .footer .locator > ul > li ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          vertical-align: top; }
 
 .navbar-small {
   height: 44.11765px; }

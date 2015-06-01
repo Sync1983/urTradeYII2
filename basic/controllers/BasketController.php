@@ -59,7 +59,7 @@ class BasketController extends Controller{
         'guest_columns' => $this->getGuestBasketColumnsDescription()];
     
     if($pjax){      
-      return $this->view->renderAjax("@app/views/basket/grid", $params);
+      return $this->renderPartial("@app/views/basket/grid", $params);
     } 
     return $this->render("index",$params);
   }

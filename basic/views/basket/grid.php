@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 /* @var $model PartRecord */
     
 if(!yii::$app->user->isGuest){
-  Pjax::begin(['id'=>'user-basket']);        
+  //Pjax::begin(['id'=>'user-basket']);
   echo GridView::widget([
     'id'            => 'user-basket',
     'dataProvider'  => $user_basket,    
@@ -45,12 +45,11 @@ if(!yii::$app->user->isGuest){
       "<div class=\"clearfix\"></div>",
     'persistResize' => false,
   ]);
-  Pjax::end();
+  //Pjax::end();
 }
 
 /* @var $guest_basket \app\models\BasketDataProvider */
 if( $guest_basket->count !== 0) :  
-Pjax::begin(['id'=>'guest-basket']);        
 echo GridView::widget([
     'id'            => 'guest-basket',
     'dataProvider'  => $guest_basket,    
@@ -87,7 +86,6 @@ echo GridView::widget([
       "<div class=\"clearfix\"></div>",
     'persistResize' => false,
   ]);
-Pjax::end();
 endif;
 
 ActiveForm::begin([
@@ -175,7 +173,7 @@ ActiveForm::end();
     if( keys.length === 0 ){
       return;
     }
-    if(confirm("Поместить в корзину набор из "+keys.length+" деталей?")){      
+    if(confirm("Отправить в заказ набор из "+keys.length+" деталей?")){
       var form = $("#user-all");
       form.children("[name=\"ids[]\"]").remove();
       for(var index in keys){
