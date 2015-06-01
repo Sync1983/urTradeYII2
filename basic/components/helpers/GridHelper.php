@@ -319,7 +319,7 @@ class GridHelper{
           'label' => '<i class="glyphicon glyphicon-remove"></i>',
           'title'=>'Удалить запись', 
           'data-toggle'=>'tooltip',
-          'data-confirm' => "Вы уверены, что хотите удалить запись?"];
+          'data-confirm' => "Вы уверены, что хотите удалить деталь из заказа?"];
         return Html::a($label, $url,$options);
       },
       'by-balance' => function($url,$model){
