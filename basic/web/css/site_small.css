@@ -1,0 +1,77 @@
+/* 
+    Created on : 04.03.2015, 22:31:31
+    Author     : Sync<atc58.ru>
+*/
+.wrap.resizeble.size-low {
+  width: 90%; }
+  .wrap.resizeble.size-low > .container {
+    margin: 120px auto 0; }
+
+.menu-wrap.resizeble.size-low {
+  width: 90%;
+  height: 120px; }
+
+.footer.size-low {
+  width: 90%; }
+
+.navbar-1.size-low a.navbar-header {
+  background-image: url("/img/logo_left_min.png");
+  width: 60px !important; }
+.navbar-1.size-low .head-buttons {
+  top: -5px;
+  padding: 0;
+  padding-right: 10px;
+  position: relative; }
+  .navbar-1.size-low .head-buttons #text-part {
+    display: none !important; }
+  .navbar-1.size-low .head-buttons #btn-part {
+    float: right;
+    position: relative; }
+.navbar-1.size-low #dropdown-menu {
+  top: -75px;
+  float: right;
+  padding-right: 10px;
+  display: block; }
+
+.navbar-2.size-low {
+  display: none !important; }
+
+.navbar-3.size-low form .search-helper {
+  top: 114px;
+  width: 66%; }
+.navbar-3.size-low form > ul {
+  width: 95%;
+  padding: 0;
+  display: block;
+  position: absolute; }
+  .navbar-3.size-low form > ul .dropdown span.text {
+    display: none; }
+  .navbar-3.size-low form > ul .search {
+    margin-left: 52px;
+    padding-right: 92px; }
+  .navbar-3.size-low form > ul .buttons {
+    right: 84px; }
+    .navbar-3.size-low form > ul .buttons label {
+      display: none; }
+    .navbar-3.size-low form > ul .buttons button span.text {
+      display: none; }
+  .navbar-3.size-low form > ul > .menu-button {
+    display: block; }
+
+.size-low .nav-line {
+  width: 100%;
+  font-size: 14px;
+  height: 40px; }
+  .size-low .nav-line li {
+    width: auto;
+    font-size: 14px;
+    margin: 0 auto;
+    height: 25px; }
+  .size-low .nav-line .menu-describe {
+    display: none; }
+  .size-low .nav-line .menu-title {
+    background-image: none; }
+  .size-low .nav-line .badge {
+    display: none; }
+
+/*# sourceMappingURL=site_small.css.map */

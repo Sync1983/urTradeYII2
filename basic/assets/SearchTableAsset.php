@@ -41,7 +41,7 @@ class SearchTableAsset extends AssetBundle{
               var head = $(this).parent().parent().parent();
               var dataSource = head.find('script[type="text/json"]').text();
               var dataObject = JSON.parse(dataSource);
-              main.loadParts(dataObject,head);
+              $(head).main().loadParts(dataObject);
             }
           );
         }

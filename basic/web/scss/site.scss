@@ -7,8 +7,7 @@ $page_color: #cccccc;
 $bg_color: #FFFFFF;
 $nav_height: 75px;
 $nav_bg_color: #FFFFBA;
-$menu_count: 3;
-$max_menu_height: 0;
+$menu_height: 195px;
 @mixin linear-gradient($angle, $color-stops...) {
   $_angle-with-vendor-prefix: "";
   $_angle: "";
@@ -55,38 +54,38 @@ text-shadow:  0px  0px 1px rgba(0,0,0,0.5),
              ;  
 }
 
-@for $i from 1 to ($menu_count+1){  
-  @if ($i!=$menu_count){
-    $max_menu_height: $max_menu_height + $nav_height;
-  }
-  @if ($i==$menu_count){
-    $max_menu_height: $max_menu_height + $nav_height / 1.7;
-  }
-  .navbar-#{$i} {
-    top: (($i - 1)*$nav_height);
-    @if ($i!=$menu_count){
-      height: $nav_height;
-    } @else{ 
-      height: $nav_height / 1.7;
-    }
-    width: $page_width;
+html, body {width: 100%;background-color: $page_color;}
+
+.menu-wrap {
+  top:0;
+  width: $page_width;
+  height: 200px;
+  margin: 0 auto;  
+  position: fixed;
+  z-index: 1001;
+}
+
+
+%navbar{
+    height: $nav_height;
+    width: 100%;
     margin: 0 auto;
     padding: 5px 0;
     background-color: $nav_bg_color;
     border-bottom: 1px solid #AAAAAA;
     border-radius: 5px;
-    position: fixed;
-    z-index: 1000;  
-  }  
+    position: relative;    
 }
 
-html, body {width: 100%;background-color: $page_color;}
+.navbar-1, .navbar-2, .navbar-3 { @extend %navbar; }
+.navbar-3 { height: $nav_height / 1.7; }
+
 .wrap {
   margin: 0 auto;
   width: $page_width;
   background-color: $bg_color;
   & > .container {
-    margin: ($max_menu_height) auto 0;
+    margin: ($menu_height) auto 0;
     padding: 0px 15px 20px;
     width: 100%;
     z-index: 0;
@@ -96,7 +95,7 @@ html, body {width: 100%;background-color: $page_color;}
 
 .footer {
     width: $page_width;
-    margin: -20px auto;
+    margin: 0 auto;
     height: 80px;
     background-color: #f5f5f5;
     border-top: 1px solid #ddd;
@@ -138,39 +137,100 @@ html, body {width: 100%;background-color: $page_color;}
 
 .navbar-1{
   a.navbar-header {
-    top: 0;
-    width: 400px;
+    top: 2;
+    left: 0;
+    width: 350px;
     height: $nav_height;
     text-decoration: none;
-    background-image: url('/img/logo_left.png');
-    background-repeat: no-repeat;
-    position: relative;
+    background: url('/img/logo_left.png') no-repeat;    
+    position: absolute;
     display: block;
   }
+  
   div.head-buttons{
-    padding-right: 20px;
-  }
-}
-
-.navbar-2{
-  .basket   {background-image: url('/img/basket_icon.png');}
-  .balance  {background-image: url('/img/balance_icon.png');}
-  .consumer {background-image: url('/img/consumer_icon.png');}
-  .contact  {background-image: url('/img/contact_icon.png');}
-  .order    {background-image: url('/img/order_icon.png');}
-  .search   {background-image: url('/img/search_icon.png');}
-  .setup    {background-image: url('/img/setup_icon.png');}
-  .badge {
-    top: 80px;
-    margin-left: -5px;
-    background-color: #F00;
-    position: fixed;
+    top: 0;
+    right: 20px;
+    width: 150px;    
+    position: absolute;
+    
+    #text-part{    
+      display: inline-block;
+    }  
+    
+    #btn-part{
+      & .btn{
+       float: right;       
+       margin: 1px 0 2px 0;
+      }      
+    }
   }
 }
 
 .navbar-3{
   form {
-    padding: 0 10px;    
+    width: 95%;
+    margin: 0 auto;
+    & > ul {
+      list-style: outside none;
+      width:95%;
+      padding: 0;
+      display: block;
+      position: absolute;
+      
+      .dropdown, .search, .buttons{
+        display: inline-table;
+      }
+      
+      & > .dropdown{
+        top: 0px;
+        left: 0px;        
+        position: absolute;
+        button{
+          border-radius: 5px 0 0 5px;          
+        }
+      }
+      & > .search {
+        margin-left: 115px;
+        padding-right: 318px; 
+        width: 100%;
+        input {
+          width: 100%;
+          display: table-cell;
+          height: 34px;
+          padding: 6px 12px;
+          font-size: 14px;
+          line-height: 1.42857;
+          color: #555;
+          background-color: #FFF;          
+          border: 1px solid #CCC;          
+          box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+          transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        }
+      }
+      & > .buttons{ 
+        top: 0px;
+        right: 0px;        
+        position: absolute;
+        
+        label {
+          border-radius: 0 5px 5px 0;
+          border-left: none;
+          float: left;
+        }
+        button {
+          border-radius: 0;
+          float:left;
+        }
+      }      
+      
+      & > .menu-button{    
+        top: 0px;
+        right: 1%;
+        position: absolute;
+        display: none;
+      }      
+    }
+    
     & div.over-price{
       border-radius: 4px;
       button {
@@ -178,30 +238,55 @@ html, body {width: 100%;background-color: $page_color;}
       }
     }
   }
+  
 }
 
 ul.nav-line {    
     list-style: none;
-    width: 90%;
+    width: 100%;
     height: $nav_height;
+    
     padding: 0;
     margin: 0 auto;
+    
     text-align: center;
     display: block;
+    
     & li {
       padding: 0;
       width: (100% / 6.2);
-      height: $nav_height;
+      height: 60px;
       vertical-align: top;
-      border-left: 2px solid rgba(0, 0, 0, 0.5);
+      border-left: 1px solid rgba(12, 85, 124, 0.37);
       display: inline-block;
       position: relative;
-      & a{
-        text-decoration: none;
+      
+      & a {
+        width: 100%;
+        height: 100%;
         display: block;
+        
       }
-      & a:hover *{
-        color: #5bc0de;
+      
+      a:hover p{
+        color: #5bc0de;          
+      }
+        
+      & p.menu-title{        
+        img{          
+          width: 20px;
+          height: 20px;
+          left: -3px;
+          margin-left: -10px;
+          display: inline-block;          
+          position: relative;
+        }
+        span {          
+          display: inline-block;
+        }
+      }
+      & p.menu-describe {
+        position: absolute;
       }
     }
     
@@ -219,8 +304,9 @@ select.over-price{
 }
 
 .search-helper{
-  top: ($max_menu_height - 5);
-  height: $max_menu_height;
+  top: ($menu_height - 5);
+  height: $menu_height;
+  width: 30%;
   position: fixed;
   display: none;
   select {
@@ -399,3 +485,6 @@ table.over-price-panel{
 #count-request{
   z-index: 2000;
 }
+
+@import "site_middle.scss";
+@import "site_small.scss";

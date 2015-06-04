@@ -26,7 +26,7 @@ $(".show-full").each(function (index, item){
       table_class.rows.add(parts).draw();
       table_class.rows().data().sort();    
       
-      $("#full-list").find("a.ref-to-basket").click(main.onAddToBasket);
+      $("#full-list").find("a.ref-to-basket").click($().main().onAddToBasket);
     }
     
     for (var id in data){
@@ -45,7 +45,7 @@ $(".show-full").each(function (index, item){
         name: "provider",
         value: id
       });
-      main.ajax("/index.php?r=site/ajax-full-load",query,onSuccess,onError);      
+      $().main().ajax("/index.php?r=site/ajax-full-load",query,onSuccess,onError);      
     }
     
     $("#full-list").modal('show');  
@@ -73,7 +73,7 @@ $( ".out-data" ).DataTable( {
     {data: 'name', title: 'Наименование', width: '50%'},
     {data: 'price', title: 'Цена', width: '5%',
       render: function (data, type, row) {
-        var op = data.price * 1 + main.getActiveOverPrice() * data.price / 100;
+        var op = data.price * 1 + $().main().getActiveOverPrice() * data.price / 100;
         return type === 'display'?op.toFixed( 2 ):data;
       }
     },
@@ -116,7 +116,7 @@ $( ".out-data" ).DataTable( {
   },
   rowCallback: function (row, data) {
     
-    var op = data.price * 1 + main.getActiveOverPrice() * data.price / 100;
+    var op = data.price * 1 + $().main().getActiveOverPrice() * data.price / 100;
     $( row ).children( "td" ).eq( 3 ).text( op.toFixed( 2 ) );
     
   }

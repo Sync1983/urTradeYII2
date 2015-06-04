@@ -1,0 +1,100 @@
+/* 
+    Created on : 04.03.2015, 22:31:31
+    Author     : Sync<atc58.ru>
+*/
+$middle_menu_height : 160px;
+
+.wrap.resizeble.size-middle{
+  width: 80%;
+  & > .container {
+    margin: ($middle_menu_height) auto 0;
+  }
+}
+.menu-wrap.resizeble.size-middle{
+  height: $middle_menu_height;
+  width: 80%;
+}
+
+.navbar-1.size-middle{  
+  a.navbar-header{
+    width: 325px !important;
+  }  
+}
+.navbar-2.size-middle {
+  height: 40px !important;
+}
+
+.navbar-3.size-middle{
+  form div.search-helper{
+    top: 154px;
+  }
+}
+
+.footer.size-middle{
+  width: 80%;
+}
+
+.size-middle{ 
+  
+  #text-part{    
+    display: block;
+    float: right;
+    right: 22%;
+    position: fixed;    
+    
+      p {          
+        top: 50px;
+        float: right;
+        display: inline-block;
+        position:relative;
+        
+        span {
+          display: none;
+        }
+        &:last-child{
+          &:before{
+            content: "[";
+          }
+          &:after{
+            content: "]";              
+          }
+        }
+    }
+  }
+  
+  #btn-part{
+    right: 0px;    
+    display: block;
+    position: absolute;
+  }  
+  
+  .nav-line{
+    width: 100%;
+    font-size: 14px;
+    height: 40px;
+    
+    li {
+      width: (100% / 6.2);
+      font-size: 14px;
+      margin: 0 auto;
+      height: 25px;
+      a p img {
+        margin: 0;
+        display: none;        
+      }
+    }    
+    
+    .menu-describe {
+      display: none;
+    }
+    
+    .menu-title{
+      padding: 0;
+      margin: 0;
+      background-image: none;
+    }
+    .badge {
+      display: none;
+    }
+  }
+}

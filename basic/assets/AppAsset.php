@@ -21,11 +21,16 @@ class AppAsset extends AssetBundle
         'css/site.css',        
     ];
     public $js = [        
-        'js/main_script.js'
+        'js/main_script.js',
+        'js/resizeble.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
         'app\assets\BootboxAsset',
     ];
+
+    public static function initResizeble(){
+      \yii::$app->view->registerJs("$(\"body\").resizeble()");
+    }
 }

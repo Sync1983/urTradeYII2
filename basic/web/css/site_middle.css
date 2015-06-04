@@ -1,0 +1,67 @@
+/* 
+    Created on : 04.03.2015, 22:31:31
+    Author     : Sync<atc58.ru>
+*/
+.wrap.resizeble.size-middle {
+  width: 80%; }
+  .wrap.resizeble.size-middle > .container {
+    margin: 160px auto 0; }
+
+.menu-wrap.resizeble.size-middle {
+  height: 160px;
+  width: 80%; }
+
+.navbar-1.size-middle a.navbar-header {
+  width: 325px !important; }
+
+.navbar-2.size-middle {
+  height: 40px !important; }
+
+.navbar-3.size-middle form div.search-helper {
+  top: 154px; }
+
+.footer.size-middle {
+  width: 80%; }
+
+.size-middle #text-part {
+  display: block;
+  float: right;
+  right: 22%;
+  position: fixed; }
+  .size-middle #text-part p {
+    top: 50px;
+    float: right;
+    display: inline-block;
+    position: relative; }
+    .size-middle #text-part p span {
+      display: none; }
+    .size-middle #text-part p:last-child:before {
+      content: "["; }
+    .size-middle #text-part p:last-child:after {
+      content: "]"; }
+.size-middle #btn-part {
+  right: 0px;
+  display: block;
+  position: absolute; }
+.size-middle .nav-line {
+  width: 100%;
+  font-size: 14px;
+  height: 40px; }
+  .size-middle .nav-line li {
+    width: 16.12903%;
+    font-size: 14px;
+    margin: 0 auto;
+    height: 25px; }
+    .size-middle .nav-line li a p img {
+      margin: 0;
+      display: none; }
+  .size-middle .nav-line .menu-describe {
+    display: none; }
+  .size-middle .nav-line .menu-title {
+    padding: 0;
+    margin: 0;
+    background-image: none; }
+  .size-middle .nav-line .badge {
+    display: none; }
+
+/*# sourceMappingURL=site_middle.css.map */
