@@ -44,7 +44,7 @@ $this->registerJs("".
       return false;
     }
 
-    main.ajax(form.attr('action'),form.serialize(),function(answer){
+    $().main().ajax(form.attr('action'),form.serialize(),function(answer){
       $('#count-request').modal('hide');
     });
 

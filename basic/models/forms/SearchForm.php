@@ -18,6 +18,12 @@ class SearchForm extends Model{
   public $over_price = 0;
   public $over_price_list = [];
   public $history = [];
+  public $catalog = [
+          ["label" => "Общие"       ,'url'=> "#"  ],
+          ["label" => "Комплекты ТО",'url'=> "#"  ],
+          ["label" => "Масла"       ,'url'=> "#"  ],
+          ["label" => "Аксесуары"   ,'url'=> "#"  ],
+          ];
   
   /**
    * Возвращает список производителей запрашиваемого артикула
@@ -77,6 +83,12 @@ class SearchForm extends Model{
             ['cross', 'boolean'],
             ['over_price','integer']
             ];
+  }
+
+  public function attributeLabels() {
+    return [
+      'catalog' => "Каталоги",
+    ];
   }
   
 }

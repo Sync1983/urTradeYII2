@@ -8,8 +8,6 @@ use app\components\NewsWidget;
       <h3>Добро пожаловать на сайт АвтоТехСнаб - Вашего поставщика автомобильных запчастей.</h3>      
       <?= NewsWidget::widget()?>
       
-      
-      
       <div class="row">
         <h4>Для наших клиентов мы предлагаем:</h4>
         <div class="col-lg-4">
