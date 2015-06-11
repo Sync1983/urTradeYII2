@@ -28,7 +28,6 @@ $order_count  = $this->params['order_count'];
 $balance      = $this->params['balance'];
 $this->registerJs("var isGuest=".$user->isGuest);
 $this->registerJs("$().main(\"init\")");
-
 ?>
 
 <?php $this->beginPage() ?>
@@ -46,6 +45,7 @@ $this->registerJs("$().main(\"init\")");
 <?php $this->beginBody() ?>
     <div class="wrap resizeble">
       <?php app\components\MenuWidget::begin([
+        'default_over_price' => \yii::$app->request->get("op",0),
         'menu' => [
           [ 'url'   => ['basket/index'],
             'title' => 'Корзина',

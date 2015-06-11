@@ -26,10 +26,11 @@
     };
     
     self.getActiveOverPrice = function(){
-      if( !$('#over-price').val() ){
+      var value = $('input[name="op"]').val();      
+      if( !value ){
         return 0;
       }
-      return $('#over-price').val()*1;
+      return value*1;
     };
     
     self.onAddToBasket = function (e){
@@ -114,15 +115,25 @@
     };
     
     self.changeOverPrice  = function(){
-      var parent = $("div.panel-collapse.collapse.in");    
-      var table = parent.find("table");    
-      var table_class = $(table).dataTable();
-      table_class.api().draw(false);
+      var value = $(".over-price").val()+"";
+      var num_value = value.substring(0,value.length - 2) * 1;
+      $('input[name="op"]').val(num_value);
+      $(this).click(onChangeOverPrice);      
     };
     
     self.searchHelperButton = function(){
-      $(this).click(onSearchHelperButton);
+      $(this).click(onSearchHelperButton);      
     };
+    
+    function onChangeOverPrice (e){
+      var parent = $("div.panel-collapse.collapse.in");    
+      var table = parent.find("table");    
+      var table_class = $(table).dataTable();
+      var value = $(".over-price").val()+"";
+      var num_value = value.substring(0,value.length - 2) * 1;
+      $('input[name="op"]').val(num_value);
+      table_class.api().draw(false);      
+    }
     
     function onSearchHelperButton( e ){
       var item = e.currentTarget;

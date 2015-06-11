@@ -240,6 +240,10 @@ html, body {width: 100%;background-color: $page_color;}
           border-left: none;
           float: left;
           margin: 0;
+          &.cbx-company {
+            border-right: medium none;
+            border-radius: 0px;
+          }
         }
         button {
           border-radius: 0;

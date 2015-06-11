@@ -154,6 +154,9 @@ html, body {
         border-left: none;
         float: left;
         margin: 0; }
+        .navbar-3 form > ul > .buttons label.cbx-company {
+          border-right: medium none;
+          border-radius: 0px; }
       .navbar-3 form > ul > .buttons button {
         border-radius: 0;
         float: left; }
