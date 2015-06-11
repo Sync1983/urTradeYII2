@@ -4,6 +4,8 @@ use yii\helpers\Url;
 /* @var $this View */
 /* @var $model \app\models\forms\SearchForm */
 $model  = $this->params['search_model'];
+$this->registerJs('$(".over-price").selectpicker()');
+$this->registerJs('$(".over-price").main().changeOverPrice()');
 ?>
 
 <div class="menu-wrap resizeble">
@@ -12,7 +14,9 @@ $model  = $this->params['search_model'];
     <div class="head-buttons pull-right">
       <div id="text-part">
         <p><span>Вы вошли как: </span><?= $caption ?></p>
-        <p><span>Организация: </span><?= $company ?></p>
+        <?php if( $isCompany ): ?>
+          <p><span>Организация: </span><?= $company ?></p>
+        <?php endif;?>
       </div>
       <div id="btn-part">
         <a type="button" class="btn btn-info" href="<?= Url::to(['site/logout']) ?>">Выйти</a>
@@ -54,8 +58,13 @@ $model  = $this->params['search_model'];
               'pluginOptions'	 => ['threeState' => false,]
             ]);?>
           </div>
-          <label for= "cross" class="btn btn-info cbx-label">Аналоги</label>
-          
+          <label for= "cross" class="btn btn-info cbx-label <?= $isCompany?"cbx-company":"" ?>">Аналоги</label>
+          <?php if( $isCompany ):?>
+            <select class="over-price show-tick show-menu-arrow" data-style="btn-info" data-width="100px" data-size="5">
+              <?= $list ?>
+            </select>
+            <input type="hidden" name="op" value="<?= $model->over_price ?>"/>
+          <?php endif;?>
       </li>
       <li class="menu-button">
         <button class="btn btn-info"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" ></span> Меню</button>
