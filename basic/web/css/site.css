@@ -86,7 +86,17 @@ html, body {
   width: 150px;
   position: absolute; }
   .navbar-1 div.head-buttons #text-part {
-    display: inline-block; }
+    width: 250px;
+    right: 100%;
+    display: inline-block;
+    padding-top: 5px;
+    position: absolute; }
+    .navbar-1 div.head-buttons #text-part p {
+      padding: 0;
+      margin: 0;
+      font-weight: bold; }
+      .navbar-1 div.head-buttons #text-part p span {
+        font-weight: normal; }
   .navbar-1 div.head-buttons #btn-part .btn {
     float: right;
     margin: 1px 0 2px 0; }
@@ -110,7 +120,7 @@ html, body {
         border-radius: 5px 0 0 5px; }
     .navbar-3 form > ul > .search {
       margin-left: 115px;
-      padding-right: 318px;
+      padding-right: 300px;
       width: 100%; }
       .navbar-3 form > ul > .search input {
         width: 100%;
@@ -128,10 +138,22 @@ html, body {
       top: 0px;
       right: 0px;
       position: absolute; }
+      .navbar-3 form > ul > .buttons .checkbox-wrap {
+        top: 5px;
+        height: 34px;
+        padding: 0 4px;
+        margin: 0;
+        margin-right: -38px;
+        float: left;
+        border-radius: 0;
+        border-right: none;
+        position: relative; }
       .navbar-3 form > ul > .buttons label {
+        padding-left: 34px;
         border-radius: 0 5px 5px 0;
         border-left: none;
-        float: left; }
+        float: left;
+        margin: 0; }
       .navbar-3 form > ul > .buttons button {
         border-radius: 0;
         float: left; }
@@ -147,7 +169,7 @@ html, body {
 
 ul.nav-line {
   list-style: none;
-  width: 100%;
+  width: 95%;
   height: 75px;
   padding: 0;
   margin: 0 auto;
@@ -168,6 +190,7 @@ ul.nav-line {
     ul.nav-line li a:hover p {
       color: #5bc0de; }
     ul.nav-line li p.menu-title img {
+      top: -2px;
       width: 20px;
       height: 20px;
       left: -3px;
@@ -350,6 +373,19 @@ table.over-price-panel {
 
 #count-request {
   z-index: 2000; }
+
+.search-articul-btn {
+  width: 10px;
+  height: 10px;
+  margin: -2px 5px;
+  background-image: url("/img/search.png");
+  background-size: 10px 20px;
+  background-repeat: none;
+  display: inline-block;
+  cursor: pointer;
+  position: relative; }
+  .search-articul-btn:hover {
+    background-position: 0 -10px; }
 
 /* 
     Created on : 04.03.2015, 22:31:31

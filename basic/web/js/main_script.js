@@ -73,7 +73,7 @@
       var query = {};
       var form_query = $("#search-form").serializeArray(); 
       var table_class = $(head).find("table.out-data").DataTable();
-
+      
       function onSuccess(data){    
         var id = data.id;
         var parts = data.parts;    
@@ -119,7 +119,19 @@
       var table_class = $(table).dataTable();
       table_class.api().draw(false);
     };
-
+    
+    self.searchHelperButton = function(){
+      $(this).click(onSearchHelperButton);
+    };
+    
+    function onSearchHelperButton( e ){
+      var item = e.currentTarget;
+      var parent = $(item).parent();
+      var articul = parent.text();
+      $("#search-string").val(articul);
+      $("#search-btn").click();
+    }
+    
     function _init_helper_position(search_bar, search_helper){
       search_helper.css({left: search_bar.offset().left});
       $( window ).resize(function(){ search_helper.css({left: search_bar.offset().left});});
@@ -199,8 +211,7 @@
       }
     }  
     
-    if( item === "init" ){
-      console.log("init");
+    if( item === "init" ){      
       _init();  
     }
     return self;

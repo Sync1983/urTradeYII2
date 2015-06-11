@@ -38,9 +38,9 @@ $this->registerJs("$().main(\"init\")");
     <meta charset="<?= Yii::$app->charset ?>"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name='yandex-verification' content='5d5d11ea4a8128ae' />
-	<?= Html::csrfMetaTags() ?>
+    <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-<?php $this->head() ?>
+    <?php $this->head() ?>
   </head>
   <body>
 <?php $this->beginBody() ?>
@@ -82,30 +82,6 @@ $this->registerJs("$().main(\"init\")");
       ]);
         app\components\MenuWidget::end();
       ?>
-<!--      
-        <div class="dropdown" id="dropdown-menu">
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-            <span class="glyphicon glyphicon-th-list"></span> Меню <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-            <li><a role="menuitem" tabindex="-1" href="<?= Url::to(['basket/index']);   ?>">Корзина</a></li>
-            <li><a role="menuitem" tabindex="-1" href="<?= Url::to(['order/index']);    ?>">Заказы</a></li>
-            <li role="presentation" class="divider"></li>
-            <li><a role="menuitem" tabindex="-1" href="<?= Url::to(['balance/index']);  ?>">Баланс</a></li>
-            <li><a role="menuitem" tabindex="-1" href="<?= Url::to(['site/setup']);     ?>">Профиль</a></li>
-            <li role="presentation" class="divider"></li>
-            <li class="dropdown-submenu">
-              <a role="menuitem" tabindex="-1" href="<?= Url::to(['site/setup']);     ?>">Каталоги</a>
-              <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li>Общий</li>
-              </ul>
-            </li>
-            <li role="presentation" class="divider"></li>
-            <li><a role="menuitem" tabindex="-1" href="<?= Url::to(['site/consumers']); ?>">Клиентам</a></li>
-            <li><a role="menuitem" tabindex="-1" href="<?= Url::to(['site/contact']);   ?>">Контакты</a></li>
-          </ul>
-        </div>		     
-      </div>-->
 
       <div class="container">
       <?= Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],])?>
