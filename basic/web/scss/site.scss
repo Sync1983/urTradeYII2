@@ -153,8 +153,20 @@ html, body {width: 100%;background-color: $page_color;}
     width: 150px;    
     position: absolute;
     
-    #text-part{    
+    #text-part{   
+      width:250px;
+      right: 100%;
       display: inline-block;
+      padding-top: 5px;
+      position: absolute;
+      & p {
+        padding: 0;
+        margin: 0;
+        font-weight: bold;
+        span {
+          font-weight: normal;
+        }
+      }
     }  
     
     #btn-part{
@@ -191,7 +203,7 @@ html, body {width: 100%;background-color: $page_color;}
       }
       & > .search {
         margin-left: 115px;
-        padding-right: 318px; 
+        padding-right: 300px; 
         width: 100%;
         input {
           width: 100%;
@@ -211,11 +223,23 @@ html, body {width: 100%;background-color: $page_color;}
         top: 0px;
         right: 0px;        
         position: absolute;
-        
+        .checkbox-wrap{
+          top: 5px;
+          height: 34px;
+          padding: 0 4px;
+          margin: 0;
+          margin-right: -38px;
+          float: left; 
+          border-radius: 0;
+          border-right: none;
+          position:relative;
+        }
         label {
+          padding-left: 34px;
           border-radius: 0 5px 5px 0;
           border-left: none;
           float: left;
+          margin: 0;
         }
         button {
           border-radius: 0;
@@ -243,7 +267,7 @@ html, body {width: 100%;background-color: $page_color;}
 
 ul.nav-line {    
     list-style: none;
-    width: 100%;
+    width: 95%;
     height: $nav_height;
     
     padding: 0;
@@ -273,11 +297,12 @@ ul.nav-line {
       }
         
       & p.menu-title{        
-        img{          
+        img {
+          top: -2px;
           width: 20px;
           height: 20px;
           left: -3px;
-          margin-left: -10px;
+          margin-left: -10px;          
           display: inline-block;          
           position: relative;
         }
@@ -484,6 +509,22 @@ table.over-price-panel{
 
 #count-request{
   z-index: 2000;
+}
+
+.search-articul-btn{  
+  width: 10px;
+  height: 10px;  
+  margin: -2px 5px;
+  background-image: url('/img/search.png');
+  background-size: 10px 20px;
+  background-repeat: none;
+  display: inline-block;  
+  cursor: pointer;
+  position: relative;
+  
+  &:hover{
+    background-position: 0 -10px;
+  }
 }
 
 @import "site_middle.scss";

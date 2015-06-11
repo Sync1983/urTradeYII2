@@ -72,11 +72,7 @@ $JS = <<< JS_END
     var values = $values;
     var type = $(this).val();
     var percent = values[type];
-    var sum = $model->real_sum;
-    console.log(values);
-    console.log(type);
-    console.log(percent);
-    console.log(sum);
+    var sum = $model->real_sum;    
     $("#yandexpayform-sum").val( (sum/(1-percent)).toFixed(2) );
     $(".field-yandexpayform-sum").children(".help-block").children("b").text( (percent*100).toFixed(2) + "%");
   });

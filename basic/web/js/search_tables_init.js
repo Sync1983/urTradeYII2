@@ -68,7 +68,7 @@ $( ".out-data" ).DataTable( {
         sort: 'data-order'
       },
       title: 'Артикул',
-      width: '5%'
+      width: '8%'
     },
     {data: 'name', title: 'Наименование', width: '50%'},
     {data: 'price', title: 'Цена', width: '5%',
@@ -113,6 +113,17 @@ $( ".out-data" ).DataTable( {
     else if ( data.shiping * 1 < 2 ) {
       $( row ).addClass( "text-info" );
     }
+    console.log(123);
+    var articul = $( row ).children( "td" ).eq(1);
+    //var text = $('<span></span>');
+    var wrap = $('<span></span>');
+    
+    //text.text(data.articul);
+    //articul.html(text);
+    wrap.addClass("search-articul-btn");
+    //wrap.css('backgroundImage','/img/search.png');
+    articul.append(wrap);
+    $(wrap).main().searchHelperButton();
   },
   rowCallback: function (row, data) {
     

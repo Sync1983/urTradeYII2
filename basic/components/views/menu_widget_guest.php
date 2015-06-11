@@ -34,20 +34,21 @@ $model  = $this->params['search_model'];
         <?= kartik\dropdown\DropdownX::widget(['items' => $model->catalog]);?>
       </li>
       <li class="search">
-        <input type="text" name="search_text" id="search-string" placeholder="Введите номер запчасти" autocomplete="off"/>
+        <input type="text" name="search_text" id="search-string" placeholder="Введите номер запчасти" autocomplete="off" value="<?= $model->search_text?>" />
       </li>
       <li class="buttons">
-        <button class="btn btn-info" type="submit">
+        <button id="search-btn" class="btn btn-info" type="submit">
           <span class="icon glyphicon glyphicon-search" aria-hidden="true"></span>
           <span class="text">Искать</span></button>
-        <label for="cross" class="btn btn-info" style="padding: 4px 10px;">
-        <?= kartik\checkbox\CheckboxX::widget([
-            'name'			 => 'cross',
-            'value'			 => $model->cross,
-            'pluginOptions'	 => ['threeState' => false]
-        ]);?>
-          Аналоги
-        </label>
+          <div class="checkbox-wrap">
+            <?= kartik\checkbox\CheckboxX::widget([
+              'options' => ['id'  			 => 'cross'],
+              'name'			 => 'cross',
+              'value'			 => $model->cross,
+              'pluginOptions'	 => ['threeState' => false,]
+            ]);?>
+          </div>
+          <label for= "cross" class="btn btn-info cbx-label">Аналоги</label>
       </li>
       <li class="menu-button">
         <button class="btn btn-info"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" ></span> Меню</button>
