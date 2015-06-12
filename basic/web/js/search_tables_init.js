@@ -132,7 +132,7 @@ $( ".out-data" ).DataTable( {
       count.append(info);      
     }
     
-    if( data.lot_quantity ){
+    if( (data.lot_quantity) && (data.lot_quantity>1) ){
       info = $('<span></span>').addClass("lot-articul-btn");
       $(info).main().infoBtnHover("Минимальная партия для заказа: " + data.lot_quantity + " шт.");
       count.append(info);
