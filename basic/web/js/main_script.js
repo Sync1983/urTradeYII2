@@ -101,7 +101,7 @@
               .attr("id","part-loader"+key)
               .text(" ");
         textLine.append(newLoader);
-        query = form_query;
+        query = form_query.slice();        
         query.push({
           name: "maker_id",
           value: value
