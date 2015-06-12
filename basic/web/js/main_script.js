@@ -125,6 +125,13 @@
       $(this).click(onSearchHelperButton);      
     };
     
+    self.infoBtnHover = function(text){
+      $(this).tooltip({
+        html:true,        
+        title: "<p class=\"tooltip-text\">" + text + "</p>"
+      });
+    };
+    
     function onChangeOverPrice (e){
       var parent = $("div.panel-collapse.collapse.in");    
       var table = parent.find("table");    

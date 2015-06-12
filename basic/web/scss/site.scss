@@ -515,20 +515,42 @@ table.over-price-panel{
   z-index: 2000;
 }
 
-.search-articul-btn{  
+%small-table-btn{
   width: 10px;
   height: 10px;  
   margin: -2px 5px;
-  background-image: url('/img/search.png');
   background-size: 10px 20px;
   background-repeat: none;
   display: inline-block;  
   cursor: pointer;
   position: relative;
-  
-  &:hover{
-    background-position: 0 -10px;
-  }
+  &:hover{background-position: 0 -10px;}
+}
+
+.search-articul-btn{  
+  @extend %small-table-btn;
+  background-image: url('/img/search.png');  
+}
+
+.info-articul-btn{
+  @extend %small-table-btn;
+  background-image: url('/img/info_icon.png');    
+}
+.lot-articul-btn{
+  @extend %small-table-btn;
+  background-image: url('/img/lot_icon.png');    
+}
+.tooltip-text{  
+  min-width: 450px;
+  word-wrap: break-word;
+  word-break: break-all;  /* не поддерживает Opera12.14, значение keep-all не поддерживается IE, Chrome */   
+  white-space: pre-line;
+  font-size: 10px;
+  line-height: 10px;
+  color: #76C2DB;
+}
+.tooltip-inner{
+  max-width: 500px !important;
 }
 
 @import "site_middle.scss";

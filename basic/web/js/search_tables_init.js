@@ -106,6 +106,18 @@ $( ".out-data" ).DataTable( {
   },
   order: [ [ 1, 'asc' ], [ 3, 'asc' ], [ 4, 'asc' ] ],
   createdRow: function (row, data, dataIndex) {
+    
+    var articul,
+        wrap,
+        info,
+        count;
+
+    articul = $( row ).children( "td" ).eq(1);
+    count   = $( row ).children( "td" ).eq(6);
+    
+    wrap    = $('<span></span>').addClass("search-articul-btn");
+    articul.append(wrap);
+    $(wrap).main().searchHelperButton();
 
     if ( data.shiping * 1 === 0 ) {
       $( row ).addClass( "text-success" );
@@ -114,12 +126,20 @@ $( ".out-data" ).DataTable( {
       $( row ).addClass( "text-info" );
     }
     
-    var articul = $( row ).children( "td" ).eq(1);    
-    var wrap = $('<span></span>');
-    wrap.addClass("search-articul-btn");    
-    articul.append(wrap);
-    $(wrap).main().searchHelperButton();
+    if( data.info ){
+      info = $('<span></span>').addClass("info-articul-btn");
+      $(info).main().infoBtnHover(data.info);
+      count.append(info);      
+    }
+    
+    if( data.lot_quantity ){
+      info = $('<span></span>').addClass("lot-articul-btn");
+      $(info).main().infoBtnHover("Минимальная партия для заказа: " + data.lot_quantity + " шт.");
+      count.append(info);
+    }
+    
   },
+  
   rowCallback: function (row, data) {
     
     var op = data.price * 1 + $().main().getActiveOverPrice() * data.price / 100;
