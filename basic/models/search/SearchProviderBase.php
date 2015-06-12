@@ -153,12 +153,13 @@ class SearchProviderBase extends Object {
   protected function onlineRequest($url="",$param=[],$is_post=true) {
     $ch = curl_init();
     $this->onlineRequestHeaders($ch);
-    curl_setopt($ch, CURLOPT_VERBOSE, false);
+    
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, $is_post==1);
     
     $params = http_build_query(array_merge($param,$this->_default_params));
-        
+    
     if( $is_post ) {
       curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
     } else  {
@@ -167,11 +168,12 @@ class SearchProviderBase extends Object {
     
     curl_setopt($ch, CURLOPT_URL, $url);
     
+    $answer = curl_exec($ch);    
+
     if( curl_errno($ch)!==0 ){
       $answer = "[]";
-    } else {
-      $answer = curl_exec($ch);	  
     }
+    
     curl_close($ch);
     return $answer;
   }
