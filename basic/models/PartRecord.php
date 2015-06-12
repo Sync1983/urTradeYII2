@@ -19,13 +19,48 @@ class PartRecord extends ActiveRecord {
    * @param array $cond Условия поиска
    * @return array
    */
-  public static function getPartsForOnlineProvider($cond=[]){
-    return self::find()->
-        where($cond)->
-        orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])->
-        limit(20)->
-        asArray()->
-        all();
+  public static function getPartsForOnlineProvider($clsid,$part_id,$cross=false){
+    
+    $condition_cross = [  "AND",
+                          ["provider"         => $clsid] ,
+                          ["search_articul"   => strval($part_id)],
+                          ['NOT','articul',strval($part_id)]
+                       ];
+    $condition_not_cross = [  "AND",
+                          ["provider"         => $clsid] ,
+                          ["search_articul"   => strval($part_id)],
+                          ['articul'          => strval($part_id)]
+                       ];
+    
+    if( $cross ){
+
+      $part1 = self::find()
+              -> where($condition_cross)
+              -> orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])
+              -> limit( 15)
+              -> asArray()
+              -> all();
+      //Добавим 5 строк оригинала, специально для Сереги
+      $part2 = self::find()
+              -> where($condition_not_cross)
+              -> orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])
+              -> limit( 5)
+              -> asArray()
+              -> all();
+      
+    } else {
+
+      $part1 = self::find()
+              -> where($condition_not_cross)
+              -> orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])
+              -> limit( 20)
+              -> asArray()
+              -> all();
+      $part2 = [];
+
+    }
+    
+    return array_merge($part1,$part2);
   }
   /**
    * Возвращает все запчасти для указанных условий
