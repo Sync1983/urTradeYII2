@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* 
     Created on : 04.03.2015, 22:31:31
     Author     : Sync<atc58.ru>
@@ -377,18 +378,39 @@ table.over-price-panel {
 #count-request {
   z-index: 2000; }
 
-.search-articul-btn {
+.search-articul-btn, .info-articul-btn, .lot-articul-btn {
   width: 10px;
   height: 10px;
   margin: -2px 5px;
-  background-image: url("/img/search.png");
   background-size: 10px 20px;
   background-repeat: none;
   display: inline-block;
   cursor: pointer;
   position: relative; }
-  .search-articul-btn:hover {
+  .search-articul-btn:hover, .info-articul-btn:hover, .lot-articul-btn:hover {
     background-position: 0 -10px; }
+
+.search-articul-btn {
+  background-image: url("/img/search.png"); }
+
+.info-articul-btn {
+  background-image: url("/img/info_icon.png"); }
+
+.lot-articul-btn {
+  background-image: url("/img/lot_icon.png"); }
+
+.tooltip-text {
+  min-width: 450px;
+  word-wrap: break-word;
+  word-break: break-all;
+  /* ╨╜╨╡ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╨╡╤В Opera12.14, ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ keep-all ╨╜╨╡ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╨╡╤В╤Б╤П IE, Chrome */
+  white-space: pre-line;
+  font-size: 10px;
+  line-height: 10px;
+  color: #76C2DB; }
+
+.tooltip-inner {
+  max-width: 500px !important; }
 
 /* 
     Created on : 04.03.2015, 22:31:31
