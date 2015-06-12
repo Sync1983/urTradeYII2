@@ -49,6 +49,7 @@ class SearchProviderBase extends Object {
     PartRecord::deleteAll(['provider'=>$this->_CLSID,'search_articul'=>$part_id,'for_user'=>$uid]);
     foreach ($answer[ $this->_part_list_id ] as $part){
       $item = $this->_dataToStruct($part,['search_articul'=>$part_id,'maker_id'=>$maker_id]);      
+      
       $part_model = new PartRecord();
       $part_model->setAttribute("for_user", $uid);
       $part_model->setAttributes($item,false);
@@ -117,7 +118,7 @@ class SearchProviderBase extends Object {
    * @return mixed
    */
   protected function convertMakersAnswerToStandart($data){    
-    if(!$data || !isset($data[ $this->_maker_list_id ])){
+    if(!$data || !isset($data[ $this->_maker_list_id ]) ){
       return [];
     }
     $result = [];    
@@ -242,6 +243,14 @@ class SearchProviderBase extends Object {
       return [];
     }    
     $json = json_encode($xml_string,JSON_FORCE_OBJECT);    
+    return json_decode($json,true);
+  }
+  /**
+   * Преобразуем входящую JSON строку в массив
+   * @param string $json
+   * @return array
+   */
+  protected function jsonToArray($json){
     return json_decode($json,true);
   }
   /**
