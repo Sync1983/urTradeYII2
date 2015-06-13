@@ -15,8 +15,7 @@ class MenuWidget extends Widget {
   public $menu = [];
   public $default_over_price = 0;
   
-  public function run(){
-    var_dump($this->default_over_price);
+  public function run(){    
     $caption    = \yii::$app->user->getCaption();
     $company    = \yii::$app->user->getCompanyName();
     $isAdmin    = \yii::$app->user->isAdmin();

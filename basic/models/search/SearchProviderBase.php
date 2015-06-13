@@ -55,16 +55,9 @@ class SearchProviderBase extends Object {
       $part_model->setAttributes($item,false);
       $part_model->save();
     }
-    $and_params = [ "AND",
-                    ["provider"         => $this->_CLSID] ,
-                    ["search_articul"   => strval($part_id)]
-      ];
-    if( !$cross ){
-      $and_params[] = ['articul' => strval($part_id)];
-    }
-    $cond = PartRecord::getCollection()->buildCondition($and_params);
+    
     if( !$full ){
-      return PartRecord::getPartsForOnlineProvider($cond);
+      return PartRecord::getPartsForOnlineProvider($this->_CLSID,$part_id, $cross);
     }
     return PartRecord::getAllPartsForOnlineProvider($cond);
   }
