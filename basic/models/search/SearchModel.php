@@ -72,6 +72,8 @@ class SearchModel extends Model{
     }
     $search = SearchProviderBase::_clearStr($this->search_text);
     $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);
+    $isAdmin = \yii::$app->user->isAdmin();
+    $provider_name = $class->getName();
 
     $answer_data = [];
     foreach ($parts as $key=>$part){
@@ -80,12 +82,17 @@ class SearchModel extends Model{
         if( !isset($data["info"]) || is_array($data["info"]) ){
           $data["info"] = "";
         }
-
+        if( $isAdmin ){
+          $stock = isset($data['stock'])?$data['stock']:"";
+          $ext_info = "<b>[$provider_name : $stock]</b> ";
+        } else {
+          $ext_info = "";
+        }
         $answer_data[$key] = [
           "id"          => strval($data["_id"]),
           "articul"     => $data["articul"],
           "producer"    => $data["producer"],
-          "name"        => $data["name"],
+          "name"        => $ext_info . $data["name"],
           "price"       => $data["price"],
           "shiping"     => $data["shiping"],
           "info"        => strval($data["info"]),

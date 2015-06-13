@@ -17,7 +17,7 @@ $this->registerJs('$(".over-price").main().changeOverPrice()');
         <?php if( $isCompany ): ?>
           <p><span>Организация: </span><?= $company ?></p>
         <?php endif;?>
-      </div>
+      </div>      
       <div id="btn-part">
         <a type="button" class="btn btn-info" href="<?= Url::to(['site/logout']) ?>">Выйти</a>
         <?php if( $isAdmin ):?>

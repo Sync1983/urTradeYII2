@@ -95,9 +95,15 @@ html, body {
     .navbar-1 div.head-buttons #text-part p {
       padding: 0;
       margin: 0;
-      font-weight: bold; }
+      font-weight: bold;
+      line-height: 24px; }
       .navbar-1 div.head-buttons #text-part p span {
         font-weight: normal; }
+  .navbar-1 div.head-buttons .contact-data {
+    right: 250% !important;
+    font-weight: bolder;
+    font-size: 16pt;
+    font-family: Arial,monospace; }
   .navbar-1 div.head-buttons #btn-part .btn {
     float: right;
     margin: 1px 0 2px 0; }
