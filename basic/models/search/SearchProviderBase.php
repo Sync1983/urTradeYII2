@@ -59,7 +59,7 @@ class SearchProviderBase extends Object {
     if( !$full ){
       return PartRecord::getPartsForOnlineProvider($this->_CLSID,$part_id, $cross);
     }
-    return PartRecord::getAllPartsForOnlineProvider($cond);
+    return PartRecord::getAllPartsForOnlineProvider($this->_CLSID,$part_id, $cross);
   }
   /**
    * Возвращает список фирм-производителей для указанного артикула

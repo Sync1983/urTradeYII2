@@ -33,7 +33,9 @@ class SearchModel extends Model{
 
     $search = SearchProviderBase::_clearStr($this->search_text);    
     $parts = $class->getPartList($search,  $this->maker_id,  $this->cross, true);
-    
+    $isAdmin = \yii::$app->user->isAdmin();
+    $provider_name = $class->getName();
+
     $answer_data = [];    
     foreach ($parts as $key=>$part){      
         $data = $parts[$key];
@@ -41,21 +43,30 @@ class SearchModel extends Model{
         if( !isset($data["info"]) || is_array($data["info"]) ){
           $data["info"] = "";
         }
-	  
-        $answer_data[$key] = [
-          "id"          => strval($data["_id"]),
-          "articul"     => $data["articul"],
-          "producer"    => $data["producer"],
-          "name"        => $data["name"],
-          "price"       => $data["price"],
-          "shiping"     => $data["shiping"],
-          "info"        => strval($data["info"]),
-          "update_time" => $data["update_time"],
-          "is_original" => boolval($data["is_original"]),
-          "count"       => $data["count"],
-          "lot_quantity"=> $data["lot_quantity"],
-          "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
-        ];
+        if( $isAdmin ){
+          $stock = isset($data['stock'])?$data['stock']:"";
+          $ext_info = "<b>[$provider_name : $stock]</b> ";
+        } else {
+          $ext_info = "";
+        }
+        try{
+          $answer_data[$key] = [
+            "id"          => strval($data["_id"]),
+            "articul"     => $data["articul"],
+            "producer"    => $data["producer"],
+            "name"        => $ext_info . strval($data["name"]),
+            "price"       => $data["price"],
+            "shiping"     => $data["shiping"],
+            "info"        => strval($data["info"]),
+            "update_time" => $data["update_time"],
+            "is_original" => boolval($data["is_original"]),
+            "count"       => $data["count"],
+            "lot_quantity"=> $data["lot_quantity"],
+            "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
+          ];
+        } catch (\Exception $e){
+          \yii::trace("Error: ".$e->getMessage());
+        }
     }
     return $answer_data;
   }  
@@ -88,20 +99,24 @@ class SearchModel extends Model{
         } else {
           $ext_info = "";
         }
-        $answer_data[$key] = [
-          "id"          => strval($data["_id"]),
-          "articul"     => $data["articul"],
-          "producer"    => $data["producer"],
-          "name"        => $ext_info . $data["name"],
-          "price"       => $data["price"],
-          "shiping"     => $data["shiping"],
-          "info"        => strval($data["info"]),
-          "update_time" => $data["update_time"],
-          "is_original" => boolval($data["is_original"]),
-          "count"       => $data["count"],
-          "lot_quantity"=> $data["lot_quantity"],
-          "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
-        ];
+        try{
+          $answer_data[$key] = [
+            "id"          => strval($data["_id"]),
+            "articul"     => $data["articul"],
+            "producer"    => $data["producer"],
+            "name"        => $ext_info . strval($data["name"]),
+            "price"       => $data["price"],
+            "shiping"     => $data["shiping"],
+            "info"        => strval($data["info"]),
+            "update_time" => $data["update_time"],
+            "is_original" => boolval($data["is_original"]),
+            "count"       => $data["count"],
+            "lot_quantity"=> $data["lot_quantity"],
+            "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
+          ];
+        } catch (\Exception $e){
+          \yii::trace("Error: ".$e->getMessage());
+        }
     }
     return $answer_data;
   }

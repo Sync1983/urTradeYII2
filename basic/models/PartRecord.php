@@ -67,9 +67,13 @@ class PartRecord extends ActiveRecord {
    * @param array $cond Условия поиска
    * @return array
    */
-  public static function getAllPartsForOnlineProvider($cond=[]){
+  public static function getAllPartsForOnlineProvider($clsid,$part_id,$cross=false){
+    $condition = [ "AND",
+                   ["provider"         => $clsid] ,
+                   ["search_articul"   => strval($part_id)],                   
+                 ];
     return self::find()->
-        where($cond)->
+        where($condition)->
         orderBy(["price"=>SORT_ASC,"shiping"=>SORT_ASC])->        
         asArray()->
         all();
