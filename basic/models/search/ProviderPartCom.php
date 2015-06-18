@@ -9,7 +9,7 @@ namespace app\models\search;
 use app\models\search\SearchProviderBase;
 
 class ProviderPartCom extends SearchProviderBase{
-  const CLSID = 006;
+  const CLSID = 6;
   const Name  = "PartCom";
   protected $url = "http://www.part-kom.ru/engine/api/v1/"; 
   protected $_maker_list_id = 'list';

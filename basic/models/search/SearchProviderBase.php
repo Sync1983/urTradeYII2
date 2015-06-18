@@ -42,7 +42,7 @@ class SearchProviderBase extends Object {
         
     if( !isset($answer[ $this->_part_list_id ]) ){return [];}
     
-    if( !isset($answer[ $this->_part_list_id ][0]) ) {
+    if( !isset($answer[ $this->_part_list_id ][0]) && !empty($answer[ $this->_part_list_id ]) ) {
      $answer[ $this->_part_list_id ] = [ $answer[ $this->_part_list_id ] ];
     } 
     $uid = \yii::$app->user->getId();
@@ -122,10 +122,10 @@ class SearchProviderBase extends Object {
     foreach ($data[ $this->_maker_list_id ] as $value) {      
       $name     = (isset($value[ $this->_maker_name ]))?$value[ $this->_maker_name ]  : false;      
       $id       = (isset($value[ $this->_maker_id ]))?  $value[ $this->_maker_id ]	  : false;      
-	  if( $name && $id ) {
-		$result[$name] = [$clsid => $id];
-	  }
-    }
+      if( $name && $id ) {
+        $result[$name] = [$clsid => $id];
+      }
+    }    
     return $result;    
   }
   /**

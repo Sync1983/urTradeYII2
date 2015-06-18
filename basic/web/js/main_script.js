@@ -78,7 +78,7 @@
       function onSuccess(data){    
         var id = data.id;
         var parts = data.parts;    
-        console.log(parts);        
+        
         $(textLine).find("div#part-loader"+id).remove();
         var rows = table_class.rows;
         var rows_part = rows.add(parts);

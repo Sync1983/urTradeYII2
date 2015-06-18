@@ -10,7 +10,7 @@ namespace app\models\search;
 use app\models\search\SearchProviderBase;
 
 class ProviderAutoEuroOnline extends SearchProviderBase{
-  const CLSID = 007;
+  const CLSID = 7;
   const Name  = "AutoEuroOnline";
   protected $url = "http://online.autoeuro.ru/ae_server/srv_main.php";
   protected $_maker_list_id = 'makers';

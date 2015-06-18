@@ -6,12 +6,11 @@
  * @author Sync<atc58.ru>
  */
 namespace app\models\search;
-use yii;
+
 use app\models\search\SearchProviderBase;
-use app\models\PartRecord;
 
 class ProviderIxora extends SearchProviderBase{
-  const CLSID = 004;
+  const CLSID = 4;
   const Name  = "Ixora";
   protected $url = "http://ws.auto-iksora.ru:83/searchdetails/searchdetails.asmx"; 
   protected $_maker_list_id = 'row';
