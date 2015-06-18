@@ -5,7 +5,7 @@ use app\models\search\SearchProviderFile;
 use PHPExcel_IOFactory;
 
 class ProviderAutoEuro extends SearchProviderFile {
-  const CLSID = 005;  
+  const CLSID = 5;  
   const name = "AutoEuro";
   
   protected $skip_lines = 5;

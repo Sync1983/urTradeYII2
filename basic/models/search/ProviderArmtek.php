@@ -8,7 +8,7 @@ namespace app\models\search;
 use app\models\search\SearchProviderFile;
 
 class ProviderArmtek extends SearchProviderFile{
-  const CLSID = 002;  
+  const CLSID = 2;  
   const name = "Armtek";
   protected $skip_lines = 1;
   protected $convert_string = true;

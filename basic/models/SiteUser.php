@@ -117,7 +117,8 @@ class SiteUser extends User{
    */
   public function getUserPrice($start_price){
     if(!is_numeric($start_price)){
-      throw new \yii\base\InvalidValueException("Ошибка в формате цены");
+      \yii::error("Ошибка в формате цены " . json_encode($start_price));
+      return 0;
     }
     
     $over_price = ArrayHelper::getValue(yii::$app->params, 'guestOverPrice', 18.0);

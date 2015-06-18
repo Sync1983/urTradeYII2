@@ -10,7 +10,7 @@ namespace app\models\search;
 use app\models\search\SearchProviderBase;
 
 class ProviderOnline extends SearchProviderBase{
-  const CLSID = 001;
+  const CLSID = 1;
   const Name  = "Online";
   protected $url = "http://onlinezakaz.ru/xmlprice.php"; 
   protected $_maker_list_id = 'detail';

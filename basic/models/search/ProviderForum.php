@@ -8,7 +8,7 @@ namespace app\models\search;
 use app\models\search\SearchProviderFile;
 
 class ProviderForum extends SearchProviderFile{
-  const CLSID = 003;  
+  const CLSID = 3;  
   const name = "Forum";
   protected $skip_lines = 1;
   protected $convert_string = true;
