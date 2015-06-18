@@ -61,8 +61,11 @@ class SearchAction extends Action {
     
     $model = new \app\models\search\SearchModel();
     if( $model->load(\yii::$app->request->post(),'') ){
+
+      $parts = $model->loadParts();
+      
       return [  'id'    => $model->getCurrentCLSID(),
-                'parts' => $model->loadParts() ];
+                'parts' => $parts ];
     }
     
     return [  'id'    => $model->getCurrentCLSID(),
@@ -74,8 +77,11 @@ class SearchAction extends Action {
 
     $model = new \app\models\search\SearchModel();
     if( $model->load(\yii::$app->request->post(),'') ){
+
+      $parts = $model->loadAllParts();
+
       return [  'id'    => $model->getCurrentCLSID(),
-                'parts' => $model->loadAllParts() ];
+                'parts' =>  $parts];
     }
 
     return [  'id'    => $model->getCurrentCLSID(),

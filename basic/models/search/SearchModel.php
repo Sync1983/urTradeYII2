@@ -90,21 +90,21 @@ class SearchModel extends Model{
     foreach ($parts as $key=>$part){
         $data = $parts[$key];
         $data["price"] = yii::$app->user->getUserPrice($data["price"]);
-        if( !isset($data["info"]) || is_array($data["info"]) ){
-          $data["info"] = "";
+        foreach ($data as $d_key=>$d_value){
+          if( is_array($d_value) ){
+            $data[$d_key] = "";
+          }
         }
-        if( $isAdmin ){
-          $stock = isset($data['stock'])?$data['stock']:"";
-          $ext_info = "<b>[$provider_name : $stock]</b> ";
-        } else {
-          $ext_info = "";
-        }
+        $data["info"] = isset($data["info"])?$data["info"]:"";
+        $data['stock']= isset($data['stock'])?$data['stock']:"";
+        $ext_info = $isAdmin?("<b>[$provider_name : " . $data['stock'] . " ]</b> "):"";
+        
         try{
           $answer_data[$key] = [
             "id"          => strval($data["_id"]),
             "articul"     => $data["articul"],
             "producer"    => $data["producer"],
-            "name"        => $ext_info . strval($data["name"]),
+            "name"        => $ext_info . $data["name"],
             "price"       => $data["price"],
             "shiping"     => $data["shiping"],
             "info"        => strval($data["info"]),
@@ -115,7 +115,7 @@ class SearchModel extends Model{
             "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
           ];
         } catch (\Exception $e){
-          \yii::trace("Error: ".$e->getMessage());
+          \yii::error("Error: ".$e->getMessage().  json_encode($data));
         }
     }
     return $answer_data;

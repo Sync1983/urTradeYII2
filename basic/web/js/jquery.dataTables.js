@@ -587,7 +587,7 @@
 			idx: iCol
 		} );
 		oSettings.aoColumns.push( oCol );
-	
+    
 		// Add search object for column specific search. Note that the `searchCols[ iCol ]`
 		// passed into extend can be undefined. This allows the user to give a default
 		// with only some of the parameters defined, and also not give a default
@@ -992,7 +992,7 @@
 	
 		oData._aData = aDataIn;
 		oSettings.aoData.push( oData );
-	
+		
 		/* Create the cells */
 		var nTd, sThisType;
 		var columns = oSettings.aoColumns;
@@ -1009,7 +1009,6 @@
 	
 		/* Add to the display array */
 		oSettings.aiDisplayMaster.push( iRow );
-	
 		/* Create the DOM information, or register it if already present */
 		if ( nTr || ! oSettings.oFeatures.bDeferRender )
 		{
