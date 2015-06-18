@@ -78,14 +78,16 @@
       function onSuccess(data){    
         var id = data.id;
         var parts = data.parts;    
-
+        console.log(parts);        
         $(textLine).find("div#part-loader"+id).remove();
-
-        table_class.rows.add(parts).draw();
+        var rows = table_class.rows;
+        var rows_part = rows.add(parts);
+        rows_part.draw();
         table_class.rows().data().sort();
 
         $("body").find("a.ref-to-basket").unbind("click");    
         $(head).find("a.ref-to-basket").click(self.onAddToBasket);
+        
       };
 
       function onError(data){

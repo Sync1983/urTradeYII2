@@ -72,7 +72,7 @@ $( ".out-data" ).DataTable( {
     },
     {data: 'name', title: 'Наименование', width: '50%'},
     {data: 'price', title: 'Цена', width: '5%',
-      render: function (data, type, row) {
+      render: function (data, type, row) {        
         var op = data.price * 1 + $().main().getActiveOverPrice() * data.price / 100;
         return type === 'display'?op.toFixed( 2 ):data;
       }
@@ -114,7 +114,6 @@ $( ".out-data" ).DataTable( {
 
     articul = $( row ).children( "td" ).eq(1);
     count   = $( row ).children( "td" ).eq(6);
-    
     wrap    = $('<span></span>').addClass("search-articul-btn");
     articul.append(wrap);
     $(wrap).main().searchHelperButton();
@@ -136,8 +135,7 @@ $( ".out-data" ).DataTable( {
       info = $('<span></span>').addClass("lot-articul-btn");
       $(info).main().infoBtnHover("Минимальная партия для заказа: " + data.lot_quantity + " шт.");
       count.append(info);
-    }
-    
+    }    
   },
   
   rowCallback: function (row, data) {
