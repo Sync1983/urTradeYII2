@@ -33,42 +33,7 @@ class SearchModel extends Model{
 
     $search = SearchProviderBase::_clearStr($this->search_text);    
     $parts = $class->getPartList($search,  $this->maker_id,  $this->cross, true);
-    $isAdmin = \yii::$app->user->isAdmin();
-    $provider_name = $class->getName();
-
-    $answer_data = [];    
-    foreach ($parts as $key=>$part){      
-        $data = $parts[$key];
-        $data["price"] = yii::$app->user->getUserPrice($data["price"]);
-        if( !isset($data["info"]) || is_array($data["info"]) ){
-          $data["info"] = "";
-        }
-        if( $isAdmin ){
-          $stock = isset($data['stock'])?$data['stock']:"";
-          $ext_info = "<b>[$provider_name : $stock]</b> ";
-        } else {
-          $ext_info = "";
-        }
-        try{
-          $answer_data[$key] = [
-            "id"          => strval($data["_id"]),
-            "articul"     => $data["articul"],
-            "producer"    => $data["producer"],
-            "name"        => $ext_info . strval($data["name"]),
-            "price"       => $data["price"],
-            "shiping"     => $data["shiping"],
-            "info"        => strval($data["info"]),
-            "update_time" => $data["update_time"],
-            "is_original" => boolval($data["is_original"]),
-            "count"       => $data["count"],
-            "lot_quantity"=> $data["lot_quantity"],
-            "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
-          ];
-        } catch (\Exception $e){
-          \yii::trace("Error: ".$e->getMessage());
-        }
-    }
-    return $answer_data;
+    return $this->convertDataToStd($parts,$class->getName());
   }  
   /**
    * Возвращает список запчастей для конкретного поставщика
@@ -83,43 +48,58 @@ class SearchModel extends Model{
     }
     $search = SearchProviderBase::_clearStr($this->search_text);
     $parts = $class->getPartList($search,  $this->maker_id,  $this->cross);
+    return $this->convertDataToStd($parts,$class->getName());
+  }
+
+  protected function clearData(&$item){
+    foreach ($item as $key=>$value){
+      if( is_array($value) ){
+            $item[$key] = "";
+      }
+    }
+    $item["info"] = isset($item["info"]) ?$item["info"]:"";
+    $item['stock']= isset($item['stock'])?$item['stock']:"";
+    return $item;
+  }
+
+  protected function itemToStd($data,$ext_info){    
+    try{
+      $item = [
+        "id"          => strval($data["_id"]),
+        "articul"     => $data["articul"],
+        "producer"    => $data["producer"],
+        "name"        => $ext_info . $data["name"],
+        "price"       => $data["price"],
+        "shiping"     => $data["shiping"],
+        "info"        => strval($data["info"]),
+        "update_time" => $data["update_time"],
+        "is_original" => boolval($data["is_original"]),
+        "count"       => $data["count"],
+        "lot_quantity"=> $data["lot_quantity"],
+        "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
+      ];
+    } catch (\Exception $e){
+      \yii::error("Error: ".$e->getMessage().  json_encode($data));
+    }
+    return $item;
+  }
+
+  protected function convertDataToStd($parts_list,$provider_name = ""){
     $isAdmin = \yii::$app->user->isAdmin();
-    $provider_name = $class->getName();
 
     $answer_data = [];
-    foreach ($parts as $key=>$part){
-        $data = $parts[$key];
-        $data["price"] = yii::$app->user->getUserPrice($data["price"]);
-        foreach ($data as $d_key=>$d_value){
-          if( is_array($d_value) ){
-            $data[$d_key] = "";
-          }
-        }
-        $data["info"] = isset($data["info"])?$data["info"]:"";
-        $data['stock']= isset($data['stock'])?$data['stock']:"";
-        $ext_info = $isAdmin?("<b>[$provider_name : " . $data['stock'] . " ]</b> "):"";
+    $parts = array_map(['self','clearData'], $parts_list);
+    
+    foreach ($parts as $part){
         
-        try{
-          $answer_data[$key] = [
-            "id"          => strval($data["_id"]),
-            "articul"     => $data["articul"],
-            "producer"    => $data["producer"],
-            "name"        => $ext_info . $data["name"],
-            "price"       => $data["price"],
-            "shiping"     => $data["shiping"],
-            "info"        => strval($data["info"]),
-            "update_time" => $data["update_time"],
-            "is_original" => boolval($data["is_original"]),
-            "count"       => $data["count"],
-            "lot_quantity"=> $data["lot_quantity"],
-            "data-order"	=> ( ( $data['articul'] === $data['search_articul'] )? "0": "10" ). "_" . $data["articul"],
-          ];
-        } catch (\Exception $e){
-          \yii::error("Error: ".$e->getMessage().  json_encode($data));
-        }
+        $part["price"] = yii::$app->user->getUserPrice($part["price"]);
+        $ext_info = $isAdmin?("<b>[$provider_name : " . $part['stock'] . " ]</b> "):"";
+        $answer_data[] = $this->itemToStd($part, $ext_info);
+        
     }
     return $answer_data;
   }
+
   /**
    * Возвращает класс поставщика по указанном CLSID
    * @param int $clsid
