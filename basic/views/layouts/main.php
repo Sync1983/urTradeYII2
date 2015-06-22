@@ -92,7 +92,18 @@ $this->registerJs("$().main(\"init\")");
 
     <footer class="footer resizeble">
       <p class="pull-left">&copy; AвтоТехСнаб <?= date('Y') ?></p>
-      <p class="pull-right"><?= Yii::powered() ?></p>
+      <div class="pull-right" style="padding-right: 10px;">
+      <ul class="pay-icons">
+        <li><?= \yii\helpers\Html::img('/img/pay_icon/yandexmoney.png',   ['alt'=>'Яндекс.Деньги',    'title' => 'Яндекс.Деньги'])    ?></li>
+			  <li><?= \yii\helpers\Html::img('/img/pay_icon/cards.png',         ['alt'=>'Банковская карта', 'title' => 'Банковская карта']) ?></li>
+			  <li><?= \yii\helpers\Html::img('/img/pay_icon/webmoney-white.png',['alt'=>'WebMoney',         'title' => 'WebMoney'])         ?></li>
+			  <li><?= \yii\helpers\Html::img('/img/pay_icon/alfabank-white.png',['alt'=>'Альфа-Клик',       'title' => 'Альфа-Клик'])       ?></li>
+			  <li><?= \yii\helpers\Html::img('/img/pay_icon/cash_rub.png',      ['alt'=>'Кассы и терминалы','title'=>'Кассы и терминалы'])  ?></li>
+			  <li><?= \yii\helpers\Html::img('/img/pay_icon/masterpass.png',    ['alt'=>'MasterPass',       'title'=>'MasterPass'])         ?></li>
+      </ul>
+      <p> <?= Yii::powered() ?></p>
+      </div>
+          
       <div class="locator">
         <ul>
           <li><a href="<?=  Url::home() ?>">Главная</a></li>
