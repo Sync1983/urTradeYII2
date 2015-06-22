@@ -106,6 +106,18 @@ class SearchProviderBase extends Object {
     throw new \BadMethodCallException("Метод должен быть описан в каждом потомке");
   }
   /**
+   * Преобразует имя в стандартное представление, для улучшения группировки
+   * Все символы - заглавные. Символы пробелов - одинарные. Иные символы заменены на дефисы
+   * @param string $name
+   */
+  protected function convertNameToStandart($name){
+    $step1 = strtoupper($name);
+    $step2 = preg_replace("/( )+/", "-", $step1);
+    $step3 = preg_replace("/[\/\+\\\]/", "-", $step2);
+    $step4 = preg_replace("/-+/","-", $step3);
+    return $step4;
+  }
+  /**
    * Преобразовываем полученный массив данных в стандартный массив обмена
    * @param mixed $data
    * @return mixed
@@ -120,10 +132,11 @@ class SearchProviderBase extends Object {
       $data[ $this->_maker_list_id ] = [ $data[ $this->_maker_list_id ] ];
     }
     foreach ($data[ $this->_maker_list_id ] as $value) {      
-      $name     = (isset($value[ $this->_maker_name ]))?$value[ $this->_maker_name ]  : false;      
-      $id       = (isset($value[ $this->_maker_id ]))?  $value[ $this->_maker_id ]	  : false;      
+      $name     = \yii\helpers\ArrayHelper::getValue($value, $this->_maker_name, false);
+      $id       = \yii\helpers\ArrayHelper::getValue($value, $this->_maker_id. false);
       if( $name && $id ) {
-        $result[$name] = [$clsid => $id];
+        $std_name = $this->convertNameToStandart($name);
+        $result[$std_name] = [$clsid => $id];
       }
     }    
     return $result;    

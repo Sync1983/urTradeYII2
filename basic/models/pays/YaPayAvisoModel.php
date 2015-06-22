@@ -73,7 +73,7 @@ class YaPayAvisoModel extends Model{
       ['customerNumber','validateCustomerNumber'],
       ['shopSumAmount', 'validateSumAmount'],
       ['shopSumCurrencyPaycash','in','strict'=>TRUE, 'range' =>['643','10643']],      
-      ['paymentType','in','strict'=>TRUE, 'range' =>['AC','PC','WM','AB']],
+      ['paymentType','in','strict'=>TRUE, 'range' =>['AC','PC','WM','AB','GP','MA']],
       [['shopArticleId','invoiceId','orderSumAmount','orderSumCurrencyPaycash','orderSumBankPaycash','shopSumBankPaycash','paymentPayerCode'],'safe'],
       [['requestDatetime','orderCreatedDatetime',
         'action','md5','shopId','customerNumber','orderNumber',

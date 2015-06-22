@@ -49,7 +49,7 @@ $(".show-full").each(function (index, item){
     }
     
     $("#full-list").modal('show');  
-    
+    table_class.page.len( -1 ).draw();
   });
 });
 
@@ -72,12 +72,19 @@ $( ".out-data" ).DataTable( {
     },
     {data: 'name', title: 'Наименование', width: '50%'},
     {data: 'price', title: 'Цена', width: '5%',
-      render: function (data, type, row) {        
+      /*render: function (data, type, row) {        
         var op = data.price * 1 + $().main().getActiveOverPrice() * data.price / 100;
         return type === 'display'?op.toFixed( 2 ):data;
-      }
+      }*/
     },
-    {data: 'shiping', title: 'Срок', width: '5%'},
+    {data: 'shiping', title: 'Срок', width: '5%',
+      render: function (data, type, row) {        
+        var sp = parseInt(data) + 1;        
+        if( isNaN(sp) ){
+          sp = 4;
+        }
+        return sp;//type === 'display'?sp:data;
+      }},
     {data: 'count', title: 'Наличие', width: '5%'},
     {data: null, title: 'В корзину', width: '7%', sortable: false,
       render: function (data, type, row) {

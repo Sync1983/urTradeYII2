@@ -33,14 +33,14 @@ class SearchForm extends Model{
     $makers = [];
     $search = SearchProviderBase::_clearStr($this->search_text);    
     foreach ($this->_providers as $provider){      
-	  $provider_list = $provider->getMakerList($search, $this->cross);
+      $provider_list = $provider->getMakerList($search, $this->cross);
       $makers = \yii\helpers\ArrayHelper::merge($makers,$provider_list);
     }
-	ksort($makers,SORT_STRING);
-	$makers_json = [];
-	foreach ($makers as $key => $value){
-	  $makers_json[ $key ] = json_encode($value,JSON_FORCE_OBJECT);	  
-	}
+    ksort($makers,SORT_STRING);
+    $makers_json = [];
+    foreach ($makers as $key => $value){
+      $makers_json[ $key ] = json_encode($value,JSON_FORCE_OBJECT);
+    }
     return $makers_json;
   }
   

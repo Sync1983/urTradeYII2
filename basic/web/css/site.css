@@ -68,6 +68,17 @@ html, body {
           padding: 0;
           margin: 0;
           vertical-align: top; }
+  .footer .pay-icons {
+    list-style: none outside;
+    margin: 0;
+    padding: 0;
+    display: inline-block; }
+    .footer .pay-icons li {
+      display: inline-block; }
+      .footer .pay-icons li img {
+        height: 16px;
+        opacity: 0.8;
+        margin: 0 -5px; }
 
 .navbar-small {
   height: 44.11765px; }

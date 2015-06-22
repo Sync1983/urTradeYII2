@@ -131,6 +131,22 @@ html, body {width: 100%;background-color: $page_color;}
         }
       }
     }
+    
+    .pay-icons{
+      list-style: none outside;
+      margin: 0;
+      padding: 0;
+      display: inline-block;
+      
+      & li {
+        display: inline-block;
+        img {
+          height: 16px;
+          opacity: 0.8;
+          margin: 0 -5px;
+        }
+      }
+    }
   }
 
 .navbar-small{height: ($nav_height/1.7);}

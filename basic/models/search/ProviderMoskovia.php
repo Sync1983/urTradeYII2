@@ -70,7 +70,8 @@ class ProviderMoskovia extends SearchProviderBase{
       $name     = (isset($value[ $this->_maker_name ]))?$value[ $this->_maker_name ]  : false;
       $id       = (isset($value[ $this->_maker_id ]))?  $value[ $this->_maker_id ]	  : false;
       if( $name && $id ) {
-        $result[$name] = [$clsid => $id . "@@" . $name];
+        $std_name = $this->convertNameToStandart($name);
+        $result[$std_name] = [$clsid => $id . "@@" . $name];
       }
     }
     return $result;
