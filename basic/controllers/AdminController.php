@@ -25,6 +25,9 @@ class AdminController extends Controller
       ],
       'user-info' => [
         'class' => actions\admin\UserInfoAction::className(),
+      ],
+      'user-order' => [
+        'class' => actions\admin\UserOrderAction::className(),
       ]
     ];
   }
@@ -160,7 +163,7 @@ class AdminController extends Controller
       "file"=>$dir."/".$new_name.".".$ext]);
   }
   
-  public function actionUserOrder(){
+  /*public function actionUserOrder(){
     $users_db = \app\models\MongoUser::find()->all();
     $users = [];
     foreach( $users_db as $user ){
@@ -174,7 +177,7 @@ class AdminController extends Controller
         ]),
     ]);    
     return $this->render('orders',['users'=>$users,'list'=>$list]);
-  }
+  }*/
   
   public function actionOrderInfo(){
     $key = \yii::$app->request->post('expandRowKey',false);

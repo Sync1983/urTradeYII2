@@ -32,7 +32,7 @@ class AdminBehavior extends Behavior{
 
   public function onBefore($event){
     if( \yii::$app->user->isGuest){
-      return $this->redirect(['site/index']);
+      return $this->owner->redirect(['site/index']);
     }
     if( !\yii::$app->user->isAdmin()){
       throw new \yii\base\InvalidConfigException("Вы должны быть администратором!");      

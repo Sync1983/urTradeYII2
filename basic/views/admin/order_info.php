@@ -7,7 +7,6 @@ use kartik\grid\GridView;
 /* @var $order app\models\orders\OrderRecord */
 /* @var $providers app\models\orders\OrderRecord */
 /* @var $user app\models\MongoUser */
-
 ?>
 <div class = "admin-order-info">
   
@@ -65,8 +64,10 @@ use kartik\grid\GridView;
     <h4>Общая информация</h4>
     <span>Обновление информации:  <div class="info"><?= date("d-m-Y H:i:s",$order->update_time) ?></div></span>    
     <span>Дата ожидания:  <div class="info"><?= date("d-m-Y H:i:s",$order->wait_time) ?></div></span>    
-    <span>Статус:  <div class="info"><?= $order->textStatus() ?></div></span>    
+    <span>Статус:  <div class="info"><?= $order->textStatus() ?></div></span>
+    <?php if ( $user ):?>
     <span>Пользователь:  <div class="info"><?= $user->getUserName()." : ".$user->name ?></div></span>    
+    <?php endif;?>
   </div>
 
 </div>

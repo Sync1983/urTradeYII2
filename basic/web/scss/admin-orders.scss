@@ -1,0 +1,59 @@
+/*
+*/
+/* 
+    Created on : 25.06.2015, 16:13:01
+    Author     : Sync
+*/
+ 
+.order-type-filter {  
+  text-align: center;
+}
+
+.tile-body{
+  text-align: center;
+  line-height: 10px;
+  font-size: 14px;
+  
+  p{
+    color: #0099ff;
+  }
+  
+  ul {
+    list-style: none outside;
+    padding: 0;
+    line-height: 14px;
+    
+    li:nth-child(even){
+      color:#0099ff;
+    }
+    li:nth-child(odd){
+      color:#0000ff;
+    }
+  }
+}
+
+.tiles-body{
+  padding: 10px 0;
+  
+  .tile-item{
+    padding: 5px 10px;
+    border: 1px solid black;
+    border-radius: 15px;
+
+    .tile-head{
+      padding: 5px 10px;
+      margin: -5px -10px;
+      line-height: 30px;
+      height: 30px;
+      vertical-align: auto;
+      background-color: #DEDEDE;
+      border-radius: 15px 15px 0 0;
+      border-bottom: none;
+      position: relative;
+    }
+    
+    .tile-body{
+      padding: 10px 10px;
+    }
+  }
+}
