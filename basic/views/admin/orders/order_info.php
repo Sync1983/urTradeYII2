@@ -1,11 +1,8 @@
 <?php
-use yii\helpers\Url;
-use yii\helpers\Html;
-use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $order app\models\orders\OrderRecord */
-/* @var $providers app\models\orders\OrderRecord */
+/* @var $providers \app\models\search\SearchModel */
 /* @var $user app\models\MongoUser */
 ?>
 <div class = "admin-order-info">
@@ -22,7 +19,7 @@ use kartik\grid\GridView;
   </div>
   <div class="admin-order-info-data">
     <h4>Данные заказа</h4>
-    <span>Поставщик:  <div class="info"><?= $providers[$order->provider]->getName()?></div></span>
+    <span>Поставщик:  <div class="info"><?= $providers->getProviderByCLSID($order->provider)->getName()?></div></span>
     <span>Сток:  <div class="info"><?= $order->stock?></div></span>
     <span>Доп. инфо:  <div class="info"><?= $order->info?></div></span>
     <span>ID производителя:  <div class="info"><?= $order->maker_id?></div></span>

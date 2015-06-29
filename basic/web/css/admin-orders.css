@@ -23,11 +23,16 @@
       color: #0000ff; }
 
 .tiles-body {
+  text-align: center;
   padding: 10px 0; }
   .tiles-body .tile-item {
     padding: 5px 10px;
-    border: 1px solid black;
-    border-radius: 15px; }
+    margin: 5px 5px;
+    border: 1px solid #8F8F8F;
+    border-radius: 15px;
+    box-shadow: inset 0px 0px 20px rgba(107, 107, 107, 0.72), 5px 3px 4px rgba(0, 0, 0, 0.44);
+    cursor: pointer;
+    display: inline-block; }
     .tiles-body .tile-item .tile-head {
       padding: 5px 10px;
       margin: -5px -10px;
@@ -37,8 +42,29 @@
       background-color: #DEDEDE;
       border-radius: 15px 15px 0 0;
       border-bottom: none;
+      box-shadow: 0px 0px 20px rgba(54, 52, 52, 0.7) inset;
       position: relative; }
     .tiles-body .tile-item .tile-body {
       padding: 10px 10px; }
+    .tiles-body .tile-item:hover {
+      border: 1px solid #00E4FF;
+      box-shadow: inset 0px 0px 20px rgba(107, 107, 107, 0.72); }
+
+.admin-order-info-main, .admin-order-info-data, .admin-order-info-price, .admin-order-info-sum {
+  width: 24%;
+  margin: 3px;
+  padding: 2px;
+  border: 1px solid;
+  border-radius: 5px;
+  vertical-align: top;
+  line-height: 1.2;
+  display: inline-block;
+  position: relative; }
+  .admin-order-info-main span, .admin-order-info-data span, .admin-order-info-price span, .admin-order-info-sum span {
+    font-weight: bold;
+    display: block; }
+    .admin-order-info-main span div, .admin-order-info-data span div, .admin-order-info-price span div, .admin-order-info-sum span div {
+      font-weight: normal;
+      display: inline-block; }
 
 /*# sourceMappingURL=admin-orders.css.map */

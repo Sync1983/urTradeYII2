@@ -28,6 +28,15 @@ class AdminController extends Controller
       ],
       'user-order' => [
         'class' => actions\admin\UserOrderAction::className(),
+        'type'  => actions\admin\UserOrderAction::TYPE_INFO
+      ],
+      'user-order-open' => [
+        'class' => actions\admin\UserOrderAction::className(),
+        'type'  => actions\admin\UserOrderAction::TYPE_USER
+      ],
+      'order-info' => [
+        'class' => actions\admin\UserOrderAction::className(),
+        'type'  => actions\admin\UserOrderAction::TYPE_EXTEND
       ]
     ];
   }
@@ -163,23 +172,7 @@ class AdminController extends Controller
       "file"=>$dir."/".$new_name.".".$ext]);
   }
   
-  /*public function actionUserOrder(){
-    $users_db = \app\models\MongoUser::find()->all();
-    $users = [];
-    foreach( $users_db as $user ){
-      $users[strval($user->getAttribute("_id"))] = $user;
-    }
-    $orders = \app\models\orders\OrderRecord::find()->orderBy(['status'=>SORT_ASC])->all();
-    $list = new \app\models\BasketDataProvider(['allModels'   => $orders,
-        'pagination'  => new \yii\data\Pagination([
-          'totalCount'  => count($orders),
-          'pageSize'        => 40,
-        ]),
-    ]);    
-    return $this->render('orders',['users'=>$users,'list'=>$list]);
-  }*/
-  
-  public function actionOrderInfo(){
+/*  public function actionOrderInfo(){
     $key = \yii::$app->request->post('expandRowKey',false);
     if( !$key ){
       throw new \yii\web\NotFoundHttpException("Ключ записи не найден");
@@ -192,7 +185,7 @@ class AdminController extends Controller
     $user = \app\models\MongoUser::findOne(['_id'=> new \MongoId($order->for_user)]);
     return $this->renderPartial('order_info',['order'=>$order,'providers'=>$providers,'user'=>$user]);
   }
-  
+*/
   public function actionOrderChange(){
     $type = \yii::$app->request->get('type',false);
     $key  = \yii::$app->request->post('editableKey',false);
@@ -241,33 +234,9 @@ class AdminController extends Controller
     }
     return $answer;
   }
-  /**
-   * Возвращает список поставщиков
-   * @return \app\models\search\SearchProviderFile
-   */
-  protected function getProviders(){
-    if( !isset(\yii::$app->params['providerUse']) ){
-      return [];
-    }
-    $param = \yii::$app->params['providerUse'];
-    $default_data = \yii::$app->params['providers'];
-    if( !is_array($param) ){
-      return [];
-    }
-    $answer = [];
-    foreach ( $param as $provider ){
-      $default = [];
-      if(isset($default_data[$provider])){
-        $default = $default_data[$provider];
-      }      
-      $class = \yii::createObject($provider,[$default,[]]);      
-      $answer[$class->getCLSID()] = $class;      
-    }
-    return $answer;
-  }
   
   protected function addNotification($message){
-	$this->view->params['notify'][] = $message;
+    $this->view->params['notify'][] = $message;
   }
 
 }
