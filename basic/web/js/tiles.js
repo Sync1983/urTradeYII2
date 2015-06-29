@@ -10,9 +10,7 @@
   init: function (options){
       var $this = $(this),
           data = $this.data('tile'),
-          head = null,
-          width = 0,
-          height = 0;
+          head = null;
       
       settings = $.extend(settings,options);
       $this.hide();
@@ -20,11 +18,11 @@
       head = $("<div></div>").addClass("tiles-head");
       $this.parent().append(head);
       
-      
-      console.log(width);
-      
       initHead(head);
       initBody($this,head);
+      $this.remove();
+      
+      $(head).on("click","div.tile-item",onClick);
       
       function initHead(parent){
         var attribute,
@@ -85,6 +83,13 @@
           $(item).remove;
           tile.width(width);
         });
+      }
+      
+      function onClick(event){
+        var action = $(event.currentTarget).attr("action");
+        if( action ){
+          window.location.href = action;
+        }
       }
     }
     

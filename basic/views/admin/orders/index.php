@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
       "stor"  => $item->data->cnt_in_storage     ,      
       "place" => $item->data->cnt_in_place       ,      
       "rej"   => $item->data->cnt_rejected       ,
+      "action"=> yii\helpers\Url::to(['admin/user-order-open',"id"=>$item->user->getId()],true)
     ];
     $attrs_text = "";
     foreach ($attrs as $key=>$value){
@@ -78,7 +79,8 @@ $js_text = <<<JS
       name: 'Отказ',
       button_text: $filter->cnt_rejected,
     },
-  }
+  },
+  line_len: 6
  });
 JS;
 $this->registerJs($js_text);?>

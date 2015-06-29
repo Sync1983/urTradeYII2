@@ -59,7 +59,14 @@ class MongoUser extends ActiveRecord implements IdentityInterface {
    * **/
   public function isAdmin(){
     return $this->getAttribute("role")==="admin";
-  }  
+  }
+  /**
+   * Проверяет является ли пользователь компанией
+   * @return boolean
+   */
+  public function isCompany(){
+    return $this->type=="company";
+  }
   /**
    * Получает список установленных пользователем наценок
    * @return array

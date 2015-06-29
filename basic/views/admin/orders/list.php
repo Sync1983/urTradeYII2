@@ -6,8 +6,14 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $users app\models\MongoUser */
 /* @var $model app\models\orders\OrderRecord */
+/* @var $search_model \app\models\search\SearchModel */
 
-$this->title = "Заказы";
+$this->title = "Заказы клиента";
+
+$this->params['breadcrumbs'][] = [
+  'label' => 'Заказы',
+  'url' => ['admin/user-order'],
+  ];
 $this->params['breadcrumbs'][] = $this->title;
 
 $columns = [
@@ -20,19 +26,12 @@ $columns = [
     'detailUrl'=> Url::to(['admin/order-info'])
   ],
   [
-    'header'          =>'Дата создания',
+    'header'          =>'Даты',
     'class'           => kartik\grid\DataColumn::className(),    
     'vAlign'          =>'middle',
+    'format'          => 'raw',
     'value'           => function ($model,$a,$b){
-      return date("d-m-Y", $model->_id->getTimestamp());
-    },
-  ],
-  [
-    'header'          =>'Дата изменения',
-    'class'           => kartik\grid\DataColumn::className(),    
-    'vAlign'          =>'middle',
-    'value'           => function ($model,$a,$b){
-      return date("d-m-Y", $model->update_time);
+      return "<b>C:</b> " . date("d-m-Y", $model->_id->getTimestamp()) . "<br><b>И:</b> " . date("d-m-Y", $model->update_time);
     },
   ],
   [
@@ -72,46 +71,32 @@ $columns = [
     'vAlign'          =>'middle',
   ],
   [
-    'attribute'       =>'stock',
-    'header'          =>'Сток',
-    'class'           => kartik\grid\DataColumn::className(),    
-    'vAlign'          =>'middle',
-  ],
-  [
     'attribute'       =>'articul',
     'header'          =>'Артикул',
     'class'           => kartik\grid\DataColumn::className(),    
     'vAlign'          =>'middle',
     'format'          =>'raw',
     'value'           => function ($model,$a,$b){
-      return "<span>".$model->articul." ".Html::button("<i class=\"glyphicon glyphicon-scissors\"></i>",['onClick'=>'copyToClipboard("'.$model->articul.'");'])."</span>";
+      return "<span>".$model->articul." ".Html::button("<i class=\"glyphicon glyphicon-scissors\"></i>",['onClick'=>'cpyToClipboard("'.$model->articul.'");'])."</span>";
     },
   ],
   [
-    'attribute'       =>'producer',
-    'header'          =>'Производитель',
-    'class'           => kartik\grid\DataColumn::className(),    
-    'vAlign'          =>'middle',
-  ],
-  [
     'attribute'       =>'name',
-    'header'          =>'Наименование',
+    'header'          =>'Деталь',
     'class'           => kartik\grid\DataColumn::className(),    
     'vAlign'          =>'middle',
-  ],  
-  [
-    'attribute'       =>'is_original',
-    'header'          =>'Ориг.',
-    'class'           => kartik\grid\BooleanColumn::className(),    
-    'vAlign'          =>'middle',
+    'format'          =>'raw',
+    'value'           => function ($model,$a,$b) use ($search_model) {
+      return  "<b>Ориг.:</b> " . ($model->is_original?"Да":"Нет") . "<br><b>C:</b> " . $search_model->getProviderByCLSID($model->provider)->getName() . " [ " . $model->stock . " ]<br><b>П:</b> " . $model->producer . "<br><b>И:</b> " . $model->name;
+    },
   ],
   [
-    'header'          =>'Количество',
+    'header'          =>'Кол-во',
     'class'           => kartik\grid\DataColumn::className(),
     'format'          =>'raw',
     'value'           => function($model,$a,$b){
       /* @var $model app\models\orders\OrderRecord */
-      return $model->getAttribute('sell_count')." шт.<br>Упак. ".$model->getAttribute('lot_quantity')." шт.";
+      return $model->getAttribute('sell_count')." шт.<br>Упак.<br> ".$model->getAttribute('lot_quantity')." шт.";
     },
     'vAlign'          =>'middle',
   ],
@@ -119,13 +104,8 @@ $columns = [
     'header'          =>'Цена',
     'class'           => kartik\grid\DataColumn::className(),
     'format'          =>'raw',
-    'value'           => function ($model, $a,$b) use ($users){      
-      if(isset($users[$model->for_user])){
-        $user = $users[$model->for_user];
-        $user_price = $user->getUserPrice($model->price);        
-      } else {
-        $user_price = "Не найден";
-      }
+    'value'           => function ($model, $a,$b) use ($user){            
+        $user_price = $user->getUserPrice($model->price);      
       return "Наша: ".$model->price."<br> Польз.: ".$user_price;      
     },
     'vAlign'          =>'middle',
@@ -150,30 +130,6 @@ $columns = [
   ],
 ];
 
-
-/*Id 
- * Provider 
- * Maker Id	
- 
- 
- * Info	
- * Update Time	
- 
- * Count	
- 
-  
- * Comment	
- * Status	
- 
- */
-
-
-
-
-
-?>
-
-<?php
 echo GridView::widget([
     'id'            => 'orders',
     'dataProvider'  => $list,    
@@ -187,20 +143,22 @@ echo GridView::widget([
     ],
     'panel' => [
       'type' => GridView::TYPE_INFO,
-      'heading' => "<i class=\"glyphicon glyphicon-book\"></i> Заказы",
+      'heading' => "<i class=\"glyphicon glyphicon-book\"></i> Заказы " . $user->getUserName() . " : " . $user->name. ($user->isCompany()?" [ Юр.лицо ]":""),
     ],    
     'persistResize' => false,
   ]);
 ?>
 
 <script type="text/javascript">
-  function copyToClipboard(text){
-    /*if( window.clipboardData ){
-      window.clipboardData.setDate("Text",text);
+  function cpyToClipboard(text){
+    if( window.clipboardData ){
+      window.clipboardData.setData("Text",text);
+      return;
     };
     if( window.copyToClipboard ){
       window.copyToClipboard(text);
-    }*/
+      return;
+    }
     window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
   }
 </script>
