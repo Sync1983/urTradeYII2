@@ -27,7 +27,7 @@ class AdminBehavior extends Behavior{
    if( !$order->save() ){
      throw new \yii\web\NotFoundHttpException("Ошибка сохранения");
    }
-   echo json_encode(['output'=>$value]);
+   //echo json_encode(['output'=>$value]);
   }
 
   public function onBefore($event){

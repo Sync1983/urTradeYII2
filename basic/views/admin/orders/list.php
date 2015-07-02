@@ -38,15 +38,19 @@ $columns = [
     'header'=>'Дата ожидания',
     'attribute' => 'wait_time',
     'vAlign'=>'middle',
-    'format'=>['date', 'php:d-m-Y'],
+    'format'=>['date', 'php:d.m.Y'],
     'class'=> kartik\grid\EditableColumn::className(),    
     'editableOptions'=> function ($model, $key, $index) {      
       return[    
             'header'=>'Дата ожидания',
-            'format'=>['date', 'php:d-m-Y'],            
+            'format'=>['date', 'php:d.m.Y'],
+            'data'  => function ($model){
+              return 1;
+            },
+            'displayValue' => date("d.m.Y",$model->wait_time),
             'inputType'=> \kartik\editable\Editable::INPUT_DATE,
             "formOptions"=>[
-              "action"=> Url::to(["admin/order-change",'type'=> 'wait_time'])
+              "action"=> Url::to(["admin/order-change"])
             ],            
           ];
     },
@@ -62,9 +66,9 @@ $columns = [
       return[    
             'header'=>'Статус',            
             'inputType'=> \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
-            'data'=>$model->getStatuses(),
+            'data'=> app\models\orders\OrderRecord::$states,//getStatuses(),
             "formOptions"=>[
-              "action"=> Url::to(["admin/order-change",'type'=> 'status'])
+              "action"=> Url::to(["admin/order-change"])
             ],            
           ];
     },

@@ -33,7 +33,10 @@
             button,
             row;
         row = $("<div></div>").addClass("row order-type-filter");
-        buttons = $("<div></div>").addClass("btn-group").attr("role","group").css("text-allign","center");
+        buttons = $("<div></div>").
+                    addClass("btn-group head-filter-buttons").
+                    attr("role","group").
+                    css("text-allign","center");
         row.append(buttons);
         $(parent).append(row);
 
@@ -42,11 +45,16 @@
           attribute = settings.attributes[i];
           name = attribute.name || attr_name;
           button_text = attribute.button_text || null;
-          button = $("<button></button>").addClass("btn").addClass("btn-default").attr("type","button");
+          button = $("<button></button>").
+                      addClass("btn").
+                      addClass("btn-default").
+                      attr("type","button").
+                      attr("filter",attr_name);
           if( button_text){
             name += " [" + button_text + "] ";
           };
           button.text(name);
+          button.click(onClickFilter);
           buttons.append(button);
         }
       }
@@ -90,6 +98,18 @@
         if( action ){
           window.location.href = action;
         }
+      }
+      
+      function onClickFilter(event){
+        var filter = $(event.currentTarget).attr('filter');
+        
+        $(".tiles-body").children(".tile-item").each(function(index,item){
+          if( !$(item).attr(filter) ){
+            $(item).hide(500);
+          }else{
+            $(item).show(500);
+          }
+        });
       }
     }
     

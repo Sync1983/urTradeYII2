@@ -17,7 +17,7 @@ class OrderRecord extends ActiveRecord{
   const STATE_REJECTED = 6;
   //public vars
   //protected vars  
-  protected $states = [
+  public static $states = [
     self::STATE_WAIT_PAY        => "Ожидает оплаты",
     self::STATE_WAIT_PLACEMENT  => "Ожидает размещения",
     self::STATE_PLACEMENT       => "Заказано",
@@ -29,10 +29,11 @@ class OrderRecord extends ActiveRecord{
   //private vars  
   //============================= Public =======================================
   public function textStatus(){
-    return isset($this->states[$this->status])?($this->states[$this->status]):$this->status;
+    return isset(self::$states[$this->status])?(self::$states[$this->status]):$this->status;
   }
-  public function getStatuses(){
-    return $this->states;
+  
+  public static function getStatuses(){
+    return self::$states;
   }
   //============================= Protected ====================================
   protected function onUpdate($event){

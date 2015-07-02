@@ -37,6 +37,10 @@ class AdminController extends Controller
       'order-info' => [
         'class' => actions\admin\UserOrderAction::className(),
         'type'  => actions\admin\UserOrderAction::TYPE_EXTEND
+      ],
+      'order-change' => [
+        'class' => actions\admin\UserOrderAction::className(),
+        'type'  => actions\admin\UserOrderAction::TYPE_CHANGE
       ]
     ];
   }
@@ -170,42 +174,6 @@ class AdminController extends Controller
     return $this->render("upload_success",[
       "upload_file"=>$file->getBaseName().".".$ext,
       "file"=>$dir."/".$new_name.".".$ext]);
-  }
-  
-/*  public function actionOrderInfo(){
-    $key = \yii::$app->request->post('expandRowKey',false);
-    if( !$key ){
-      throw new \yii\web\NotFoundHttpException("Ключ записи не найден");
-    }
-    $order = \app\models\orders\OrderRecord::findOne(["_id"=> new \MongoId($key)]);
-    if( !$order ){
-      throw new \yii\web\NotFoundHttpException("Запись не найдена");
-    }
-    $providers = $this->getProviders();
-    $user = \app\models\MongoUser::findOne(['_id'=> new \MongoId($order->for_user)]);
-    return $this->renderPartial('order_info',['order'=>$order,'providers'=>$providers,'user'=>$user]);
-  }
-*/
-  public function actionOrderChange(){
-    $type = \yii::$app->request->get('type',false);
-    $key  = \yii::$app->request->post('editableKey',false);
-    $index= \yii::$app->request->post('editableIndex',-1);
-    $data = \yii::$app->request->post('OrderRecord',false);
-    $allow_types = ['wait_time','status'];
-    if( !$type || !$key || $index==-1 || !$data || !in_array($type, $allow_types)){
-      throw new \yii\web\NotFoundHttpException("Ошибочный запрос");
-    }
-    $value = $data[$index][$type];
-    
-    if( $type=="wait_time" ){
-      $data[$index][$type] = strtotime($value);      
-    }
-    
-    $event = new \app\models\events\OrderEvent();
-    $event->key = $key;
-    $event->items = $data[$index];
-    \yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    $this->trigger(\app\models\events\OrderEvent::EVENT_ORDER_CHANGE,$event);
   }
 
   /**
