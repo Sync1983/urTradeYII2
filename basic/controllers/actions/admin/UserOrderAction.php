@@ -21,6 +21,8 @@ class UserOrderAction extends Action {
       return $this->typeUser();
     }elseif( $this->type == self::TYPE_EXTEND ){
       return $this->typeExtend();
+    }elseif($this->type == self::TYPE_CHANGE ){
+      return $this->typeChange();
     }
   }
 
@@ -94,5 +96,33 @@ class UserOrderAction extends Action {
     $providers = new \app\models\search\SearchModel();
     $user = \app\models\MongoUser::findOne(['_id'=> new \MongoId($order->for_user)]);
     return $this->controller->renderPartial('orders/order_info',['order'=>$order,'providers'=>$providers,'user'=>$user]);
+  }
+
+  protected function typeChange() {    
+    $key  = \yii::$app->request->post('editableKey',false);
+    $index= \yii::$app->request->post('editableIndex',-1);
+    $data = \yii::$app->request->post('OrderRecord',false);
+    $type = array_keys($data[$index])[0];
+    
+    $allow_types = ['wait_time','status'];
+    if( !$type || !$key || $index==-1 || !$data || !in_array($type, $allow_types)){
+      throw new \yii\web\NotFoundHttpException("Ошибочный запрос");
+    }
+    $value = $data[$index][$type];
+
+    if( $type=="wait_time" ){
+      $data[$index][$type] = strtotime($value);
+    }
+
+    $event = new \app\models\events\OrderEvent();
+    $event->key = $key;
+    $event->items = $data[$index];
+    \yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $this->controller->trigger(\app\models\events\OrderEvent::EVENT_ORDER_CHANGE,$event);
+    if ( $type == "wait_time" ){
+      return [$data[$index]];
+    }elseif( $type == "status" ){
+      return ['output'=> \app\models\orders\OrderRecord::$states[$value]];
+    }
   }
 }
