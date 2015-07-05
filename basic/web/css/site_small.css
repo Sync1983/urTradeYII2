@@ -73,5 +73,7 @@
     background-image: none; }
   .size-low .nav-line .badge {
     display: none; }
+.size-low form .buttons .over-price {
+  display: none !important; }
 
 /*# sourceMappingURL=site_small.css.map */

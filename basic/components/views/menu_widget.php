@@ -39,7 +39,8 @@ $this->registerJs('$(".over-price").main().changeOverPrice()');
       <li class="dropdown">
         <button class="btn btn-info dropdown-toggle" type="button" id="catalogLabel" data-toggle="dropdown" aria-expanded="true">
           <span class="icon glyphicon glyphicon-list"></span>
-          <span class="text">Каталоги</span> <span class="caret"></span>
+          <span class="text">Каталоги</span>
+          <span class="caret"></span>
         </button>
         <?= kartik\dropdown\DropdownX::widget(['items' => $model->catalog]);?>
       </li>
@@ -67,7 +68,14 @@ $this->registerJs('$(".over-price").main().changeOverPrice()');
           <?php endif;?>
       </li>
       <li class="menu-button">
-        <button class="btn btn-info"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" ></span> Меню</button>
+        <button class="btn btn-info dropdown-toggle" type="button" id="menuLabel" data-toggle="dropdown" aria-expanded="true">
+          <span class="glyphicon glyphicon-menu-hamburger"></span>
+          <span class="text"> Меню</span>
+        </button>
+        <?= kartik\dropdown\DropdownX::widget([
+                'options'=>['class'=>'pull-right','id'=>'menuLabel'],
+                'items' => $raw_menu
+            ]);?>
       </li>
     </ul>
     <div id="search-helper" class="search-helper"><?= yii\helpers\Html::listBox("", 0, ['a' => 'b']); ?></div>

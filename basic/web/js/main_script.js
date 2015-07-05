@@ -134,6 +134,29 @@
       });
     };
     
+    self.crossClick = function(){
+      $("#cross").click();
+      var value = $("#cross").val() * 1;
+      var item = $(".cross-menu").children("a").children("span");
+      
+      if( value === 1 ){
+        item.removeClass("hidden");
+      } else {
+        item.addClass("hidden");
+      }
+    };
+    
+    self.overPriceClick = function(head,value){
+      
+      $(".over-price-menu-main").each(function(index,item){
+        $(item).children("a").children("span").addClass("hidden");
+      });
+      $(head).children("a").children("span").removeClass("hidden");
+      
+      $(".over-price").val(value + " %");
+      onChangeOverPrice(null);
+    };
+    
     function onChangeOverPrice (e){
       var parent = $("div.panel-collapse.collapse.in");    
       var table = parent.find("table");    

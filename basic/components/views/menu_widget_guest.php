@@ -51,7 +51,14 @@ $model  = $this->params['search_model'];
           <label for= "cross" class="btn btn-info cbx-label">Аналоги</label>
       </li>
       <li class="menu-button">
-        <button class="btn btn-info"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" ></span> Меню</button>
+        <button class="btn btn-info dropdown-toggle" type="button" id="menuLabel" data-toggle="dropdown" aria-expanded="true">
+          <span class="glyphicon glyphicon-menu-hamburger"></span>
+          <span class="text"> Меню</span>
+        </button>
+        <?= kartik\dropdown\DropdownX::widget([
+                'options'=>['class'=>'pull-right','id'=>'menuLabel'],
+                'items' => $raw_menu
+            ]);?>
       </li>
     </ul>
     <div id="search-helper" class="search-helper"><?= yii\helpers\Html::listBox("", 0, ['a' => 'b']); ?></div>
