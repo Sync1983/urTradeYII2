@@ -17,7 +17,6 @@ AppAsset::register($this);
 NotifyAsset::register($this);
 SelectorAsset::register($this);
 
-AppAsset::initResizeble();
 BootboxAsset::overrideSystemConfirm();
 SelectorAsset::registerJS();
 

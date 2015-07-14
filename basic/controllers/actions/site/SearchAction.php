@@ -12,7 +12,7 @@ class SearchAction extends Action {
   const TYPE_PARTS_FULL   = "full";
 
   public $type  = self::TYPE_INDEX;
-  /* @var $_form app\models\forms\SearchForm */
+  /** @var $_form \app\models\forms\SearchForm **/
   protected $_form;
 
   public function run() {
@@ -25,7 +25,9 @@ class SearchAction extends Action {
     }elseif($this->type == self::TYPE_PARTS_FULL ){
       return $this->actionFullList();
     }
-
+    if( !$this->_form->search_text){
+      return $this->controller->goHome();
+    }
     if( $this->_form->validate() ){
       \app\models\SearchHistoryRecord::addQuery( $this->_form->search_text );
     }

@@ -24,9 +24,10 @@ class MenuWidget extends Widget {
 
     $menu       = $this->createMenu();
     $list       = $this->createList($over_price);
+    $raw        = $this->rawMenu();
 
     if( \yii::$app->user->isGuest ){
-      return $this->render('menu_widget_guest',['menu'=> $menu]);
+      return $this->render('menu_widget_guest',['menu'=> $menu,'raw_menu' => $raw]);
     }
 
     return $this->render('menu_widget',[
@@ -36,19 +37,71 @@ class MenuWidget extends Widget {
             'isCompany' => $isComapny,
             'menu'=> $menu,
             'list'=> $list,
+            'raw_menu' => $raw
         ]);
+  }
+
+  protected function rawMenu() {
+    $user = \yii::$app->user;
+    $isCompany = $user->isCompany();
+    $overPrices = $user->getOverPiceList();
+    $op = \yii::$app->request->get("op",0);
+    $searchForm = new \app\models\forms\SearchForm();
+    $searchForm->load(\yii::$app->request->get(),"");
+    $cross = $searchForm->cross;
+
+    $menu = [];
+    foreach ($this->menu as $item){
+      $menu[] = [
+        'label' => $item['title'],
+        'url'   => $item['url']
+      ];
+    }
+    
+    if( $isCompany ){
+      $sub_menu1 = [];
+      foreach ($overPrices as $name=>$value){
+        $hidden = "hidden";
+        if( $op === $value ){
+          $hidden = "";
+        }
+        $sub_menu1[] = [
+          'encode'   => false,
+          'label' => "<span class=\"glyphicon glyphicon-ok $hidden\"></span>  " . $name . "( $value% )",
+          'url'   => "#",
+          'options'=> ['onClick' => "$().main().overPriceClick(this," . intval($value) .")", 'class' => 'over-price-menu-main'],
+        ];
+      }
+      $menu[] =  '<li class="divider"></li>';
+      $menu[] =  ['label'=>'Наценка','items'=>$sub_menu1,'options'=>['class'=>'sub-menu-main']];
+    }
+    
+    $menu[] =  '<li class="divider"></li>';
+    $cross_label = "<span class=\"glyphicon glyphicon-ok hidden\"></span> Аналоги";
+    if( $cross ){
+      $cross_label = "<span class=\"glyphicon glyphicon-ok\"></span> Аналоги";
+    }
+    $menu[] = [
+      'label'   => $cross_label,
+      'encode'   => false,
+      'url'     => "#",
+      'options' => ['onClick' => '$().main().crossClick()','class'=>'cross-menu']
+    ];
+    return $menu;
   }
 
   protected function createMenu(){
     $answer = "";
     foreach ($this->menu as $item){
-      $answer .= "<li>"
+      $answer .= "<li class=\"col-md-2 col-xs-2\">"
           . "<a href=\"" . Url::to($item['url']) . "\">"
           . "<p class=\"menu-title\">"
-          . "<img src=\"". $item['img'] ."\" />"
-          . "<span>" . $item['title'] . "</span>"
+          . "<img class=\"visible-lg-inline-block\" src=\"". $item['img'] ."\" />"
+          . "<img class=\"visible-sm\" src=\"". $item['img'] ."\" />"
+          . "<span class=\"hidden-sm\">" . $item['title'] . "</span>"
+          . "<span class=\"visible-sm\">" . $item['title'] . "</span>"
           . "</p>"
-          . "<p class=\"menu-describe\">" . $item['descr'] . "</p>"
+          . "<p class=\"menu-describe visible-md visible-lg\">" . $item['descr'] . "</p>"
           . "</a>"
           . "</li>";
     }

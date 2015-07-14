@@ -47,7 +47,7 @@ $user = Yii::$app->user;
 	  <div class="collapse navbar-collapse navbar-ex1-collapse">
 		<ul class="nav navbar-nav side-nav">
       <li class="dropdown">
-        <a href="javascript:;" data-toggle="collapse" data-target="#summary"><i class="fa fa-fw fa-arrows-v"></i> Общая информация</a>
+        <a href="javascript:;" data-toggle="collapse" data-target="#summary"><i class="fa fa-angle-double-right"></i> Общая информация</a>
         <ul id="summary" class="collapse">
           <li><?= Html::a("База данных",   Url::to(['admin/database-info']));?></li>
           <li><?= Html::a("Пользователи",   Url::to(['admin/user-info']));?></li>
@@ -59,7 +59,16 @@ $user = Yii::$app->user;
 		  <li><?= Html::a("Пользователи",       Url::to(['admin/users']));?></li>
 		  <li><?= Html::a("Корзины",            Url::to(['admin/user-basket']),['class'=>'menu-item']);?></li>
       <li><?= Html::a("Заказы",             Url::to(['admin/user-order']),['class'=>'menu-item']);?></li>
-      <li><?= Html::a("Прайс-листы",        Url::to(['admin/prices']),['class'=>'menu-item']);?></li>          
+      <li><?= Html::a("Прайс-листы",        Url::to(['admin/prices']),['class'=>'menu-item']);?></li>
+
+      <li class="dropdown">
+        <a href="javascript:;" data-toggle="collapse" data-target="#catalogs"><i class="fa fa-angle-double-right"></i> Каталоги</a>
+        <ul id="catalogs" class="collapse">
+          <li><?= Html::a("Создание каталога",     Url::to(['admin/catalog-create']));?></li>
+          <li><?= Html::a("Управление каталогами", Url::to(['admin/catalog-control']));?></li>
+          <li><?= Html::a("Наполнение каталогов",  Url::to(['admin/catalog-fill']));?></li>
+        </ul>
+      </li>
 		  
     </ul>
       </div>

@@ -1,6 +1,6 @@
 /* global Function */
 
-(function( $ ) {
+/*(function( $ ) {
   $.fn.resizeble = function( options ) {
     var self = this;    
     var middle = 1280;
@@ -42,7 +42,7 @@
     return this; 
   }; 
 }( jQuery ));
-
+*/
 
 
 
