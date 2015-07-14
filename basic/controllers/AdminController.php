@@ -41,13 +41,25 @@ class AdminController extends Controller
       'order-change' => [
         'class' => actions\admin\UserOrderAction::className(),
         'type'  => actions\admin\UserOrderAction::TYPE_CHANGE
+      ],
+      'catalog-create' => [
+        'class' => actions\admin\CatalogAction::className(),
+        'type'  => actions\admin\CatalogAction::TYPE_CREATE
+      ],
+      'catalog-control' => [
+        'class' => actions\admin\CatalogAction::className(),
+        'type'  => actions\admin\CatalogAction::TYPE_CONTROL
+      ],
+      'catalog-fill' => [
+        'class' => actions\admin\CatalogAction::className(),
+        'type'  => actions\admin\CatalogAction::TYPE_FILL
       ]
     ];
   }
 
   public function actionIndex() {     
-	$this->addNotification("blabla-bla");
-	$this->addNotification("blabla-bla2");
+    $this->addNotification("blabla-bla");
+    $this->addNotification("blabla-bla2");
     return $this->render('index');
   }
   

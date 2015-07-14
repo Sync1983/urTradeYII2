@@ -18,6 +18,22 @@ class PayController extends Controller{
       ],
       'aviso'  => [
         'class' => actions\pay\AvisoAction::className()
+      ],
+      'fail'   => [
+        'class' => actions\pay\OkFailAction::className(),
+        'type'  => actions\pay\OkFailAction::FAIL,
+      ],
+      'ok'     => [
+        'class' => actions\pay\OkFailAction::className(),
+        'type'  => actions\pay\OkFailAction::OK,
+      ]
+    ];
+  }
+
+  public function behaviors() {
+    return [
+      'form' => [
+        'class' => \app\components\behaviors\SearchFormBehavior::className()
       ]
     ];
   }

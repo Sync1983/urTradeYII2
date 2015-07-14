@@ -93,13 +93,15 @@ class MenuWidget extends Widget {
   protected function createMenu(){
     $answer = "";
     foreach ($this->menu as $item){
-      $answer .= "<li>"
+      $answer .= "<li class=\"col-md-2 col-xs-2\">"
           . "<a href=\"" . Url::to($item['url']) . "\">"
           . "<p class=\"menu-title\">"
-          . "<img src=\"". $item['img'] ."\" />"
-          . "<span>" . $item['title'] . "</span>"
+          . "<img class=\"visible-lg-inline-block\" src=\"". $item['img'] ."\" />"
+          . "<img class=\"visible-sm\" src=\"". $item['img'] ."\" />"
+          . "<span class=\"hidden-sm\">" . $item['title'] . "</span>"
+          . "<span class=\"visible-sm\">" . $item['title'] . "</span>"
           . "</p>"
-          . "<p class=\"menu-describe\">" . $item['descr'] . "</p>"
+          . "<p class=\"menu-describe visible-md visible-lg\">" . $item['descr'] . "</p>"
           . "</a>"
           . "</li>";
     }

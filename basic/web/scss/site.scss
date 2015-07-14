@@ -151,90 +151,28 @@ html, body {width: 100%;background-color: $page_color;}
 
 .navbar-small{height: ($nav_height/1.7);}
 
-.navbar-1{
-  a.navbar-header {
-    top: 2;
-    left: 0;
-    width: 350px;
-    height: $nav_height;
-    text-decoration: none;
-    background: url('/img/logo_left.png') no-repeat;    
-    position: absolute;
-    display: block;
-  }
-  
-  div.head-buttons{
-    top: 0;
-    right: 20px;
-    width: 150px;    
-    position: absolute;
-    
-    #text-part{   
-      width:250px;
-      right: 100%;
-      display: inline-block;
-      padding-top: 5px;
-      position: absolute;
-      & p {
-        padding: 0;
-        margin: 0;
-        font-weight: bold;
-        //text-shadow:  0px  0px 2px rgba(255,255,255,1);
-        line-height: 24px;
-        //color:rgb(12, 85, 124);
-        
-        span {
-          font-weight: normal;
-        }
-      }
-    } 
-    
-    .contact-data{
-      right:250% !important; 
-      font-weight: bolder; 
-      font-size: 16pt;
-      font-family: Arial,monospace;
-    }
-    
-    #btn-part{
-      & .btn{
-       float: right;       
-       margin: 1px 0 2px 0;
-      }      
-    }
-  }
-}
-
 .navbar-3{
   form {
-    width: 95%;
-    margin: 0 auto;
+    
     & > ul {
-      list-style: outside none;
-      width:95%;
-      padding: 0;
-      display: block;
-      position: absolute;
+      list-style: outside none;      
+      width: 100%;
+      margin:0 auto;
+      display: inline-block;      
       
-      .dropdown, .search, .buttons{
-        display: inline-table;
-      }
-      
-      & > .dropdown{
-        top: 0px;
-        left: 0px;        
-        position: absolute;
-        button{
-          border-radius: 5px 0 0 5px;          
+      li {
+        padding: 0;
+        margin: 0;        
+        &.dropdown{
+          button {
+            border-radius: 5px 0 0 5px;           
+          }
         }
       }
-      & > .search {
-        margin-left: 115px;
-        padding-right: 300px; 
-        width: 100%;
+      
+      & > .search {        
         input {
           width: 100%;
-          display: table-cell;
           height: 34px;
           padding: 6px 12px;
           font-size: 14px;
@@ -246,11 +184,8 @@ html, body {width: 100%;background-color: $page_color;}
           transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         }
       }
-      & > .buttons{ 
-        top: 0px;
-        right: 0px;        
-        position: absolute;
-        .checkbox-wrap{
+        
+      .checkbox-wrap{
           top: 5px;
           height: 34px;
           padding: 0 4px;
@@ -271,28 +206,24 @@ html, body {width: 100%;background-color: $page_color;}
             border-right: medium none;
             border-radius: 0px;
           }
-        }
+
         button {
           border-radius: 0;
           float:left;
         }
-      }      
-      
-      & > .menu-button{    
-        top: 0px;
-        right: 1%;
-        position: absolute;
-        display: none;
-      }      
-    }
-    
-    & div.over-price{
-      border-radius: 4px;
-      button {
-        border-radius: 0 4px 4px 0 !important;        
+      }
+      .over-price{        
+        button {
+          border-radius: 0 4px 4px 0 !important;        
+        }
       }
     }
-    
+    button{
+      width: 100%;
+    }
+    #search-btn{
+      border-radius: 0px;
+    }
     li.sub-menu-main > ul {
       margin-left: -200%;
       margin-right: 100%;
@@ -313,8 +244,7 @@ ul.nav-line {
     display: block;
     
     & li {
-      padding: 0;
-      width: (100% / 6.2);
+      padding: 0;      
       height: 60px;
       vertical-align: top;
       border-left: 1px solid rgba(12, 85, 124, 0.37);
@@ -324,15 +254,24 @@ ul.nav-line {
       & a {
         width: 100%;
         height: 100%;
-        display: block;
-        
+        display: block;        
       }
       
       a:hover p{
         color: #5bc0de;          
       }
         
-      & p.menu-title{        
+      & p.menu-title{ 
+        text-align: center;
+        background-repeat: no-repeat;
+        background-size: 25px 25px;
+        background-position: 2px 0;  
+        color: black;
+        width: 100%;
+        line-height: 25px;
+        font-size: 16pt;
+        font-family: Impact, Arial, Helvetica, sans-serif;
+  
         img {
           top: -2px;
           width: 20px;
@@ -341,12 +280,25 @@ ul.nav-line {
           margin-left: -10px;          
           display: inline-block;          
           position: relative;
+          
+          &.visible-sm {
+            margin: 0 auto;
+            top: 5px;
+          }
         }
         span {          
           display: inline-block;
         }
+        span.visible-sm{
+          top: 10px;
+          font-size: 12pt;
+          text-align: center;
+          margin: 0 !important;
+          position: relative;
+        }
       }
       & p.menu-describe {
+        top: 20px;
         position: absolute;
       }
     }
@@ -356,9 +308,19 @@ ul.nav-line {
     }
 }
 
-.menu-title, .menu-describe{background-repeat: no-repeat;background-size: 25px 25px;background-position: 2px 0;margin: 0 5px;color: black;width: 100%;line-height: 25px;font-size: 16pt;font-family: Impact, Arial, Helvetica, sans-serif;}
-
-.menu-describe {padding: 5px 0;height: ($nav_height/2);width: 90%;line-height: 10px;font-weight: bold;font-size: 8pt;font-family: Arial, Helvetica, sans-serif;}
+.menu-describe {
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: 2px 0;  
+  color: black;
+  padding: 5px 0;
+  height: ($nav_height/2);
+  margin: 0 5px;
+  width: 90%;
+  line-height: 10px;
+  font-weight: bold;
+  font-size: 8pt;
+  font-family: Arial, Helvetica, sans-serif;}
 
 select.over-price{
   height: 34px;
@@ -584,6 +546,3 @@ table.over-price-panel{
 .tooltip-inner{
   max-width: 500px !important;
 }
-
-@import "site_middle.scss";
-@import "site_small.scss";
