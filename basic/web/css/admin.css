@@ -71,4 +71,35 @@
       font-weight: normal;
       display: inline-block; }
 
+/* 
+    Created on : 25.06.2015, 16:13:01
+    Author     : Sync
+*/
+table.fields-table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 60%; }
+  table.fields-table thead {
+    color: #cebd39;
+    background-color: #1954e3; }
+    table.fields-table thead tr th {
+      text-align: center;
+      border-right: 3px solid black; }
+      table.fields-table thead tr th:last-child {
+        border: none; }
+  table.fields-table tbody tr {
+    font-weight: bold;
+    height: 40px;
+    vertical-align: central;
+    color: #3B3084;
+    background-color: #93A6C8; }
+    table.fields-table tbody tr td {
+      text-align: center;
+      border-right: 3px solid black;
+      border-top: 1px solid black; }
+    table.fields-table tbody tr:nth-child(odd) {
+      color: #27CDE9;
+      background-color: #53679F; }
+
 /*# sourceMappingURL=admin.css.map */

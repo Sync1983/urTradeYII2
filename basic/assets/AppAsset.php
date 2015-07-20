@@ -30,6 +30,6 @@ class AppAsset extends AssetBundle
     ];
 
     public static function initResizeble(){
-      \yii::$app->view->registerJs("$(\"body\").resizeble()");
+      
     }
 }
