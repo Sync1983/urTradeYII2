@@ -25,9 +25,7 @@ class CatalogAction extends Action {
 
   protected function typeCreate() {
     $model = new \app\models\forms\CatalogCreateForm();
-    $data = new \yii\data\ArrayDataProvider([
-      'allModels' => $model->fields
-    ]);    
+    $data = $model->fields;
     
     return $this->controller->render("catalogs/catalog-create",['model'=>$model,'data'=>$data]);
   }

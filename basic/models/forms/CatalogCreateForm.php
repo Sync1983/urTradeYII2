@@ -15,7 +15,7 @@ class CatalogCreateForm extends Model{
     ['attr'     => 'producer',
      'name'     => 'Производитель',
      'position' => 1,
-     'type'     => 'string', //string, int, price, car, list
+     'type'     => 'string', //string, int, car, list
      'visible'  => true,
      'filter'   => true,
     ],

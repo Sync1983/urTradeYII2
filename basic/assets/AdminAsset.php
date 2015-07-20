@@ -34,6 +34,6 @@ class AdminAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
         'app\assets\BootboxAsset',
-        'app\assets\AdminBootstrapAsset',
+        'app\assets\AdminBootstrapAsset',        
     ];
 }

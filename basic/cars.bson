@@ -1,0 +1,5 @@
+connected to: 127.0.0.1
+2015-07-20T22:03:18.392+0300 DATABASE: ur_trade	 to 	dump/ur_trade
+2015-07-20T22:03:18.394+0300 	ur_trade.cars to dump/ur_trade/cars.bson
+2015-07-20T22:03:18.769+0300 		 583 documents
+2015-07-20T22:03:19.822+0300 	Metadata for ur_trade.cars to dump/ur_trade/cars.metadata.json

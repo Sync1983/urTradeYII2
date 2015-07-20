@@ -1,0 +1,47 @@
+/* 
+    Created on : 25.06.2015, 16:13:01
+    Author     : Sync
+*/
+ 
+table.fields-table{
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 60%;
+  
+  thead{
+    color: #cebd39;
+    background-color: #1954e3;
+    tr th{
+      text-align: center;
+      border-right: 3px solid black;      
+      &:last-child{
+        border: none;
+      }
+    }
+  }
+  
+  tbody{
+    
+    tr {      
+      font-weight: bold;
+      height: 40px;
+      vertical-align: central;
+      color: #3B3084;
+      background-color: #93A6C8;
+      
+      td{
+        text-align: center;
+        border-right: 3px solid black;
+        border-top: 1px solid black;
+      }
+      
+      &:nth-child(odd){
+        color: #27CDE9;
+        background-color: #53679F;
+      }
+      
+    }
+  }
+  
+}
