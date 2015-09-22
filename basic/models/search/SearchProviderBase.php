@@ -173,11 +173,13 @@ class SearchProviderBase extends Object {
     }     
     
     curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
     
     $answer = curl_exec($ch);    
 
     if( curl_errno($ch)!==0 ){
       $answer = "[]";
+      \yii::error(curl_error($ch));
     }
     
     curl_close($ch);
@@ -242,14 +244,26 @@ class SearchProviderBase extends Object {
    * @return array
    */
   protected function xmlToArray($xml){    
-    try{
-      $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);
-    }catch(\yii\base\ErrorException $err){
-      \yii::error($err->getMessage());      
-      \yii::error($xml);      
+    if( $xml === "[]" ){
+      \yii::error("Xml error: []");
+      return [];
+    }
+
+    $use_errors = libxml_use_internal_errors(true);
+    
+    $xml_string = simplexml_load_string($xml, "SimpleXMLElement", LIBXML_NOCDATA);
+    if( $xml_string === false ){
+      foreach(libxml_get_errors() as $error) {
+        \yii::error($error->message);
+      }
+      \yii::error($xml);
+      libxml_clear_errors();
+      libxml_use_internal_errors($use_errors);
       $xml_string = false;
       return [];
-    }    
+    } 
+    libxml_clear_errors();
+    libxml_use_internal_errors($use_errors);   
     $json = json_encode($xml_string,JSON_FORCE_OBJECT);    
     return json_decode($json,true);
   }
