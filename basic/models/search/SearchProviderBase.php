@@ -49,7 +49,6 @@ class SearchProviderBase extends Object {
     PartRecord::deleteAll(['provider'=>$this->_CLSID,'search_articul'=>$part_id,'for_user'=>$uid]);
     foreach ($answer[ $this->_part_list_id ] as $part){
       $item = $this->_dataToStruct($part,['search_articul'=>$part_id,'maker_id'=>$maker_id]);      
-      
       $part_model = new PartRecord();
       $part_model->setAttribute("for_user", $uid);
       $part_model->setAttributes($item,false);

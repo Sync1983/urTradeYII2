@@ -12,11 +12,12 @@ use app\models\search\SearchProviderBase;
 class ProviderIxora extends SearchProviderBase{
   const CLSID = 4;
   const Name  = "Ixora";
-  protected $url = "http://ws.auto-iksora.ru:83/searchdetails/searchdetails.asmx"; 
-  protected $_maker_list_id = 'row';
+  //protected $url = "http://ws.auto-iksora.ru:83/searchdetails/searchdetails.asmx"; 
+  protected $url = "http://ws.ixora-auto.ru/soap/ApiService.asmx"; 
+  protected $_maker_list_id = 'MakerInfo';
   protected $_maker_name    = 'name';
-  protected $_maker_id      = 'id';
-  protected $_part_list_id  = 'row';
+  protected $_maker_id      = 'name';
+  protected $_part_list_id  = 'DetailInfo';
 
   public function __construct($default_params=[], $config=[]) {
     parent::__construct(self::Name, self::CLSID, $default_params, $config);
@@ -28,7 +29,7 @@ class ProviderIxora extends SearchProviderBase{
    * @param type $cross
    */
   protected function sendPartRequest($part_id = "", $maker_id = "", $cross = false){
-    $xml = $this->onlineRequest($this->url."/FindDetailsXML", ['MakerID'=>$maker_id,'DetailNumber'=>$part_id]);
+    $xml = $this->onlineRequest($this->url."/FindXML", ['Maker'=>$maker_id,'Number'=>$part_id,'StockOnly'=>'false','SubstFilter'=>($cross?'All':'Originals')]);
     $answer = $this->xmlToArray($xml);
     return $answer;
   }
@@ -39,26 +40,31 @@ class ProviderIxora extends SearchProviderBase{
    * @return type
    */
   protected function sendMakerRequest($part_id = "", $cross = false){
-    $param = ['DetailNumber'=>$part_id];
-    $xml  = $this->onlineRequest($this->url."/GetMakersByDetailNubmerXML", $param);    
+    $param = ['Number'=>$part_id];
+    $xml  = $this->onlineRequest($this->url."/GetMakersXML", $param);
     $answer = $this->xmlToArray($xml);
     return $answer;
+  }
+
+  protected function _dataToStruct($data=[],$add_fields=[]){
+    $add_fields['is_original'] = ($data['group']==='Original');
+    return parent::_dataToStruct($data,$add_fields);
   }
   
   protected function _stdDataStruct(){
     return [
 			  "search_articul" => "search_articul",
 			  "provider"    => 0,
-			  "articul"     => "detailnumber",
-			  "producer"    => "maker_name",
+			  "articul"     => "number",
+			  "producer"    => "maker",
 			  "maker_id"    => "maker_id",
-			  "name"        => "detailname",
+			  "name"        => "name",
 			  "price"       => "price",
 			  "shiping"     => "dayswarranty",
-			  "stock"       => "regionname",  
+			  "stock"       => "region",  
 			  "info"        => 0,
-			  "update_time" => "pricedate",
-			  "is_original" => "groupid",
+			  "update_time" => "date",
+			  "is_original" => "original",
 			  "count"       => "quantity",
 			  "lot_quantity"=> "lotquantity"
     ];
