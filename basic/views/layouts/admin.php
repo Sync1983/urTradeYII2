@@ -69,6 +69,12 @@ $user = Yii::$app->user;
           <li><?= Html::a("Наполнение каталогов",  Url::to(['admin/catalog-fill']));?></li>
         </ul>
       </li>
+      <li class="dropdown">
+        <a href="javascript:;" data-toggle="collapse" data-target="#cars"><i class="fa fa-angle-double-right"></i> Автомобили</a>
+        <ul id="cars" class="collapse">
+          <li><?= Html::a("Управление каталогом", Url::to(['admin/cars-control']));?></li>
+        </ul>
+      </li>
 		  
     </ul>
       </div>

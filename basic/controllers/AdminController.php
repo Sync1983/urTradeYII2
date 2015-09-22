@@ -53,6 +53,12 @@ class AdminController extends Controller
       'catalog-fill' => [
         'class' => actions\admin\CatalogAction::className(),
         'type'  => actions\admin\CatalogAction::TYPE_FILL
+      ],
+      'cars-control' =>[
+        'class' => actions\admin\CarsAction::className()
+      ],
+      'car-selector' => [
+        'class' => \app\widgets\CarSelector\action\CarSelectorAction::className(),
       ]
     ];
   }
