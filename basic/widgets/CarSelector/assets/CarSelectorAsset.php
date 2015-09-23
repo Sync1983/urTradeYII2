@@ -41,7 +41,6 @@ class CarSelectorAsset extends AssetBundle
           . "  } else {\n"
           . "    $('#$name').find('span.header').removeClass('focus')\n"
           . "  }\n"
-          . "});\n");
-      $view->registerJs("$('#$name-container').treeview({data:" . json_encode($data) . "})");
+          . "});\n");      
     }
 }

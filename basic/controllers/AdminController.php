@@ -57,9 +57,9 @@ class AdminController extends Controller
       'cars-control' =>[
         'class' => actions\admin\CarsAction::className()
       ],
-      'car-selector' => [
+      /*'car-selector' => [
         'class' => \app\widgets\CarSelector\action\CarSelectorAction::className(),
-      ]
+      ]*/
     ];
   }
 
