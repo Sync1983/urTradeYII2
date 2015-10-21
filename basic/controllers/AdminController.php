@@ -113,8 +113,12 @@ class AdminController extends Controller
     $user = \app\models\MongoUser::findOne(['_id' => new \MongoId($model->_id)]);
     if( !$user ){
       throw new \yii\base\Exception("Пользователь не найден");      
-    }    
-    $user->setAttributes($model->getAttributes());    
+    }  
+    $attributes = $model->getAttributes();  
+    if( isset($attributes['user_pass']) ){
+      $attributes['user_pass'] = md5($attributes['user_pass']);
+    }
+    $user->setAttributes($attributes);    
     if( !$user->save() ){
       throw new \yii\base\Exception("Ошибка в сохранении");      
     }

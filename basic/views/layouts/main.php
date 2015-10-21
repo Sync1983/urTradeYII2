@@ -22,7 +22,7 @@ SelectorAsset::registerJS();
 
 /* @var $user SiteUser */
 $user = Yii::$app->user;
-$basket_count = $this->params['basket_count'];
+$basket_count = isset($this->params['basket_count'])?$this->params['basket_count']:0;
 $order_count  = $this->params['order_count'];
 $balance      = $this->params['balance'];
 $this->registerJs("var isGuest=".$user->isGuest);

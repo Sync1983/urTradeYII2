@@ -57,11 +57,11 @@ class OrderBehavior extends Behavior{
         ];
       }
     }
-    \yii::$app->mailer->compose('site/new_order',[ 'items' => $mail_text ])
+/*    \yii::$app->mailer->compose('site/new_order',[ 'items' => $mail_text ])
 		  ->setFrom(['robot@atc58.ru' => 'АвтоТехСнаб'])
 		  ->setTo('sales@atc58.ru')
 		  ->setSubject('Тест АвтоТехСнаб Новый Заказ')
-		  ->send();
+		  ->send();*/
   }
   
   public function onChangeBalance(BalanceEvent $event){
